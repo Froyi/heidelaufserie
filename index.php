@@ -7,6 +7,8 @@ use Project\Utilities\Tools;
 
 \define('ROOT_PATH', getcwd());
 
+session_start();
+
 require ROOT_PATH . '/vendor/autoload.php';
 
 $route = 'index';

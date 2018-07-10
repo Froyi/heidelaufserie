@@ -1,0 +1,19 @@
+{% include ('module/partial/notification.twig') %}
+
+<div class="admin-page js-admin-page">
+    <h1>Bearbeitung Wettkämpfe</h1>
+
+    <form action="{{ route('createCompetition') }}" method="post">
+        {% if competitionData %}
+        <p>
+            <select name="competitionNumber">
+                {% for number, competition in competitionData %}
+                    <option value="{{ number }}">{{ competition }}</option>
+                {% endfor %}
+            </select>
+        </p>
+        {% endif %}
+        <p><input type="date" name="date"></p>
+        <p><input type="submit" name="submit" value="Speichern"></p>
+    </form>
+</div>

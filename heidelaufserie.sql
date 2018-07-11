@@ -20,3 +20,13 @@ CREATE TABLE `competition` (
 COLLATE='utf8_general_ci'
 ENGINE=MyISAM
 ;
+
+
+CREATE TABLE `competitionDay` (
+	`competitionDayId` VARCHAR(200) NOT NULL,
+	`title` VARCHAR(200) NOT NULL,
+	`date` DATE NOT NULL,
+	PRIMARY KEY (`competitionDayId`)
+)
+ENGINE=MyISAM
+;

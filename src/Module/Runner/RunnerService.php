@@ -51,13 +51,33 @@ class RunnerService
     }
 
     /**
+     * @return array
+     */
+    public function getAllRunner(): array
+    {
+        $runnerArray = [];
+
+        $runnerData = $this->runnerRepository->getAllRunner();
+
+        foreach ($runnerData as $singleRunnerData) {
+            $runner = $this->runnerFactory->getRunnerByObject($singleRunnerData, $this->configuration);
+
+            if ($runner !== null) {
+                $runnerArray[] = $runner;
+            }
+        }
+
+        return $runnerArray;
+    }
+
+    /**
      * @param array $parameter
      *
      * @return null|Runner
      */
     public function getRunnerByParameter(array $parameter): ?Runner
     {
-        $runnerData = (object) $parameter;
+        $runnerData = (object)$parameter;
 
         if (empty($runnerData) === true) {
             return null;

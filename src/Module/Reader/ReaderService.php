@@ -16,19 +16,30 @@ class ReaderService
     /** @var string RUNNER_FILE */
     public const RUNNER_FILE = 'runner.txt';
 
+    /** @var bool */
     protected const RUNNER_HAS_LEGEND = true;
 
-    public function readRunnerFile(RunnerService $runnerService): array
+    /**
+     * @param RunnerService $runnerService
+     * @param null|string $runnerFile
+     *
+     * @return array
+     */
+    public function readRunnerFile(RunnerService $runnerService, ?string $runnerFile = null): array
     {
-
         $runnerArray = [];
 
-        if (filesize(self::RUNNER_FILE) === 0) {
-            return $runnerArray;
-        }
+        if ($runnerFile !== null) {
+            $file = file($runnerFile);
+            $count = \count($file);
+        } else {
+            if (filesize(self::RUNNER_FILE) === 0) {
+                return $runnerArray;
+            }
 
-        $file = file(self::RUNNER_FILE);
-        $count = \count($file);
+            $file = file(self::RUNNER_FILE);
+            $count = \count($file);
+        }
 
         $startEntry = 0;
         if (self::RUNNER_HAS_LEGEND === true) {
@@ -36,8 +47,13 @@ class ReaderService
         }
 
         for ($i = $startEntry; $i < $count; $i++) {
+            try {
+                iconv('UTF-8', 'UTF-8', $file[$i]);
+            } catch (\TypeError $error) {
+                return [];
+            }
             $runnerData = explode(';', $file[$i]);
-
+            echo $runnerData[0];
             $runnerSingleData = [];
             $runnerSingleData['runnerId'] = Id::generateId()->toString();
             $runnerSingleData['surname'] = $runnerData[0];

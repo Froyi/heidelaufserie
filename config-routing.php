@@ -17,6 +17,14 @@ return [
             'controller' => 'IndexController',
             'action' => 'createCompetitionAction'
         ],
+        'createCompetitionDay' => [
+            'controller' => 'IndexController',
+            'action' => 'createCompetitionDayAction'
+        ],
+        'uploadRunnerFile' => [
+            'controller' => 'IndexController',
+            'action' => 'uploadRunnerFileAction'
+        ],
         'sendmail' => [
             'controller' => 'MailerController',
             'action' => 'sendMailAction'

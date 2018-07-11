@@ -82,4 +82,12 @@ class Competition extends DefaultModel
     {
         return $this->competitionName;
     }
+
+    /**
+     * @return array
+     */
+    public static function getStandardCompetitions(): array
+    {
+        return self::POSSIBLE_COMPETITIONS;
+    }
 }

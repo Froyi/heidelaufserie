@@ -4,6 +4,7 @@ namespace Project\Module\Competition;
 
 use Project\Module\GenericValueObject\Date;
 use Project\Module\GenericValueObject\Id;
+use Project\Module\GenericValueObject\Title;
 
 
 /**
@@ -20,7 +21,7 @@ class CompetitionFactory
     public function getCompetitionByObject($object): ?Competition
     {
         try {
-            if ($this->checkProperties($object) === false) {
+            if ($this->checkCompetitionProperties($object) === false) {
                 return null;
             }
 
@@ -32,9 +33,37 @@ class CompetitionFactory
 
             /** @var Date $date */
             $date = Date::fromValue($object->date);
-            $competitionNumber = (int) $object->competitionNumber;
+            $competitionNumber = (int)$object->competitionNumber;
 
             return new Competition($competitionId, $date, $competitionNumber);
+        } catch (\InvalidArgumentException $exception) {
+            return null;
+        }
+    }
+
+    /**
+     * @param $object
+     *
+     * @return null|CompetitionDay
+     */
+    public function getCompetitionDayByObject($object): ?CompetitionDay
+    {
+        try {
+            if ($this->checkCompetitionDayProperties($object) === false) {
+                return null;
+            }
+
+            if (empty($object->competitionDayId) === true) {
+                $competitionDayId = Id::generateId();
+            } else {
+                $competitionDayId = Id::fromString($object->competitionDayId);
+            }
+
+            /** @var Date $date */
+            $date = Date::fromValue($object->date);
+            $title = Title::fromString($object->title);
+
+            return new CompetitionDay($competitionDayId, $title, $date);
         } catch (\InvalidArgumentException $exception) {
             return null;
         }
@@ -45,8 +74,18 @@ class CompetitionFactory
      *
      * @return bool
      */
-    protected function checkProperties($properties): bool
+    protected function checkCompetitionProperties($properties): bool
     {
-        return !(empty($properties->competitionNumber) === true || empty($properties->date) === true);
+        return empty($properties->competitionNumber) !== true && empty($properties->date) !== true;
+    }
+
+    /**
+     * @param $properties
+     *
+     * @return bool
+     */
+    protected function checkCompetitionDayProperties($properties): bool
+    {
+        return empty($properties->date) !== true && empty($properties->title) !== true;
     }
 }

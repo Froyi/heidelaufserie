@@ -79,4 +79,14 @@ class RunnerRepository
 
         return $this->database->execute($query);
     }
+
+    /**
+     * @return array
+     */
+    public function getAllRunner(): array
+    {
+        $query = $this->database->getNewSelectQuery(self::TABLE);
+
+        return $this->database->fetchAll($query);
+    }
 }

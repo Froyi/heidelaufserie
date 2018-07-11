@@ -31,7 +31,7 @@ class RunnerFactory
             $surname = Name::fromString($object->surname);
             $firstname = Name::fromString($object->firstname);
 
-            $birthYear = BirthYear::fromValue($object->birthYear);
+            $birthYear = BirthYear::fromValue((int)$object->birthYear);
             $gender = Gender::fromString($object->gender);
             $ageGroup = AgeGroup::fromValues($birthYear, $gender, $configuration);
 

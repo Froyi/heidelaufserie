@@ -626,3 +626,4 @@ Hahn;Babette;W;1969;SV Francke 08;;2810;W45;4;+491634029243;;;;
 Böttcher;Sven-Torsten;M;1961;Dessau NW;;476;M55;5;+491729922555;x;;;
 Knies;Manfred;M;1949;VS Lutherstadt Wittenberg;;2141;M65;5;+4917643759649;;;D;
 Brückner;Dirk;M;1964;Volkssport Halle;;460;M50;5;+491796456242;;;6;
+Hellwig;Nicola;M;1974;Volkssport Halle;;714;M40;1;+491709901582;;;;

@@ -6,6 +6,7 @@ namespace Project\Controller;
 use Project\Module\Competition\Competition;
 use Project\Module\Competition\CompetitionService;
 use Project\Module\Reader\ReaderService;
+use Project\Module\Runner\Runner;
 use Project\Module\Runner\RunnerService;
 use Project\Utilities\Tools;
 
@@ -141,5 +142,43 @@ class IndexController extends DefaultController
         header('Location: ' . Tools::getRouteUrl('admin'));
         exit;
 
+    }
+
+    public function findDuplicateNamesAction()
+    {
+        $duplicates = [];
+        $runnerService = new RunnerService($this->database, $this->configuration);
+
+        $allRunner = $runnerService->getAllRunner();
+        $toCheckRunner = $allRunner;
+        /** @var Runner $runner */
+        foreach ($allRunner as $runner){
+            $testedRunner['runner'] = $runner;
+            $testedRunner['duplicates'] = [];
+            /** @var Runner $otherRunner */
+            foreach ($toCheckRunner as $otherRunner){
+                if($runner === $otherRunner){
+                    continue;
+                }
+                if($runner->getSurname() === $otherRunner->getSurname() && $runner->getFirstname() === $otherRunner->getFirstname()){
+                    $testedRunner['duplicates'][] = $otherRunner;
+                    continue;
+                }
+                if ($runner->getFirstname() === $otherRunner->getFirstname() && $runner->getAgeGroup() === $otherRunner->getAgeGroup()){
+                    $testedRunner['duplicates'][] = $otherRunner;
+                    continue;
+                }
+                if ($runner->getSurname() === $otherRunner->getSurname() && $runner->getAgeGroup() === $otherRunner->getAgeGroup()){
+                    $testedRunner['duplicates'][] = $otherRunner;
+                    continue;
+                }
+            }
+            if (empty($testedRunner['duplicates']) === false){
+                $duplicates[] = $testedRunner;
+            }
+        }
+        $this->viewRenderer->addViewConfig('duplicates', $duplicates);
+        $this->viewRenderer->addViewConfig('page', 'duplicates');
+        $this->viewRenderer->renderTemplate();
     }
 }

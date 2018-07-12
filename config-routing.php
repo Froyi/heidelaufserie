@@ -28,6 +28,10 @@ return [
         'sendmail' => [
             'controller' => 'MailerController',
             'action' => 'sendMailAction'
+        ],
+        'findDuplicateNames' => [
+            'controller' => 'IndexController',
+            'action' => 'findDuplicateNamesAction'
         ]
     ]
 ];

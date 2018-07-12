@@ -101,7 +101,6 @@ class AgeGroup extends DefaultGenericValueObject
                 $ageGroup .= $tableAgeName;
             }
         }
-
         return $ageGroup;
     }
 }

@@ -19,7 +19,6 @@
     "php": "^7.0",
     "twig/twig": "2.4.3",
     "ramsey/uuid": "3.6.1",
-    "league/uri": "5.*",
     "claviska/simpleimage": "3.*",
     "tinify/tinify": "1.*",
     "swiftmailer/swiftmailer": "6.*",

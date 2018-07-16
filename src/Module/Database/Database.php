@@ -50,7 +50,7 @@ class Database
      */
     public function connect(): void
     {
-        $dsn = 'mysql:host=' . $this->host . ';dbname=' . $this->database;
+        $dsn = 'mysql:host=' . $this->host . ';dbname=' . $this->database . ';charset=utf8';
         $this->connection = new \PDO($dsn, $this->user, $this->password);
     }
 

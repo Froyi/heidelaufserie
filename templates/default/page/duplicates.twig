@@ -1,13 +1,16 @@
 <div class="duplicates-page js-duplicates-page">
+    {% if counter %}
+        {{ counter }}
+    {% endif %}
     {% if duplicates %}
         <div class="runner-container">
             {% for runnerDuplicate in duplicates %}
-                <div class="runner-data">
+                <div class="runner-data"  style="background-color: green;">
                     {{ runnerDuplicate.runner.getFirstname }} {{ runnerDuplicate.runner.getSurname }} {{ runnerDuplicate.runner.getAgeGroup.getBirthYear }}
                 </div>
                 {% for runner in runnerDuplicate.duplicates %}
                     <div>
-                        {{ runner.runner.getFirstname }} {{ runner.runner.getSurname }} {{ runner.runner.getAgeGroup.getBirthYear }}
+                        {{ runner.getFirstname }} {{ runner.getSurname }} {{ runner.getAgeGroup.getBirthYear }}
                     </div>
                 {% endfor %}
             {% endfor %}

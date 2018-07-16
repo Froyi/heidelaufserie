@@ -8,6 +8,7 @@ CREATE TABLE `runner` (
 	`gender` ENUM('w','m') NOT NULL,
 	`club` VARCHAR(200) NULL DEFAULT NULL
 )
+COLLATE='utf8_general_ci'
 ENGINE=MyISAM
 ;
 
@@ -28,5 +29,6 @@ CREATE TABLE `competitionDay` (
 	`date` DATE NOT NULL,
 	PRIMARY KEY (`competitionDayId`)
 )
+COLLATE='utf8_general_ci'
 ENGINE=MyISAM
 ;

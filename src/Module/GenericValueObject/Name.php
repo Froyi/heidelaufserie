@@ -51,17 +51,17 @@ class Name extends DefaultGenericValueObject
      */
     protected static function convertName(string $name): string
     {
-        if (strpos($name, '-') >= 0) {
+        if (strpos($name, '-') !== false) {
             $names = explode('-', $name);
 
             foreach ($names as $key => $lastname) {
-                $lastname = ucwords(strtolower(trim($lastname)));
+                $lastname = ucwords(mb_strtolower(trim($lastname)));
                 $names[$key] = $lastname;
             }
 
             $name = implode('-', $names);
         } else {
-            $name = ucwords(strtolower(trim($name)));
+            $name = ucwords(mb_strtolower(trim($name)));
         }
 
         return $name;

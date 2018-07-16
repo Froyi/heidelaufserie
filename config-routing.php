@@ -32,6 +32,10 @@ return [
         'findDuplicateNames' => [
             'controller' => 'IndexController',
             'action' => 'findDuplicateNamesAction'
+        ],
+        'findDuplicatesByLevenshtein' => [
+            'controller' => 'IndexController',
+            'action' => 'findDuplicatesByLevenshteinAction'
         ]
     ]
 ];

@@ -63,7 +63,7 @@ class RunnerRepository
     public function saveRunner(Runner $runner): bool
     {
         if ($this->runnerExists($runner) === true) {
-            return false;
+            return true;
         }
 
         $query = $this->database->getNewInsertQuery(self::TABLE);

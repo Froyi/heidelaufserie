@@ -47,13 +47,8 @@ class ReaderService
         }
 
         for ($i = $startEntry; $i < $count; $i++) {
-            try {
-                iconv('UTF-8', 'UTF-8', $file[$i]);
-            } catch (\TypeError $error) {
-                return [];
-            }
             $runnerData = explode(';', $file[$i]);
-            echo $runnerData[0];
+
             $runnerSingleData = [];
             $runnerSingleData['runnerId'] = Id::generateId()->toString();
             $runnerSingleData['surname'] = $runnerData[0];

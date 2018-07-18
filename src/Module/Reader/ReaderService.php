@@ -63,7 +63,6 @@ class ReaderService
             $runnerSingleData['firstname'] = $runnerData[self::RUNNER_FILE_INDEX['firstname']];
             $runnerSingleData['gender'] = $runnerData[self::RUNNER_FILE_INDEX['gender']];
             $runnerSingleData['birthYear'] = (int)$runnerData[self::RUNNER_FILE_INDEX['birthYear']];
-            $runnerSingleData['club'] = $runnerData[self::RUNNER_FILE_INDEX['club']];
 
             $runner = $runnerService->getRunnerByParameter($runnerSingleData);
 

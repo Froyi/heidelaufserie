@@ -16,11 +16,8 @@ class CompetitionRepository
     /** @var string TABLE */
     protected const TABLE = 'competition';
 
-    /** @var string TABLE_COMPETITION_DAY */
-    protected const TABLE_COMPETITION_DAY = 'competitionDay';
-
-    /** @var string ORDER_BY_COMPETITION_DAY */
-    protected const ORDER_BY_COMPETITION_DAY = 'date';
+    /** @var string TABLE_COMPETITION_TYPE */
+    protected const TABLE_COMPETITION_TYPE = 'competitionType';
 
     /** @var Database $database */
     protected $database;
@@ -36,6 +33,28 @@ class CompetitionRepository
     }
 
     /**
+     * @return array
+     */
+    public function getAllCompetitionTypes(): array
+    {
+        $query = $this->database->getNewSelectQuery(self::TABLE_COMPETITION_TYPE);
+        $query->orderBy('competitionTypeId', Query::ASC);
+
+        return $this->database->fetchAll($query);
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllCompetitions(): array
+    {
+        $query = $this->database->getNewSelectQuery(self::TABLE);
+        $query->orderBy('date', Query::ASC);
+
+        return $this->database->fetchAll($query);
+    }
+
+    /**
      * @param Competition $competition
      *
      * @return bool
@@ -45,27 +64,10 @@ class CompetitionRepository
         if ($this->getCompetitionByCompetitionId($competition->getCompetitionId()) === false) {
             $query = $this->database->getNewInsertQuery(self::TABLE);
             $query->insert('competitionId', $competition->getCompetitionId()->toString());
-            $query->insert('competitionNumber', $competition->getCompetitionNumber());
+            $query->insert('competitionTypeId', $competition->getCompetitionType()->getCompetitionTypeId());
+            $query->insert('title', $competition->getTitle()->getTitle());
             $query->insert('date', $competition->getDate()->toString());
-
-            return $this->database->execute($query);
-        }
-
-        return false;
-    }
-
-    /**
-     * @param CompetitionDay $competitionDay
-     *
-     * @return bool
-     */
-    public function saveCompetitionDay(CompetitionDay $competitionDay): bool
-    {
-        if ($this->getCompetitionDayByCompetitionDayId($competitionDay->getCompetitionDayId()) === false) {
-            $query = $this->database->getNewInsertQuery(self::TABLE_COMPETITION_DAY);
-            $query->insert('competitionDayId', $competitionDay->getCompetitionDayId()->toString());
-            $query->insert('title', $competitionDay->getTitle()->getTitle());
-            $query->insert('date', $competitionDay->getDate()->toString());
+            $query->insert('startTime', $competition->getStartTime()->toString());
 
             return $this->database->execute($query);
         }
@@ -95,43 +97,6 @@ class CompetitionRepository
     {
         $query = $this->database->getNewSelectQuery(self::TABLE);
         $query->where('date', '=', $date->toString());
-
-        return $this->database->fetchAll($query);
-    }
-
-    /**
-     * @param Id $competitionDayId
-     *
-     * @return mixed
-     */
-    public function getCompetitionDayByCompetitionDayId(Id $competitionDayId)
-    {
-        $query = $this->database->getNewSelectQuery(self::TABLE_COMPETITION_DAY);
-        $query->where('competitionDayId', '=', $competitionDayId->toString());
-
-        return $this->database->fetch($query);
-    }
-
-    /**
-     * @param Date $date
-     *
-     * @return mixed
-     */
-    public function getCompetitionDayByDate(Date $date)
-    {
-        $query = $this->database->getNewSelectQuery(self::TABLE_COMPETITION_DAY);
-        $query->where('date', '=', $date->toString());
-
-        return $this->database->fetch($query);
-    }
-
-    /**
-     * @return array
-     */
-    public function getAllCompetitionDays(): array
-    {
-        $query = $this->database->getNewSelectQuery(self::TABLE_COMPETITION_DAY);
-        $query->orderBy(self::ORDER_BY_COMPETITION_DAY, Query::DESC);
 
         return $this->database->fetchAll($query);
     }

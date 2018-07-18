@@ -29,19 +29,73 @@ class CompetitionService
     }
 
     /**
-     * @param array $parameter
-     *
-     * @return null|Competition
+     * @return array
      */
-    public function getCompetitionByParameter(array $parameter): ?Competition
+    public function getAllCompetitionTypes(): array
     {
-        $competitionData = (object)$parameter;
+        $allCompetitionsArray = [];
 
-        if (empty($competitionData) === true) {
-            return null;
+        $allCompetitionTypesData = $this->competitionRepository->getAllCompetitionTypes();
+
+        if (empty($allCompetitionTypesData) === true) {
+            return $allCompetitionsArray;
         }
 
-        return $this->competitionFactory->getCompetitionByObject($competitionData);
+        foreach ($allCompetitionTypesData as $allCompetitionTypeData) {
+            $allCompetitionType = $this->competitionFactory->getCompetitionTypeByObject($allCompetitionTypeData);
+
+            if ($allCompetitionType !== null) {
+                $allCompetitionsArray[$allCompetitionType->getCompetitionTypeId()] = $allCompetitionType;
+            }
+        }
+
+        return $allCompetitionsArray;
+    }
+
+    /**
+     * @param array $parameter
+     *
+     * @return array
+     */
+    public function getCompetitionsByParameter(array $parameter): array
+    {
+        $allCompetitionsArray = [];
+        /** @var \stdClass $competitionData */
+        $competitionData = (object)$parameter;
+
+        if ($competitionData === null) {
+            return $allCompetitionsArray;
+        }
+
+        $allCompetitionTypes = $this->getAllCompetitionTypes();
+
+        if (empty($competitionData->createStandardCompetitions) === false) {
+            $standardCompetitionTypes = $this->getAllStandardCompetitionTypes($allCompetitionTypes);
+
+            foreach ($standardCompetitionTypes as $standardCompetitionType) {
+                $competition = $this->competitionFactory->getCompetitionByObject($competitionData, $standardCompetitionType);
+
+                if ($competition !== null) {
+                    $allCompetitionsArray[] = $competition;
+                }
+            }
+
+            return $allCompetitionsArray;
+        }
+
+        if (empty($competitionData->competitionTypes) === false && \is_array($competitionData->competitionTypes)) {
+            foreach ($competitionData->competitionTypes as $competitionTypeId) {
+                $competition = $this->competitionFactory->getCompetitionByObject($competitionData, $allCompetitionTypes[$competitionTypeId]);
+
+                if ($competition !== null) {
+                    $allCompetitionsArray[] = $competition;
+                }
+            }
+
+            return $allCompetitionsArray;
+        }
+
+        return $allCompetitionsArray;
     }
 
     /**
@@ -52,48 +106,6 @@ class CompetitionService
     public function saveCompetition(Competition $competition): bool
     {
         return $this->competitionRepository->saveCompetition($competition);
-    }
-
-    /**
-     * @param Date $date
-     *
-     * @return null|CompetitionDay
-     */
-    public function getCompetitionDayByDate(Date $date): ?CompetitionDay
-    {
-        $competitionDayData = $this->competitionRepository->getCompetitionDayByDate($date);
-
-        if (empty($competitionDayData) === true) {
-            return null;
-        }
-
-        return $this->competitionFactory->getCompetitionDayByObject($competitionDayData);
-    }
-
-    /**
-     * @param array $parameter
-     *
-     * @return null|CompetitionDay
-     */
-    public function getCompetitionDayByParameter(array $parameter): ?CompetitionDay
-    {
-        $competitionDayData = (object)$parameter;
-
-        if (empty($competitionDayData) === true) {
-            return null;
-        }
-
-        return $this->competitionFactory->getCompetitionDayByObject($competitionDayData);
-    }
-
-    /**
-     * @param CompetitionDay $competitionDay
-     *
-     * @return bool
-     */
-    public function saveCompetitionDay(CompetitionDay $competitionDay): bool
-    {
-        return $this->competitionRepository->saveCompetitionDay($competitionDay);
     }
 
     /**
@@ -111,8 +123,10 @@ class CompetitionService
             return $competitionArray;
         }
 
+        $allCompetitionTypes = $this->getAllCompetitionTypes();
+
         foreach ($competitionData as $singleCompetitionData) {
-            $competition = $this->competitionFactory->getCompetitionByObject($singleCompetitionData);
+            $competition = $this->competitionFactory->getCompetitionByObject($singleCompetitionData, $allCompetitionTypes[$singleCompetitionData->competitionTypeId]);
 
             if ($competition !== null) {
                 $competitionArray[] = $competition;
@@ -123,57 +137,21 @@ class CompetitionService
     }
 
     /**
+     * @param array $allCompetitionTypes
+     *
      * @return array
      */
-    public function getAllCompetitionDaysWithCompetitions(): array
+    protected function getAllStandardCompetitionTypes(array $allCompetitionTypes): array
     {
-        $competitionDayArray = [];
+        $standardCompetitiontypes = [];
 
-        $competitionDayData = $this->competitionRepository->getAllCompetitionDays();
-
-        if (empty($competitionDayData) === true) {
-            return $competitionDayArray;
-        }
-
-        foreach ($competitionDayData as $singleCompetitionDayData) {
-            $competitionDay = $this->competitionFactory->getCompetitionDayByObject($singleCompetitionDayData);
-
-            if ($competitionDay !== null) {
-                $competitions = $this->getCompetitionsByDate($competitionDay->getDate());
-
-                if ($competitions !== null) {
-                    $competitionDay->setCompetitionList($competitions);
-                }
-
-                $competitionDayArray[] = $competitionDay;
+        /** @var CompetitionType $competitionType */
+        foreach ($allCompetitionTypes as $competitionType) {
+            if ($competitionType->isStandardSet() === true) {
+                $standardCompetitiontypes[$competitionType->getCompetitionTypeId()] = $competitionType;
             }
         }
 
-        return $competitionDayArray;
-    }
-
-    /**
-     * @param Date $date
-     *
-     * @return bool
-     */
-    public function createStandardCompetitions(Date $date): bool
-    {
-        $savedAll = true;
-        $standardCompetitions = Competition::getStandardCompetitions();
-
-        foreach ($standardCompetitions as $standardCompetitionNumber => $standardCompetition) {
-            $object = new \stdClass();
-            $object->date = $date->toString();
-            $object->competitionNumber = $standardCompetitionNumber;
-
-            $competition = $this->competitionFactory->getCompetitionByObject($object);
-
-            if ($competition !== null && $this->saveCompetition($competition) === false) {
-                $savedAll = false;
-            }
-        }
-
-        return $savedAll;
+        return $standardCompetitiontypes;
     }
 }

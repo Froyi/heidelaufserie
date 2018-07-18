@@ -3,8 +3,12 @@
 namespace Project\Module\Competition;
 
 use Project\Module\GenericValueObject\Date;
+use Project\Module\GenericValueObject\Datetime;
+use Project\Module\GenericValueObject\Distance;
 use Project\Module\GenericValueObject\Id;
+use Project\Module\GenericValueObject\Name;
 use Project\Module\GenericValueObject\Title;
+use Project\Module\Tracking\Round\Round;
 
 
 /**
@@ -13,18 +17,31 @@ use Project\Module\GenericValueObject\Title;
  */
 class CompetitionFactory
 {
+    public function getCompetitionTypeByObject($object): ?CompetitionType
+    {
+        try {
+            $competitionTypeId = (int)$object->competitionTypeId;
+            $competitionName = Name::fromString($object->competitionName);
+            $distance = Distance::fromValue($object->distance);
+            $rounds = Round::fromValue($object->rounds);
+            $standardSet = (bool)$object->standardSet;
+
+            return new CompetitionType($competitionTypeId, $competitionName, $distance, $rounds, $standardSet);
+
+        } catch (\InvalidArgumentException $exception) {
+            return null;
+        }
+    }
+
     /**
      * @param $object
+     * @param CompetitionType $competitionType
      *
      * @return null|Competition
      */
-    public function getCompetitionByObject($object): ?Competition
+    public function getCompetitionByObject(\stdClass $object, CompetitionType $competitionType): ?Competition
     {
         try {
-            if ($this->checkCompetitionProperties($object) === false) {
-                return null;
-            }
-
             if (empty($object->competitionId) === true) {
                 $competitionId = Id::generateId();
             } else {
@@ -33,59 +50,16 @@ class CompetitionFactory
 
             /** @var Date $date */
             $date = Date::fromValue($object->date);
-            $competitionNumber = (int)$object->competitionNumber;
 
-            return new Competition($competitionId, $date, $competitionNumber);
-        } catch (\InvalidArgumentException $exception) {
-            return null;
-        }
-    }
-
-    /**
-     * @param $object
-     *
-     * @return null|CompetitionDay
-     */
-    public function getCompetitionDayByObject($object): ?CompetitionDay
-    {
-        try {
-            if ($this->checkCompetitionDayProperties($object) === false) {
-                return null;
-            }
-
-            if (empty($object->competitionDayId) === true) {
-                $competitionDayId = Id::generateId();
-            } else {
-                $competitionDayId = Id::fromString($object->competitionDayId);
-            }
-
-            /** @var Date $date */
-            $date = Date::fromValue($object->date);
+            /** @var Title $title */
             $title = Title::fromString($object->title);
 
-            return new CompetitionDay($competitionDayId, $title, $date);
+            /** @var Datetime $startTime */
+            $startTime = Datetime::fromValue($object->date . ' ' . $object->startTime);
+
+            return new Competition($competitionId, $competitionType, $title, $date, $startTime);
         } catch (\InvalidArgumentException $exception) {
             return null;
         }
-    }
-
-    /**
-     * @param $properties
-     *
-     * @return bool
-     */
-    protected function checkCompetitionProperties($properties): bool
-    {
-        return empty($properties->competitionNumber) !== true && empty($properties->date) !== true;
-    }
-
-    /**
-     * @param $properties
-     *
-     * @return bool
-     */
-    protected function checkCompetitionDayProperties($properties): bool
-    {
-        return empty($properties->date) !== true && empty($properties->title) !== true;
     }
 }

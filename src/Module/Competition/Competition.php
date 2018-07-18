@@ -4,7 +4,9 @@ namespace Project\Module\Competition;
 
 use Project\Module\DefaultModel;
 use Project\Module\GenericValueObject\Date;
+use Project\Module\GenericValueObject\Datetime;
 use Project\Module\GenericValueObject\Id;
+use Project\Module\GenericValueObject\Title;
 
 /**
  * Class Competition
@@ -12,43 +14,37 @@ use Project\Module\GenericValueObject\Id;
  */
 class Competition extends DefaultModel
 {
-    /** @var array POSSIBLE_COMPETITIONS */
-    public const POSSIBLE_COMPETITIONS = [
-        1 => '5km Laufen',
-        2 => '10km Laufen',
-        3 => '15km Laufen',
-        4 => '5km Nordic Walking',
-        5 => '10km Nordic Walking',
-    ];
-
     /** @var Id $competitionId */
     protected $competitionId;
+
+    /** @var CompetitionType $competitionType */
+    protected $competitionType;
+
+    /** @var Title $title */
+    protected $title;
 
     /** @var Date $date */
     protected $date;
 
-    /** @var int $competitionNumber */
-    protected $competitionNumber;
-
-    /** @var string $competition */
-    protected $competitionName;
+    /** @var Datetime $startTime */
+    protected $startTime;
 
     /**
      * Competition constructor.
      *
      * @param Id $competitionId
+     * @param CompetitionType $competitionType
+     * @param Title $title
      * @param Date $date
-     * @param int $competitionNumber
+     * @param Datetime $startTime
      */
-    public function __construct(Id $competitionId, Date $date, int $competitionNumber)
+    public function __construct(Id $competitionId, CompetitionType $competitionType, Title $title, Date $date, Datetime $startTime)
     {
-        parent::__construct();
-
         $this->competitionId = $competitionId;
+        $this->competitionType = $competitionType;
+        $this->title = $title;
         $this->date = $date;
-        $this->competitionNumber = $competitionNumber;
-
-        $this->competitionName = self::POSSIBLE_COMPETITIONS[$this->competitionNumber];
+        $this->startTime = $startTime;
     }
 
     /**
@@ -60,6 +56,22 @@ class Competition extends DefaultModel
     }
 
     /**
+     * @return CompetitionType
+     */
+    public function getCompetitionType(): CompetitionType
+    {
+        return $this->competitionType;
+    }
+
+    /**
+     * @return Title
+     */
+    public function getTitle(): Title
+    {
+        return $this->title;
+    }
+
+    /**
      * @return Date
      */
     public function getDate(): Date
@@ -68,26 +80,10 @@ class Competition extends DefaultModel
     }
 
     /**
-     * @return int
+     * @return Datetime
      */
-    public function getCompetitionNumber(): int
+    public function getStartTime(): Datetime
     {
-        return $this->competitionNumber;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCompetitionName(): string
-    {
-        return $this->competitionName;
-    }
-
-    /**
-     * @return array
-     */
-    public static function getStandardCompetitions(): array
-    {
-        return self::POSSIBLE_COMPETITIONS;
+        return $this->startTime;
     }
 }

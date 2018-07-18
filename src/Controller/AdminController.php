@@ -34,18 +34,6 @@ class AdminController extends DefaultController
         $this->viewRenderer->renderTemplate();
     }
 
-    public function importCsvAction(): void
-    {
-        $runnerService = new RunnerService($this->database, $this->configuration);
-        $readerService = new ReaderService();
-
-        $runner = $readerService->readRunnerFile($runnerService);
-
-        foreach ($runner as $singleRunner) {
-            $runnerService->saveRunner($singleRunner);
-        }
-    }
-
     public function createCompetitionAction(): void
     {
         $competitionService = new CompetitionService($this->database);
@@ -87,7 +75,7 @@ class AdminController extends DefaultController
             $competitionDate = Date::fromValue(Tools::getValue('date'));
         }
 
-        $runner = $readerService->readRunnerFile($runnerService, $_FILES['runnerFile']['tmp_name'], $competitionDate);
+        $runner = $readerService->readRunnerFile($runnerService, $_FILES['runnerFile']['tmp_name']);
 
         if (\count($runner) === 0) {
             $this->notificationService->setError('Die Teilnehmer konnten nicht importiert werden. Entweder ist es die falsche Kodierung, oder die Formatierung stimmt nicht überein, oder die Datei ist leer.');

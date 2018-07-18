@@ -2,10 +2,8 @@
 
 namespace Project\Module\Reader;
 
-
 use Project\Module\GenericValueObject\Id;
 use Project\Module\Runner\RunnerService;
-
 
 /**
  * Class ReaderService
@@ -15,6 +13,16 @@ class ReaderService
 {
     /** @var string RUNNER_FILE */
     public const RUNNER_FILE = 'runner.txt';
+
+    public const RUNNER_FILE_INDEX = [
+        'surname' => 0,
+        'firstname' => 1,
+        'gender' => 2,
+        'birthYear' => 3,
+        'club' => 4,
+        'startnumber' => 6,
+        'competitionNumber' => 8,
+    ];
 
     /** @var bool */
     protected const RUNNER_HAS_LEGEND = true;
@@ -51,11 +59,11 @@ class ReaderService
 
             $runnerSingleData = [];
             $runnerSingleData['runnerId'] = Id::generateId()->toString();
-            $runnerSingleData['surname'] = $runnerData[0];
-            $runnerSingleData['firstname'] = $runnerData[1];
-            $runnerSingleData['gender'] = $runnerData[2];
-            $runnerSingleData['birthYear'] = (int)$runnerData[3];
-            $runnerSingleData['club'] = $runnerData[4];
+            $runnerSingleData['surname'] = $runnerData[self::RUNNER_FILE_INDEX['surname']];
+            $runnerSingleData['firstname'] = $runnerData[self::RUNNER_FILE_INDEX['firstname']];
+            $runnerSingleData['gender'] = $runnerData[self::RUNNER_FILE_INDEX['gender']];
+            $runnerSingleData['birthYear'] = (int)$runnerData[self::RUNNER_FILE_INDEX['birthYear']];
+            $runnerSingleData['club'] = $runnerData[self::RUNNER_FILE_INDEX['club']];
 
             $runner = $runnerService->getRunnerByParameter($runnerSingleData);
 

@@ -43,6 +43,8 @@ DB RUNNER
     - runnerId
     - surname
     - firstname
+    - birthYear
+    - gender
 
 DB COMPETITIONDATA
     - competitionDataId

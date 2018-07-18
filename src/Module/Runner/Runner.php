@@ -2,6 +2,7 @@
 
 namespace Project\Module\Runner;
 
+use Project\Module\GenericValueObject\Date;
 use Project\Module\GenericValueObject\Id;
 use Project\Module\GenericValueObject\Name;
 
@@ -19,9 +20,6 @@ class Runner
 
     /** @var Name $firstname */
     protected $firstname;
-
-    /** @var Club $club */
-    protected $club;
 
     /**
      * Consists of birthyear, gender and ageGroup string
@@ -46,14 +44,6 @@ class Runner
     }
 
     /**
-     * @param Club $club
-     */
-    public function setClub(Club $club): void
-    {
-        $this->club = $club;
-    }
-
-    /**
      * @return Id
      */
     public function getRunnerId(): Id
@@ -75,14 +65,6 @@ class Runner
     public function getFirstname(): Name
     {
         return $this->firstname;
-    }
-
-    /**
-     * @return Club
-     */
-    public function getClub(): ?Club
-    {
-        return $this->club;
     }
 
     /**

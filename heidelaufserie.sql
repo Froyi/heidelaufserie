@@ -6,7 +6,6 @@ CREATE TABLE `heidelaufserie`.`runner` (
 	`firstname` VARCHAR(200) NOT NULL,
 	`birthYear` INT(4) NOT NULL,
 	`gender` ENUM('w','m') NOT NULL,
-	`club` VARCHAR(200) NULL DEFAULT NULL
 )
 COLLATE='utf8_general_ci'
 ENGINE=MyISAM
@@ -32,6 +31,19 @@ CREATE TABLE `heidelaufserie`.`competitionType` (
 	`standardSet` TINYINT(1) NOT NULL DEFAULT '0',
 	PRIMARY KEY (`competitionTypeId`)
 )
+ENGINE=MyISAM
+;
+
+CREATE TABLE `heidelaufserie`.`competitionData` (
+	`competitionDataId` VARCHAR(200) NOT NULL,
+	`competitionId` VARCHAR(200) NOT NULL,
+	`runnerId` VARCHAR(200) NOT NULL,
+	`startNumber` INT(11) NOT NULL,
+	`transponderNumber` INT(11) NOT NULL,
+ 	`club` VARCHAR(200) NULL DEFAULT NULL,
+	PRIMARY KEY (`competitionDataId`)
+)
+COLLATE='utf8_general_ci'
 ENGINE=MyISAM
 ;
 

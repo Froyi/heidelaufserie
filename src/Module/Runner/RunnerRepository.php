@@ -73,10 +73,6 @@ class RunnerRepository
         $query->insert('birthYear', $runner->getAgeGroup()->getBirthYear()->getBirthYear());
         $query->insert('gender', $runner->getAgeGroup()->getGender()->getGender());
 
-        if ($runner->getClub() !== null) {
-            $query->insert('club', $runner->getClub()->getClub());
-        }
-
         return $this->database->execute($query);
     }
 

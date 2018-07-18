@@ -3,35 +3,31 @@ return [
     'route' => [
         'index' => [
             'controller' => 'IndexController',
-            'action' => 'indexAction'
+            'action' => 'indexAction',
         ],
         'admin' => [
             'controller' => 'AdminController',
-            'action' => 'adminAction'
+            'action' => 'adminAction',
         ],
         'createCompetition' => [
             'controller' => 'AdminController',
-            'action' => 'createCompetitionAction'
-        ],
-        'importCsv' => [
-            'controller' => 'AdminController',
-            'action' => 'importCsvAction'
+            'action' => 'createCompetitionAction',
         ],
         'uploadRunnerFile' => [
             'controller' => 'AdminController',
-            'action' => 'uploadRunnerFileAction'
+            'action' => 'uploadRunnerFileAction',
         ],
         'sendmail' => [
             'controller' => 'MailerController',
-            'action' => 'sendMailAction'
+            'action' => 'sendMailAction',
         ],
         'findDuplicateNames' => [
             'controller' => 'AdminController',
-            'action' => 'findDuplicateNamesAction'
+            'action' => 'findDuplicateNamesAction',
         ],
         'findDuplicatesByLevenshtein' => [
             'controller' => 'AdminController',
-            'action' => 'findDuplicatesByLevenshteinAction'
-        ]
-    ]
+            'action' => 'findDuplicatesByLevenshteinAction',
+        ],
+    ],
 ];

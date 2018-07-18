@@ -6,23 +6,19 @@ return [
             'action' => 'indexAction'
         ],
         'admin' => [
-            'controller' => 'IndexController',
+            'controller' => 'AdminController',
             'action' => 'adminAction'
         ],
-        'importCsv' => [
-            'controller' => 'IndexController',
-            'action' => 'importCsvAction'
-        ],
         'createCompetition' => [
-            'controller' => 'IndexController',
+            'controller' => 'AdminController',
             'action' => 'createCompetitionAction'
         ],
-        'createCompetitionDay' => [
-            'controller' => 'IndexController',
-            'action' => 'createCompetitionDayAction'
+        'importCsv' => [
+            'controller' => 'AdminController',
+            'action' => 'importCsvAction'
         ],
         'uploadRunnerFile' => [
-            'controller' => 'IndexController',
+            'controller' => 'AdminController',
             'action' => 'uploadRunnerFileAction'
         ],
         'sendmail' => [
@@ -30,11 +26,11 @@ return [
             'action' => 'sendMailAction'
         ],
         'findDuplicateNames' => [
-            'controller' => 'IndexController',
+            'controller' => 'AdminController',
             'action' => 'findDuplicateNamesAction'
         ],
         'findDuplicatesByLevenshtein' => [
-            'controller' => 'IndexController',
+            'controller' => 'AdminController',
             'action' => 'findDuplicatesByLevenshteinAction'
         ]
     ]

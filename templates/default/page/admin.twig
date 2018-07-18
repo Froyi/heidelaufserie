@@ -4,34 +4,24 @@
     <div class="create-competition-day">
         <h1>1. Erstelle einen Wettkampftag</h1>
 
-        <form action="{{ route('createCompetitionDay') }}" method="post">
+        <form action="{{ route('createCompetition') }}" method="post">
             <p><label for="date">Datum: <input type="date" name="date"></label></p>
             <p><label for="title">Titel: <input type="text" name="title"></label></p>
             <p><label for="createStandardCompetitions">Standardwettkänpfe? <input type="checkbox" name="createStandardCompetitions"></label></p>
-            <p><input type="submit" name="submit" value="Speichern"></p>
-        </form>
-    </div>
-
-    <div class="create-competition">
-        <h1>2. Bearbeitung Wettkämpfe</h1>
-
-        <form action="{{ route('createCompetition') }}" method="post">
-            {% if competitionData %}
-                <p>
-                    <select name="competitionNumber">
-                        {% for number, competition in competitionData %}
-                            <option value="{{ number }}">{{ competition }}</option>
-                        {% endfor %}
-                    </select>
-                </p>
+            {% if allCompetitionTypes %}
+                <select multiple name="competitionTypes[]">
+                    {% for competitionType in allCompetitionTypes %}
+                    <option value="{{ competitionType.getCompetitionTypeId }}">{{ competitionType.getCompetitionName }}</option>
+                    {% endfor %}
+                </select>
             {% endif %}
-            <p><input type="date" name="date"></p>
+            <p><label for="startTime">Startzeit: <input type="time" name="startTime"></label></p>
             <p><input type="submit" name="submit" value="Speichern"></p>
         </form>
     </div>
 
     <div class="upload-runner-file">
-        <h1>3. Upload Läuferdatei</h1>
+        <h1>2. Upload Läuferdatei</h1>
 
         <form action="{{ route('uploadRunnerFile') }}" method="post" enctype="multipart/form-data">
             <p><label for="runnerFile">Datei: <input type="file" name="runnerFile"></label></p>
@@ -39,18 +29,4 @@
             <p><input type="submit" name="submit" value="Speichern"></p>
         </form>
     </div>
-    {% if competitionDays %}
-        <div class="competition-days">
-            {% for competitionDay in competitionDays %}
-                <div class="competition-day">
-                    <h1>{{ competitionDay.getTitle }}</h1>
-                    <p>{{ competitionDay.getDate }}</p>
-
-                    {% for competition in competitionDay.getCompetitionList %}
-                        <p>{{ competition.getCompetitionName }}</p>
-                    {% endfor %}
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
 </div>

@@ -28,8 +28,6 @@ class Notification extends DefaultModel
      */
     public function __construct(Level $level, Message $message)
     {
-        parent::__construct();
-
         $this->level = $level;
         $this->message = $message;
     }

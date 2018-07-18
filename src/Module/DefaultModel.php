@@ -2,8 +2,6 @@
 
 namespace Project\Module;
 
-use Project\Configuration;
-
 /**
  * Class DefaultModel
  * @package     Project\Module
@@ -11,22 +9,11 @@ use Project\Configuration;
  */
 class DefaultModel implements \JsonSerializable
 {
-    /** @var Configuration $configuration */
-    protected $configuration;
-
     /**
      * @return array|mixed
      */
     public function jsonSerialize()
     {
         return get_object_vars($this);
-    }
-
-    /**
-     * DefaultModel constructor.
-     */
-    public function __construct()
-    {
-        $this->configuration = new Configuration();
     }
 }

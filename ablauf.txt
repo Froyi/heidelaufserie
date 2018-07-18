@@ -1,0 +1,81 @@
+1. Die Competitions für den Wettkampftag müssen generiert werden.
+    - Dabei kann ein Standardset von Wettkämpfen zu einem bestimmten Datum angelegt werden.
+    - Notwendig sind hierbei der Titel der Veranstaltung und das Datum.
+    - Wenn nicht das Standardset an Läufen ausgewählt werden, sollen über ein MultiSelect alle Läufe ausgewählt werden, die an diesem Tag stattfinden.
+
+    ? Sollen die Competition Name Einträge auch manuell erstellbar sein
+        - Zu Begin sollte es reichen, wenn der Nutzer diese selbst in der Datenbank anlegt.
+
+[Standardset]
+    1 => '5km Laufen', 5000m, 1 round,
+    2 => '10km Laufen', 10000m, 2 rounds,
+    3 => '15km Laufen', 15000m, 3 rounds,
+    4 => '5km Nordic Walking', 5000m, 1 round,
+    5 => '10km Nordic Walking', 10000m, 2 rounds
+
+DB COMPETITION
+    - competitionId
+    - cmpetitionType
+    - title
+    - date
+    - startTime
+
+DB COMPETITION TYPE
+    - competitionTypeId
+    - competitionName
+    - distance
+    - rounds
+    - standardSet
+
+
+
+2. Die Teilnehmer werden importiert.
+    - Die Datei der Teilnehmer, welche generiert wurde, wird eingelesen und ein Duplikatencheck ausgeführt.
+    - Alle Daten werden zunächst in die Datenbank geschrieben.
+    - Anschließend wird aus allen Daten ein Duplikatencheck durchgeführt und dem Nutzer ausgegeben.
+    - Diese Duplikate werden per Hand gelöst. (Später wird es eine Abfrage geben, ob es ein Duplikat ist und ob die Daten umgeschrieben werden müssen)
+
+
+[Transponder - Startnummer]
+    Diese Info wird in ein File geschrieben, welches bei der Erstellung einer CompetitionData ausgelesen wird und für die Daten verwendet wird.
+
+DB RUNNER
+    - runnerId
+    - surname
+    - firstname
+
+DB COMPETITIONDATA
+    - competitionDataId
+    - competitionId
+    - runnerId
+    - startNumber
+    - transponderNumber
+    - club
+
+
+
+3. Der Prozess zum Einlesen wird gestartet.
+    - Der Hintergrundprozess zum Einlesen der Daten in die Datenbank wird gestartet.
+    - Die Daten der Läufer werden jede Sekunde in die Datenbank in die PreviewTime Tabelle geschrieben.
+
+DB PREVIEWTIME
+    - previewTimeId
+    - transponderNumber
+    - timestamp
+    - created
+
+
+
+4. Die Seite für den Sprecher wird aufgerufen.
+    - Im Hintergrund wird per AJAX aller 1-3 Sekunden die Datenbank nach neuen Daten abgefragt.
+    - Hierbei muss der Zeitstempel höher sein, als der created Eintrag, um auch nur die neuen Einträge zu bekommen.
+    - Diese werden dann hinter die aktuellen Einträge geschrieben.
+
+    ? Handling, wie die Daten ausgegeben werden und welche Daten ausgegeben werden.
+        - Werden die "alten Daten" wieder gelöscht, oder kann man scrollen
+        - Welche und wie viele Infos werden dem Sprecher ausgegeben (Übersichtlichkeit)
+            - Gerade, wenn mehrere gleichzeitig einlaufen
+        - Soll es einen Teil mit allgemeinen Infos geben?
+            - Infos wie, wann kommt theoretisch der erste Läufer einer Kategorie ins Ziel
+            - Historische Daten
+            - Statistiken

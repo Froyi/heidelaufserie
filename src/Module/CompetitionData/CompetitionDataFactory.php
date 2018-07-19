@@ -35,7 +35,12 @@ class CompetitionDataFactory
             $competitionId = $competition->getCompetitionId();
             $date = $competition->getDate();
             $runnerId = Id::fromString($competitionDataData->runnerId);
+
             $startNumber = StartNumber::fromValue($competitionDataData->startNumber);
+            if (empty($transponderData[$startNumber->getStartNumber()]) === true) {
+                return null;
+            }
+
             $transponderNumber = TransponderNumber::fromValue($transponderData[$startNumber->getStartNumber()]['transponderNumber']);
 
             $competitionData = new CompetitionData($competitionDataId, $competitionId, $runnerId, $date, $startNumber, $transponderNumber);

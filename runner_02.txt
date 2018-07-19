@@ -1,0 +1,10 @@
+Nachname;Vorname;w/m;Jg;Verein;Staffel;Stnr;AK;WB;Handynr;SW1;SW2;SW3;
+Budai;Jonas;M;2000;Hallesche LA-Freunde;;36;MJ U20;1;+4915758350568;;;4;
+Friedling;Felix;M;1998;SSV Ahlsdorf;;98;M20;1;;;;;
+Heerdegen;Lars;M;1972;Running Rabbits;;111;M45;1;;;;D;
+Saar;Anton;M;2004;Turbine Halle;;202;MJ U16;1;;x;;4;
+Kirchhöfer;Nils;M;1999;Nietlebener Heideschnucken;;25;MJ U20;1;+4915153923971;;;;
+Saar;Jakob;M;2004;Turbine Halle;;208;MJ U16;1;;x;;x;
+Slama;Jannik;M;2002;Turbine Halle;;230;MJ U20;1;;x;;S;
+Lahmer;Robert;M;1986;Turn Team Halle;;3011;M30;1;+4915223142766;;;D;
+Schwarzer;Christoph;M;1982;SV Halle Triathlon;;226;M35;1;+4915255996862;;;6;

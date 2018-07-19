@@ -38,6 +38,9 @@ class CompetitionDataService
      */
     public function getCompetitionDataAfterRunnerUpload(array $uploadData, array $competitions, array $transponderData): array
     {
+        /**
+         * TODO: look, why here is nothing set
+         */
         $competitionDataArray = [];
 
         foreach ($uploadData as $competitionDataData) {

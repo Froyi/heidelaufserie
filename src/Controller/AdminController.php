@@ -26,10 +26,17 @@ class AdminController extends DefaultController
     public function adminAction(): void
     {
         $competitionService = new CompetitionService($this->database);
+        $runnerService = new RunnerService($this->database, $this->configuration);
 
         $allCompetitionTypes = $competitionService->getAllCompetitionTypes();
 
+        /** Duplicates */
+        //$duplicatesByDefault = $runnerService->findRunnerDuplicates();
+        $duplicatesByLevenshtein = $runnerService->findRuplicatesByLevenshtein();
+
         $this->viewRenderer->addViewConfig('allCompetitionTypes', $allCompetitionTypes);
+        //$this->viewRenderer->addViewConfig('duplicatesByDefault', $duplicatesByDefault);
+        $this->viewRenderer->addViewConfig('duplicatesByLevenshtein', $duplicatesByLevenshtein);
         $this->viewRenderer->addViewConfig('page', 'admin');
 
         $this->viewRenderer->renderTemplate();
@@ -109,118 +116,8 @@ class AdminController extends DefaultController
             }
         }
 
-
         $this->notificationService->setSuccess('Die Teilnehmer konnten erfolgreich importiert werden.');
         header('Location: ' . Tools::getRouteUrl('admin'));
         exit;
-
-    }
-
-    /**
-     * @throws \InvalidArgumentException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
-     */
-    public function findDuplicateNamesAction(): void
-    {
-        $duplicates = [];
-        $runnerService = new RunnerService($this->database, $this->configuration);
-
-        $allRunner = $runnerService->getAllRunner();
-        $toCheckRunner = $allRunner;
-        /** @var Runner $runner */
-        foreach ($allRunner as $runner) {
-            $testedRunner['runner'] = $runner;
-            $testedRunner['duplicates'] = [];
-            /** @var Runner $otherRunner */
-            foreach ($toCheckRunner as $otherRunner) {
-                if ($runner === $otherRunner) {
-                    continue;
-                }
-                if ($runner->getSurname()->getName() === $otherRunner->getSurname()->getName() && $runner->getFirstname()->getName() === $otherRunner->getFirstname()->getName()) {
-                    $testedRunner['duplicates'][] = $otherRunner;
-                    continue;
-                }
-                if ($runner->getFirstname()->getName() === $otherRunner->getFirstname()->getName() && $runner->getAgeGroup()->getBirthYear()->getBirthYear() === $otherRunner->getAgeGroup()->getBirthYear()->getBirthYear()) {
-                    $testedRunner['duplicates'][] = $otherRunner;
-                    continue;
-                }
-                if ($runner->getSurname()->getName() === $otherRunner->getSurname()->getName() && $runner->getAgeGroup()->getBirthYear()->getBirthYear() === $otherRunner->getAgeGroup()->getBirthYear()->getBirthYear()) {
-                    $testedRunner['duplicates'][] = $otherRunner;
-                    continue;
-                }
-            }
-            if (empty($testedRunner['duplicates']) === false) {
-                $duplicates[] = $testedRunner;
-            }
-        }
-        $this->viewRenderer->addViewConfig('duplicates', $duplicates);
-        $this->viewRenderer->addViewConfig('page', 'duplicates');
-        $this->viewRenderer->renderTemplate();
-    }
-
-    /**
-     * @throws \InvalidArgumentException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
-     */
-    public function findDuplicatesByLevenshteinAction(): void
-    {
-        $duplicates = [];
-        $runnerService = new RunnerService($this->database, $this->configuration);
-
-        $allRunner = $runnerService->getAllRunner();
-        $toCheckRunner = $allRunner;
-        $duplicatedKeys = [];
-
-        /** @var Runner $runner */
-        foreach ($allRunner as $key => $runner) {
-            if (\in_array($key, $duplicatedKeys, true)) {
-                continue;
-            }
-
-            $testedRunner['runner'] = $runner;
-            $testedRunner['duplicates'] = [];
-
-            /** @var Runner $otherRunner */
-            foreach ($toCheckRunner as $checkKey => $otherRunner) {
-                if ($runner === $otherRunner) {
-                    continue;
-                }
-
-                if ($runner->getAgeGroup()->getGender()->getGender() !== $otherRunner->getAgeGroup()->getGender()->getGender()) {
-                    continue;
-                }
-
-                if (abs($runner->getAgeGroup()->getBirthYear()->getBirthYear() - $otherRunner->getAgeGroup()->getBirthYear()->getBirthYear()) > 2) {
-                    continue;
-                }
-
-                $surnameDiff = levenshtein($runner->getSurname()->getName(), $otherRunner->getSurname()->getName());
-                if ($surnameDiff === -1 || $surnameDiff > 2) {
-                    continue;
-                }
-
-                $firstnameDiff = levenshtein($runner->getFirstname()->getName(), $otherRunner->getFirstname()->getName());
-                if ($firstnameDiff === -1 || $firstnameDiff > 2) {
-                    continue;
-                }
-
-                if (($surnameDiff + $firstnameDiff) < 3) {
-                    $duplicatedKeys[] = $checkKey;
-                    $testedRunner['duplicates'][] = $otherRunner;
-                }
-            }
-
-            if (empty($testedRunner['duplicates']) === false) {
-                $duplicates[] = $testedRunner;
-            }
-        }
-
-        $this->viewRenderer->addViewConfig('duplicates', $duplicates);
-        $this->viewRenderer->addViewConfig('page', 'duplicates');
-        $this->viewRenderer->renderTemplate();
     }
 }

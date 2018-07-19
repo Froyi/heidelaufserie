@@ -48,4 +48,12 @@ class CompetitionDataRepository extends DefaultRepository
 
         return $this->database->fetch($query);
     }
+
+    public function getCompetitionDataByRunnerId(Id $runnerId): array
+    {
+        $query = $this->database->getNewSelectQuery(self::TABLE);
+        $query->where('runnerId', '=', $runnerId->toString());
+
+        return $this->database->fetchAll($query);
+    }
 }

@@ -27,6 +27,9 @@ class Runner
      */
     protected $ageGroup;
 
+    /** @var array $competitionDataList */
+    protected $competitionDataList = [];
+
     /**
      * Runner constructor.
      *
@@ -73,5 +76,21 @@ class Runner
     public function getAgeGroup(): AgeGroup
     {
         return $this->ageGroup;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCompetitionDataList(): array
+    {
+        return $this->competitionDataList;
+    }
+
+    /**
+     * @param array $competitionDataList
+     */
+    public function setCompetitionDataList(array $competitionDataList)
+    {
+        $this->competitionDataList = $competitionDataList;
     }
 }

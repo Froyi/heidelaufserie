@@ -5,6 +5,7 @@ namespace Project\Module\CompetitionData;
 
 use Project\Module\Competition\Competition;
 use Project\Module\Database\Database;
+use Project\Module\GenericValueObject\Id;
 
 /**
  * Class CompetitionDataService
@@ -85,4 +86,22 @@ class CompetitionDataService
 
         return null;
     }
+
+    public function getCompetitionDataByRunnerId(Id $runnerId): array
+    {
+        $competitionDataArray = [];
+        $competitionDataData = $this->competitionDataRepository->getCompetitionDataByRunnerId($runnerId);
+
+        foreach ($competitionDataData as $singleCompetitionData) {
+            /** @var CompetitionData $competitionData */
+            $competitionData = $this->competitionDataFactory->getCompetitionData($singleCompetitionData);
+
+            if($competitionData !== null){
+                $competitionDataArray[$competitionData->getCompetitionDataId()->toString()] = $competitionData;
+            }
+        }
+
+        return $competitionDataArray;
+    }
+
 }

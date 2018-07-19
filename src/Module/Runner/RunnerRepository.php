@@ -29,17 +29,15 @@ class RunnerRepository extends DefaultRepository
 
     /**
      * @param Runner $runner
-     *
-     * @return bool
      */
-    public function runnerExists(Runner $runner): bool
+    public function runnerExists(Runner $runner)
     {
         $query = $this->database->getNewSelectQuery(self::TABLE);
         $query->where('surname', '=', $runner->getSurname()->getName());
         $query->andWhere('firstname', '=', $runner->getFirstname()->getName());
         $query->andWhere('birthYear', '=', $runner->getAgeGroup()->getBirthYear()->getBirthYear());
 
-        return empty($this->database->fetch($query)) === false;
+        return $this->database->fetch($query);
     }
 
     /**
@@ -49,7 +47,7 @@ class RunnerRepository extends DefaultRepository
      */
     public function saveRunner(Runner $runner): bool
     {
-        if ($this->runnerExists($runner) === true) {
+        if (empty($this->runnerExists($runner)) === false) {
             return true;
         }
 

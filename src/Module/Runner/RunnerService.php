@@ -3,6 +3,7 @@
 namespace Project\Module\Runner;
 
 use Project\Configuration;
+use Project\Module\CompetitionData\CompetitionDataService;
 use Project\Module\Database\Database;
 use Project\Module\GenericValueObject\Id;
 
@@ -53,7 +54,7 @@ class RunnerService
     /**
      * @return array
      */
-    public function getAllRunner(): array
+    public function getAllRunner(CompetitionDataService $competitionDataService): array
     {
         $runnerArray = [];
 
@@ -61,8 +62,10 @@ class RunnerService
 
         foreach ($runnerData as $singleRunnerData) {
             $runner = $this->runnerFactory->getRunnerByObject($singleRunnerData, $this->configuration);
-
             if ($runner !== null) {
+                $competitionDataList = $competitionDataService->getCompetitionDataByRunnerId($runner->getRunnerId());
+                $runner->setCompetitionDataList($competitionDataList);
+
                 $runnerArray[] = $runner;
             }
         }
@@ -158,11 +161,11 @@ class RunnerService
     /**
      * @return array
      */
-    public function findRuplicatesByLevenshtein(): array
+    public function findDuplicatesByLevenshtein(CompetitionDataService $competitionDataService): array
     {
         $duplicates = [];
 
-        $allRunner = $this->getAllRunner();
+        $allRunner = $this->getAllRunner($competitionDataService);
         $toCheckRunner = $allRunner;
         $duplicatedKeys = [];
 
@@ -195,11 +198,11 @@ class RunnerService
                 }
 
                 $firstnameDiff = levenshtein($runner->getFirstname()->getName(), $otherRunner->getFirstname()->getName());
-                if ($firstnameDiff === -1 || $firstnameDiff > 2) {
+                if ($firstnameDiff === -1 || $firstnameDiff > 3) {
                     continue;
                 }
 
-                if (($surnameDiff + $firstnameDiff) < 3) {
+                if (($surnameDiff + $firstnameDiff) < 4) {
                     $duplicatedKeys[] = $checkKey;
                     $testedRunner['duplicates'][] = $otherRunner;
                 }
@@ -211,5 +214,16 @@ class RunnerService
         }
 
         return $duplicates;
+    }
+
+    public function runnerExists(Runner $runner): ?Runner
+    {
+        $runnerData = $this->runnerRepository->runnerExists($runner);
+
+        if (empty($runnerData) === true) {
+            return null;
+        }
+
+        return $this->runnerFactory->getRunnerByObject($runnerData, $this->configuration);
     }
 }

@@ -27,12 +27,13 @@ class AdminController extends DefaultController
     {
         $competitionService = new CompetitionService($this->database);
         $runnerService = new RunnerService($this->database, $this->configuration);
+        $competitionDataService = new CompetitionDataService($this->database);
 
         $allCompetitionTypes = $competitionService->getAllCompetitionTypes();
 
         /** Duplicates */
         //$duplicatesByDefault = $runnerService->findRunnerDuplicates();
-        $duplicatesByLevenshtein = $runnerService->findRuplicatesByLevenshtein();
+        $duplicatesByLevenshtein = $runnerService->findDuplicatesByLevenshtein($competitionDataService);
 
         $this->viewRenderer->addViewConfig('allCompetitionTypes', $allCompetitionTypes);
         //$this->viewRenderer->addViewConfig('duplicatesByDefault', $duplicatesByDefault);
@@ -91,10 +92,21 @@ class AdminController extends DefaultController
             exit;
         }
 
+        /** @var Runner $singleRunner */
         foreach ($allRunner as $singleRunner) {
-            if ($runnerService->saveRunner($singleRunner) === false) {
-                $errorRunner[] = $singleRunner;
+            $runner = $runnerService->runnerExists($singleRunner);
+            if ($runner !== null) {
+                $runnerData[$singleRunner->getRunnerId()->toString()]['runnerId'] = $runner->getRunnerId()->toString();
+                $runnerData[$runner->getRunnerId()->toString()] = $runnerData[$singleRunner->getRunnerId()->toString()];
+                unset($runnerData[$singleRunner->getRunnerId()->toString()]);
+
+            } else {
+                if ($runnerService->saveRunner($singleRunner) === false) {
+                    $errorRunner[] = $singleRunner;
+                }
             }
+
+
         }
 
         $date = null;

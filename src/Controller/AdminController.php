@@ -4,6 +4,7 @@ declare (strict_types=1);
 namespace Project\Controller;
 
 use Project\Module\Competition\CompetitionService;
+use Project\Module\CompetitionData\CompetitionDataService;
 use Project\Module\GenericValueObject\Date;
 use Project\Module\Reader\ReaderService;
 use Project\Module\Runner\Runner;
@@ -63,31 +64,51 @@ class AdminController extends DefaultController
      * 1. Import runner data and create an array of Runner
      * 2. save all runner in repository
      * 3. save runner startnumber and other data in competition_runner to register them for the run
+     * @throws \InvalidArgumentException
      */
     public function uploadRunnerFileAction(): void
     {
-        $runnerService = new RunnerService($this->database, $this->configuration);
+        $errorRunner = [];
+        $competitionDataAfterUpload = null;
         $readerService = new ReaderService();
+        $runnerService = new RunnerService($this->database, $this->configuration);
+        $competitionService = new CompetitionService($this->database);
+        $competitionDataService = new CompetitionDataService($this->database);
 
-        $competitionDate = null;
+        $runnerData = $readerService->readRunnerFile($_FILES['runnerFile']['tmp_name']);
 
-        if (Tools::getValue('date') !== false) {
-            $competitionDate = Date::fromValue(Tools::getValue('date'));
-        }
-
-        $runner = $readerService->readRunnerFile($runnerService, $_FILES['runnerFile']['tmp_name']);
-
-        if (\count($runner) === 0) {
+        $allRunner = $runnerService->getAllRunnerByParameter($runnerData);
+        if (\count($allRunner) === 0) {
             $this->notificationService->setError('Die Teilnehmer konnten nicht importiert werden. Entweder ist es die falsche Kodierung, oder die Formatierung stimmt nicht überein, oder die Datei ist leer.');
             header('Location: ' . Tools::getRouteUrl('admin'));
             exit;
         }
 
-        foreach ($runner as $singleRunner) {
-            if ($runnerService->saveRunner($singleRunner) === true) {
-                continue;
+        foreach ($allRunner as $singleRunner) {
+            if ($runnerService->saveRunner($singleRunner) === false) {
+                $errorRunner[] = $singleRunner;
             }
         }
+
+        $date = null;
+        if (Tools::getValue('date') !== false) {
+            /** @var Date $date */
+            $date = Date::fromValue(Tools::getValue('date'));
+
+            $transponderData = $readerService->readTransponderFile();
+
+            $competitions = $competitionService->getCompetitionsByDate($date);
+            if (empty($competitions) === false) {
+                $competitionDataAfterUpload = $competitionDataService->getCompetitionDataAfterRunnerUpload($runnerData, $competitions, $transponderData);
+            }
+
+            if ($competitionDataAfterUpload !== null) {
+                foreach ($competitionDataAfterUpload as $competitionData) {
+                    $competitionDataService->saveCompetitionData($competitionData);
+                }
+            }
+        }
+
 
         $this->notificationService->setSuccess('Die Teilnehmer konnten erfolgreich importiert werden.');
         header('Location: ' . Tools::getRouteUrl('admin'));
@@ -95,6 +116,12 @@ class AdminController extends DefaultController
 
     }
 
+    /**
+     * @throws \InvalidArgumentException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
     public function findDuplicateNamesAction(): void
     {
         $duplicates = [];
@@ -133,6 +160,12 @@ class AdminController extends DefaultController
         $this->viewRenderer->renderTemplate();
     }
 
+    /**
+     * @throws \InvalidArgumentException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
     public function findDuplicatesByLevenshteinAction(): void
     {
         $duplicates = [];

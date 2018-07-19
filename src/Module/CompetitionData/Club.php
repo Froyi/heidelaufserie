@@ -1,7 +1,7 @@
 <?php
 declare (strict_types=1);
 
-namespace Project\Module\Runner;
+namespace Project\Module\CompetitionData;
 
 use Project\Module\GenericValueObject\DefaultGenericValueObject;
 

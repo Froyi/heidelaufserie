@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Project\Module\Runner;
+namespace Project\Module\CompetitionData;
 
 use Project\Module\GenericValueObject\DefaultGenericValueObject;
 
@@ -24,26 +24,26 @@ class StartNumber extends DefaultGenericValueObject
     }
 
     /**
-     * @param int $startNumber
+     * @param $startNumber
      *
      * @return StartNumber
      * @throws \InvalidArgumentException
      */
-    public static function fromValue(int $startNumber): self
+    public static function fromValue($startNumber): self
     {
         self::ensureStartNumberIsValid($startNumber);
 
-        return new self($startNumber);
+        return new self((int)$startNumber);
     }
 
     /**
-     * @param int $startNumber
+     * @param $startNumber
      *
      * @throws \InvalidArgumentException
      */
-    protected static function ensureStartNumberIsValid(int $startNumber): void
+    protected static function ensureStartNumberIsValid($startNumber): void
     {
-        if ($startNumber < 0) {
+        if ((\is_int($startNumber) === false && \is_string($startNumber) === false) || (int)$startNumber < 0) {
             throw new \InvalidArgumentException('This Number is not valid: ' . $startNumber);
         }
     }
@@ -61,7 +61,7 @@ class StartNumber extends DefaultGenericValueObject
      */
     public function __toString(): string
     {
-        return (string) $this->getStartNumber();
+        return (string)$this->getStartNumber();
     }
 
 

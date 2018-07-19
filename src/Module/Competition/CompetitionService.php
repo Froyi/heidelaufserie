@@ -67,6 +67,10 @@ class CompetitionService
             return $allCompetitionsArray;
         }
 
+        if (strpos($competitionData->startTime, $competitionData->date) === false) {
+            $competitionData->startTime = $competitionData->date . ' ' . $competitionData->startTime;
+        }
+
         $allCompetitionTypes = $this->getAllCompetitionTypes();
 
         if (empty($competitionData->createStandardCompetitions) === false) {
@@ -76,7 +80,7 @@ class CompetitionService
                 $competition = $this->competitionFactory->getCompetitionByObject($competitionData, $standardCompetitionType);
 
                 if ($competition !== null) {
-                    $allCompetitionsArray[] = $competition;
+                    $allCompetitionsArray[$competition->getCompetitionId()->toString()] = $competition;
                 }
             }
 
@@ -88,7 +92,7 @@ class CompetitionService
                 $competition = $this->competitionFactory->getCompetitionByObject($competitionData, $allCompetitionTypes[$competitionTypeId]);
 
                 if ($competition !== null) {
-                    $allCompetitionsArray[] = $competition;
+                    $allCompetitionsArray[$competition->getCompetitionId()->toString()] = $competition;
                 }
             }
 
@@ -129,7 +133,7 @@ class CompetitionService
             $competition = $this->competitionFactory->getCompetitionByObject($singleCompetitionData, $allCompetitionTypes[$singleCompetitionData->competitionTypeId]);
 
             if ($competition !== null) {
-                $competitionArray[] = $competition;
+                $competitionArray[$competition->getCompetitionId()->toString()] = $competition;
             }
         }
 

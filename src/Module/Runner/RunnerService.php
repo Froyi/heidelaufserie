@@ -4,7 +4,6 @@ namespace Project\Module\Runner;
 
 use Project\Configuration;
 use Project\Module\Database\Database;
-use Project\Module\GenericValueObject\Date;
 use Project\Module\GenericValueObject\Id;
 
 /**
@@ -85,6 +84,26 @@ class RunnerService
         }
 
         return $this->runnerFactory->getRunnerByObject($runnerData, $this->configuration);
+    }
+
+    /**
+     * @param array $parameter
+     *
+     * @return array
+     */
+    public function getAllRunnerByParameter(array $parameter): array
+    {
+        $runnerArray = [];
+
+        foreach ($parameter as $runnerData) {
+            $runner = $this->getRunnerByParameter($runnerData);
+
+            if ($runner !== null) {
+                $runnerArray[] = $runner;
+            }
+        }
+
+        return $runnerArray;
     }
 
     /**

@@ -55,7 +55,7 @@ class CompetitionFactory
             $title = Title::fromString($object->title);
 
             /** @var Datetime $startTime */
-            $startTime = Datetime::fromValue($object->date . ' ' . $object->startTime);
+            $startTime = Datetime::fromValue($object->startTime);
 
             return new Competition($competitionId, $competitionType, $title, $date, $startTime);
         } catch (\InvalidArgumentException $exception) {

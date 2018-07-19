@@ -2,8 +2,8 @@
 
 namespace Project\Module\Competition;
 
-use Project\Module\Database\Database;
 use Project\Module\Database\Query;
+use Project\Module\DefaultRepository;
 use Project\Module\GenericValueObject\Date;
 use Project\Module\GenericValueObject\Id;
 
@@ -11,26 +11,13 @@ use Project\Module\GenericValueObject\Id;
  * Class CompetitionRepository
  * @package Project\Module\Competition
  */
-class CompetitionRepository
+class CompetitionRepository extends DefaultRepository
 {
     /** @var string TABLE */
     protected const TABLE = 'competition';
 
     /** @var string TABLE_COMPETITION_TYPE */
     protected const TABLE_COMPETITION_TYPE = 'competitionType';
-
-    /** @var Database $database */
-    protected $database;
-
-    /**
-     * CompetitionRepository constructor.
-     *
-     * @param Database $database
-     */
-    public function __construct(Database $database)
-    {
-        $this->database = $database;
-    }
 
     /**
      * @return array

@@ -2,30 +2,17 @@
 
 namespace Project\Module\Runner;
 
-use Project\Module\Database\Database;
+use Project\Module\DefaultRepository;
 use Project\Module\GenericValueObject\Id;
 
 /**
  * Class RunnerRepository
  * @package Project\Module\Runner
  */
-class RunnerRepository
+class RunnerRepository extends DefaultRepository
 {
     /** @var string string RUNNER */
     protected const TABLE = 'runner';
-
-    /** @var Database $database */
-    protected $database;
-
-    /**
-     * RunnerRepository constructor.
-     *
-     * @param Database $database
-     */
-    public function __construct(Database $database)
-    {
-        $this->database = $database;
-    }
 
     /**
      * @param Id $runnerId

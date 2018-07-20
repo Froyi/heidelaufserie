@@ -1,25 +1,8 @@
 <div class="duplicates-page js-duplicates-page">
-    {% if duplicatesByDefault %}
-        <div class="runner-container">
-            {% for runnerDuplicate in duplicatesByDefault %}
-                <div class="runner-data"  style="background-color: green;">
-                    {{ runnerDuplicate.runner.getFirstname }} {{ runnerDuplicate.runner.getSurname }} {{ runnerDuplicate.runner.getAgeGroup.getBirthYear }}
-                </div>
-                {% for runner in runnerDuplicate.duplicates %}
-                    <div>
-                        {{ runner.getFirstname }} {{ runner.getSurname }} {{ runner.getAgeGroup.getBirthYear }}
-                    </div>
-                {% endfor %}
-            {% endfor %}
-        </div>
-    {% endif %}
-</div>
-
-<div class="duplicates-page js-duplicates-page">
     {% if duplicatesByLevenshtein %}
         <div class="runner-container">
             {% for runnerDuplicate in duplicatesByLevenshtein %}
-                <div class="runner-data"  style="background-color: green;">
+                <div class="runner-data">
                     {{ runnerDuplicate.runner.getFirstname }} {{ runnerDuplicate.runner.getSurname }} {{ runnerDuplicate.runner.getAgeGroup.getBirthYear }}
                 </div>
                 {% for runner in runnerDuplicate.duplicates %}

@@ -39,9 +39,6 @@ class CompetitionDataService
      */
     public function getCompetitionDataAfterRunnerUpload(array $uploadData, array $competitions, array $transponderData): array
     {
-        /**
-         * TODO: look, why here is nothing set
-         */
         $competitionDataArray = [];
 
         foreach ($uploadData as $competitionDataData) {
@@ -87,6 +84,11 @@ class CompetitionDataService
         return null;
     }
 
+    /**
+     * @param Id $runnerId
+     *
+     * @return array
+     */
     public function getCompetitionDataByRunnerId(Id $runnerId): array
     {
         $competitionDataArray = [];
@@ -96,12 +98,11 @@ class CompetitionDataService
             /** @var CompetitionData $competitionData */
             $competitionData = $this->competitionDataFactory->getCompetitionData($singleCompetitionData);
 
-            if($competitionData !== null){
+            if ($competitionData !== null) {
                 $competitionDataArray[$competitionData->getCompetitionDataId()->toString()] = $competitionData;
             }
         }
 
         return $competitionDataArray;
     }
-
 }

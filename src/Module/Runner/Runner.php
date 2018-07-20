@@ -1,8 +1,8 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace Project\Module\Runner;
 
-use Project\Module\GenericValueObject\Date;
 use Project\Module\GenericValueObject\Id;
 use Project\Module\GenericValueObject\Name;
 
@@ -89,7 +89,7 @@ class Runner
     /**
      * @param array $competitionDataList
      */
-    public function setCompetitionDataList(array $competitionDataList)
+    public function setCompetitionDataList(array $competitionDataList): void
     {
         $this->competitionDataList = $competitionDataList;
     }

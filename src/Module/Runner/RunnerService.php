@@ -52,9 +52,11 @@ class RunnerService
     }
 
     /**
+     * @param CompetitionDataService $competitionDataService
+     *
      * @return array
      */
-    public function getAllRunner(CompetitionDataService $competitionDataService): array
+    public function getAllRunner(CompetitionDataService $competitionDataService = null): array
     {
         $runnerArray = [];
 
@@ -63,8 +65,10 @@ class RunnerService
         foreach ($runnerData as $singleRunnerData) {
             $runner = $this->runnerFactory->getRunnerByObject($singleRunnerData, $this->configuration);
             if ($runner !== null) {
-                $competitionDataList = $competitionDataService->getCompetitionDataByRunnerId($runner->getRunnerId());
-                $runner->setCompetitionDataList($competitionDataList);
+                if ($competitionDataService !== null) {
+                    $competitionDataList = $competitionDataService->getCompetitionDataByRunnerId($runner->getRunnerId());
+                    $runner->setCompetitionDataList($competitionDataList);
+                }
 
                 $runnerArray[] = $runner;
             }
@@ -137,19 +141,23 @@ class RunnerService
                 if ($runner === $otherRunner) {
                     continue;
                 }
+
                 if ($runner->getSurname()->getName() === $otherRunner->getSurname()->getName() && $runner->getFirstname()->getName() === $otherRunner->getFirstname()->getName()) {
                     $testedRunner['duplicates'][] = $otherRunner;
                     continue;
                 }
+
                 if ($runner->getFirstname()->getName() === $otherRunner->getFirstname()->getName() && $runner->getAgeGroup()->getBirthYear()->getBirthYear() === $otherRunner->getAgeGroup()->getBirthYear()->getBirthYear()) {
                     $testedRunner['duplicates'][] = $otherRunner;
                     continue;
                 }
+
                 if ($runner->getSurname()->getName() === $otherRunner->getSurname()->getName() && $runner->getAgeGroup()->getBirthYear()->getBirthYear() === $otherRunner->getAgeGroup()->getBirthYear()->getBirthYear()) {
                     $testedRunner['duplicates'][] = $otherRunner;
                     continue;
                 }
             }
+
             if (empty($testedRunner['duplicates']) === false) {
                 $duplicates[] = $testedRunner;
             }
@@ -159,6 +167,8 @@ class RunnerService
     }
 
     /**
+     * @param CompetitionDataService $competitionDataService
+     *
      * @return array
      */
     public function findDuplicatesByLevenshtein(CompetitionDataService $competitionDataService): array
@@ -216,6 +226,11 @@ class RunnerService
         return $duplicates;
     }
 
+    /**
+     * @param Runner $runner
+     *
+     * @return null|Runner
+     */
     public function runnerExists(Runner $runner): ?Runner
     {
         $runnerData = $this->runnerRepository->runnerExists($runner);

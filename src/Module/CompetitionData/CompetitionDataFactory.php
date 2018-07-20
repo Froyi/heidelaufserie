@@ -57,6 +57,11 @@ class CompetitionDataFactory
         }
     }
 
+    /**
+     * @param $object
+     *
+     * @return null|CompetitionData
+     */
     public function getCompetitionData($object): ?CompetitionData
     {
         try {
@@ -79,6 +84,5 @@ class CompetitionDataFactory
         } catch (\InvalidArgumentException $exception) {
             return null;
         }
-
     }
 }

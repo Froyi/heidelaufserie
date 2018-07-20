@@ -32,11 +32,9 @@ class AdminController extends DefaultController
         $allCompetitionTypes = $competitionService->getAllCompetitionTypes();
 
         /** Duplicates */
-        //$duplicatesByDefault = $runnerService->findRunnerDuplicates();
         $duplicatesByLevenshtein = $runnerService->findDuplicatesByLevenshtein($competitionDataService);
 
         $this->viewRenderer->addViewConfig('allCompetitionTypes', $allCompetitionTypes);
-        //$this->viewRenderer->addViewConfig('duplicatesByDefault', $duplicatesByDefault);
         $this->viewRenderer->addViewConfig('duplicatesByLevenshtein', $duplicatesByLevenshtein);
         $this->viewRenderer->addViewConfig('page', 'admin');
 
@@ -78,14 +76,15 @@ class AdminController extends DefaultController
     {
         $errorRunner = [];
         $competitionDataAfterUpload = null;
+
         $readerService = new ReaderService();
         $runnerService = new RunnerService($this->database, $this->configuration);
         $competitionService = new CompetitionService($this->database);
         $competitionDataService = new CompetitionDataService($this->database);
 
         $runnerData = $readerService->readRunnerFile($_FILES['runnerFile']['tmp_name']);
-
         $allRunner = $runnerService->getAllRunnerByParameter($runnerData);
+
         if (\count($allRunner) === 0) {
             $this->notificationService->setError('Die Teilnehmer konnten nicht importiert werden. Entweder ist es die falsche Kodierung, oder die Formatierung stimmt nicht überein, oder die Datei ist leer.');
             header('Location: ' . Tools::getRouteUrl('admin'));
@@ -95,18 +94,17 @@ class AdminController extends DefaultController
         /** @var Runner $singleRunner */
         foreach ($allRunner as $singleRunner) {
             $runner = $runnerService->runnerExists($singleRunner);
+
             if ($runner !== null) {
                 $runnerData[$singleRunner->getRunnerId()->toString()]['runnerId'] = $runner->getRunnerId()->toString();
                 $runnerData[$runner->getRunnerId()->toString()] = $runnerData[$singleRunner->getRunnerId()->toString()];
-                unset($runnerData[$singleRunner->getRunnerId()->toString()]);
 
+                unset($runnerData[$singleRunner->getRunnerId()->toString()]);
             } else {
                 if ($runnerService->saveRunner($singleRunner) === false) {
                     $errorRunner[] = $singleRunner;
                 }
             }
-
-
         }
 
         $date = null;

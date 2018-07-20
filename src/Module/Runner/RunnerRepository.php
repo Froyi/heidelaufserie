@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace Project\Module\Runner;
 
@@ -29,6 +30,8 @@ class RunnerRepository extends DefaultRepository
 
     /**
      * @param Runner $runner
+     *
+     * @return mixed
      */
     public function runnerExists(Runner $runner)
     {

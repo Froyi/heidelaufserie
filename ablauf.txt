@@ -73,6 +73,11 @@ DB PREVIEWTIME
     - Hierbei muss der Zeitstempel höher sein, als der created Eintrag, um auch nur die neuen Einträge zu bekommen.
     - Diese werden dann hinter die aktuellen Einträge geschrieben.
 
+[Ausgabe Sprecher]
+    - Es sollen alle relevanten Daten zu dem jeweiligen Läufer ausgegeben werden:
+        - Name, Vorname, Verein, Altersklasse, Platzierung letztes Jahr
+        - Liste der ersten drei Frauen 10km und der ersten sechs Männer 15km
+
     ? Handling, wie die Daten ausgegeben werden und welche Daten ausgegeben werden.
         - Werden die "alten Daten" wieder gelöscht, oder kann man scrollen
         - Welche und wie viele Infos werden dem Sprecher ausgegeben (Übersichtlichkeit)

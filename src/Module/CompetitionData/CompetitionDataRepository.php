@@ -27,6 +27,7 @@ class CompetitionDataRepository extends DefaultRepository
             $query->insert('competitionId', $competitionData->getCompetitionId()->toString());
             $query->insert('runnerId', $competitionData->getRunnerId()->toString());
             $query->insert('startNumber', $competitionData->getStartNumber()->getStartNumber());
+            $query->insert('date', $competitionData->getDate()->toString());
             $query->insert('transponderNumber', $competitionData->getTransponderNumber()->getTransponderNumber());
             $query->insert('club', $competitionData->getClub()->getClub());
 

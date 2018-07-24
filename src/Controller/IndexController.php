@@ -22,11 +22,7 @@ class IndexController extends DefaultController
     {
         $runnerService = new RunnerService($this->database, $this->configuration);
 
-        $allRunner = $runnerService->getAllRunner();
-
-        $this->viewRenderer->addViewConfig('allRunner', $allRunner);
         $this->viewRenderer->addViewConfig('page', 'home');
-
         $this->viewRenderer->renderTemplate();
     }
 }

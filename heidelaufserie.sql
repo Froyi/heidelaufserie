@@ -43,7 +43,18 @@ CREATE TABLE `heidelaufserie`.`competitionData` (
 	`startNumber` INT(11) NOT NULL,
 	`transponderNumber` INT(11) NOT NULL,
  	`club` VARCHAR(200) NULL DEFAULT NULL,
+ 	`date` DATE NOT NULL,
 	PRIMARY KEY (`competitionDataId`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=MyISAM
+;
+
+CREATE TABLE `heidelaufserie`.`timemeasure` (
+  `timeMeasureId` VARCHAR(200) NOT NULL,
+  `transponderNumber` VARCHAR(200) NOT NULL,
+    `startTime` DATETIME NOT NULL,
+  PRIMARY KEY (`timeMeasureId`)
 )
 COLLATE='utf8_general_ci'
 ENGINE=MyISAM

@@ -3,6 +3,10 @@
 namespace Project\Controller;
 
 use Project\Configuration;
+use Project\Module\GenericValueObject\Id;
+use Project\Module\Runner\RunnerDuplicateService;
+use Project\Module\Runner\RunnerService;
+use Project\Utilities\Tools;
 use Project\View\JsonModel;
 
 /**
@@ -26,5 +30,28 @@ class JsonController extends DefaultController
         parent::__construct($configuration, $routeName);
 
         $this->jsonModel = new JsonModel();
+    }
+
+    /**
+     *
+     */
+    public function noDuplicateAction(): void
+    {
+        $runnerDuplicateService = new RunnerDuplicateService($this->database, $this->configuration);
+        $runnerService = new RunnerService($this->database, $this->configuration);
+
+        try {
+            $runnerId = Id::fromString(Tools::getValue('runnerId'));
+
+            $runnerWithDuplicates = $runnerDuplicateService->findDuplicateToRunnerByRunnerId($runnerId);
+
+            foreach ($runnerWithDuplicates as $runner) {
+                $runnerService->markRunnerAsProved($runner);
+            }
+        } catch (\InvalidArgumentException $exception) {
+            $this->jsonModel->send('error');
+        }
+
+        $this->jsonModel->send();
     }
 }

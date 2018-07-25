@@ -60,8 +60,21 @@ class RunnerRepository extends DefaultRepository
         $query->insert('firstname', $runner->getFirstname()->getName());
         $query->insert('birthYear', $runner->getAgeGroup()->getBirthYear()->getBirthYear());
         $query->insert('gender', $runner->getAgeGroup()->getGender()->getGender());
+        $query->insert('proved', $runner->isProved());
 
         return $this->database->execute($query);
+    }
+
+    public function updateRunner(Runner $runner): bool
+    {
+        $query = $this->database->getNewUpdateQuery(self::TABLE);
+        $query->set('runnerId', $runner->getRunnerId()->toString());
+        $query->set('surname', $runner->getSurname()->getName());
+        $query->set('firstname', $runner->getFirstname()->getName());
+        $query->set('birthYear', $runner->getAgeGroup()->getBirthYear()->getBirthYear());
+        $query->set('gender', $runner->getAgeGroup()->getGender()->getGender());
+        $query->set('proved', $runner->isProved());
+        $query->where('runnerId', '=', $runner->getRunnerId()->toString());
     }
 
     /**

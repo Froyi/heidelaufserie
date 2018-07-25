@@ -27,6 +27,9 @@ class Runner
      */
     protected $ageGroup;
 
+    /** @var bool $proved */
+    protected $proved;
+
     /** @var array $competitionDataList */
     protected $competitionDataList = [];
 
@@ -38,12 +41,13 @@ class Runner
      * @param Name $firstname
      * @param AgeGroup $ageGroup
      */
-    public function __construct(Id $runnerId, Name $surname, Name $firstname, AgeGroup $ageGroup)
+    public function __construct(Id $runnerId, Name $surname, Name $firstname, AgeGroup $ageGroup, bool $proved)
     {
         $this->runnerId = $runnerId;
         $this->surname = $surname;
         $this->firstname = $firstname;
         $this->ageGroup = $ageGroup;
+        $this->proved = $proved;
     }
 
     /**
@@ -92,5 +96,21 @@ class Runner
     public function setCompetitionDataList(array $competitionDataList): void
     {
         $this->competitionDataList = $competitionDataList;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isProved(): bool
+    {
+        return $this->proved;
+    }
+
+    /**
+     * @param bool $proved
+     */
+    public function setProved(bool $proved): void
+    {
+        $this->proved = $proved;
     }
 }

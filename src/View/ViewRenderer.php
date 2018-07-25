@@ -41,7 +41,7 @@ class ViewRenderer
         $this->templateName = $template['name'];
 
         $loaderFilesystem = new \Twig_Loader_Filesystem($this->templateDir->getTemplateDir());
-        $this->viewRenderer = new \Twig_Environment($loaderFilesystem);
+        $this->viewRenderer = new \Twig_Environment($loaderFilesystem, array('debug' => true));
 
         $this->addViewFilter();
 

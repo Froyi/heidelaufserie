@@ -1,16 +1,26 @@
 <div class="duplicates-page js-duplicates-page">
-    {% if duplicatesByLevenshtein %}
+    {% if duplicates %}
         <div class="runner-container">
-            {% for runnerDuplicate in duplicatesByLevenshtein %}
-                <div class="runner-data">
-                    {{ runnerDuplicate.runner.getFirstname }} {{ runnerDuplicate.runner.getSurname }} {{ runnerDuplicate.runner.getAgeGroup.getBirthYear }}
-                </div>
-                {% for runner in runnerDuplicate.duplicates %}
-                    <div>
-                        {{ runner.getFirstname }} {{ runner.getSurname }} {{ runner.getAgeGroup.getBirthYear }}
+            {% for runnerDuplicate in duplicates %}
+                <div class="runner-duplicate-container js-runner-duplicate-container">
+                    <div class="runner-data">
+                        {{ runnerDuplicate.runner.getFirstname }} {{ runnerDuplicate.runner.getSurname }} {{ runnerDuplicate.runner.getAgeGroup.getBirthYear }}
                     </div>
-                {% endfor %}
-                <a href="{{ route('') }}"></a>
+                    <button class="js-duplicat-original"
+                            data-original-runner-id="{{ runnerDuplicate.runner.getRunnerId }}">Dies ist der Originale
+                    </button>
+                    {% for runner in runnerDuplicate.duplicates %}
+                        <div>
+                            {{ runner.getFirstname }} {{ runner.getSurname }} {{ runner.getAgeGroup.getBirthYear }}
+                        </div>
+                        <button class="js-duplicat-original" data-original-runner-id="{{ runner.getRunnerId }}">Dies ist
+                            der Originale
+                        </button>
+                    {% endfor %}
+                    <button class="js-no-duplicat" data-original-runner-id="{{ runnerDuplicate.runner.getRunnerId }}">
+                        Keine Duplikate
+                    </button>
+                </div>
             {% endfor %}
         </div>
     {% endif %}

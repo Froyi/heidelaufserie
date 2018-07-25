@@ -8,6 +8,7 @@ use Project\Module\CompetitionData\CompetitionDataService;
 use Project\Module\GenericValueObject\Date;
 use Project\Module\Reader\ReaderService;
 use Project\Module\Runner\Runner;
+use Project\Module\Runner\RunnerDuplicateService;
 use Project\Module\Runner\RunnerService;
 use Project\Utilities\Tools;
 
@@ -26,16 +27,10 @@ class AdminController extends DefaultController
     public function adminAction(): void
     {
         $competitionService = new CompetitionService($this->database);
-        $runnerService = new RunnerService($this->database, $this->configuration);
-        $competitionDataService = new CompetitionDataService($this->database);
 
         $allCompetitionTypes = $competitionService->getAllCompetitionTypes();
 
-        /** Duplicates */
-        $duplicatesByLevenshtein = $runnerService->findDuplicatesByLevenshtein($competitionDataService);
-
         $this->viewRenderer->addViewConfig('allCompetitionTypes', $allCompetitionTypes);
-        $this->viewRenderer->addViewConfig('duplicatesByLevenshtein', $duplicatesByLevenshtein);
         $this->viewRenderer->addViewConfig('page', 'admin');
 
         $this->viewRenderer->renderTemplate();
@@ -64,6 +59,18 @@ class AdminController extends DefaultController
         $this->notificationService->setSuccess('Die Wettbewerbe wurden erfolgreich erstellt.');
         header('Location: ' . Tools::getRouteUrl('admin'));
         exit;
+    }
+
+    public function findDuplicateNamesAction(): void
+    {
+        $runnerDuplicateService = new RunnerDuplicateService($this->database, $this->configuration);
+
+        $duplicates = $runnerDuplicateService->findNotProvedDuplicates();
+
+        $this->viewRenderer->addViewConfig('duplicates', $duplicates);
+        $this->viewRenderer->addViewConfig('page', 'duplicates');
+
+        $this->viewRenderer->renderTemplate();
     }
 
     /**

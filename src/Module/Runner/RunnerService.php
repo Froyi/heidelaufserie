@@ -56,7 +56,7 @@ class RunnerService
      *
      * @return array
      */
-    public function getAllRunner(CompetitionDataService $competitionDataService = null): array
+    public function getAllCompleteRunner(CompetitionDataService $competitionDataService = null): array
     {
         $runnerArray = [];
 
@@ -124,106 +124,15 @@ class RunnerService
     }
 
     /**
-     * @return array
-     */
-    public function findRunnerDuplicates(): array
-    {
-        $duplicates = [];
-
-        $allRunner = $this->getAllRunner();
-        $toCheckRunner = $allRunner;
-        /** @var Runner $runner */
-        foreach ($allRunner as $runner) {
-            $testedRunner['runner'] = $runner;
-            $testedRunner['duplicates'] = [];
-            /** @var Runner $otherRunner */
-            foreach ($toCheckRunner as $otherRunner) {
-                if ($runner === $otherRunner) {
-                    continue;
-                }
-
-                if ($runner->getSurname()->getName() === $otherRunner->getSurname()->getName() && $runner->getFirstname()->getName() === $otherRunner->getFirstname()->getName()) {
-                    $testedRunner['duplicates'][] = $otherRunner;
-                    continue;
-                }
-
-                if ($runner->getFirstname()->getName() === $otherRunner->getFirstname()->getName() && $runner->getAgeGroup()->getBirthYear()->getBirthYear() === $otherRunner->getAgeGroup()->getBirthYear()->getBirthYear()) {
-                    $testedRunner['duplicates'][] = $otherRunner;
-                    continue;
-                }
-
-                if ($runner->getSurname()->getName() === $otherRunner->getSurname()->getName() && $runner->getAgeGroup()->getBirthYear()->getBirthYear() === $otherRunner->getAgeGroup()->getBirthYear()->getBirthYear()) {
-                    $testedRunner['duplicates'][] = $otherRunner;
-                    continue;
-                }
-            }
-
-            if (empty($testedRunner['duplicates']) === false) {
-                $duplicates[] = $testedRunner;
-            }
-        }
-
-        return $duplicates;
-    }
-
-    /**
-     * @param CompetitionDataService $competitionDataService
+     * @param Runner $runner
      *
-     * @return array
+     * @return bool
      */
-    public function findDuplicatesByLevenshtein(CompetitionDataService $competitionDataService): array
+    public function markRunnerAsProved(Runner $runner): bool
     {
-        $duplicates = [];
+        $runner->setProved(true);
 
-        $allRunner = $this->getAllRunner($competitionDataService);
-        $toCheckRunner = $allRunner;
-        $duplicatedKeys = [];
-
-        /** @var Runner $runner */
-        foreach ($allRunner as $key => $runner) {
-            if (\in_array($key, $duplicatedKeys, true)) {
-                continue;
-            }
-
-            $testedRunner['runner'] = $runner;
-            $testedRunner['duplicates'] = [];
-
-            /** @var Runner $otherRunner */
-            foreach ($toCheckRunner as $checkKey => $otherRunner) {
-                if ($runner === $otherRunner) {
-                    continue;
-                }
-
-                if ($runner->getAgeGroup()->getGender()->getGender() !== $otherRunner->getAgeGroup()->getGender()->getGender()) {
-                    continue;
-                }
-
-                if (abs($runner->getAgeGroup()->getBirthYear()->getBirthYear() - $otherRunner->getAgeGroup()->getBirthYear()->getBirthYear()) > 2) {
-                    continue;
-                }
-
-                $surnameDiff = levenshtein($runner->getSurname()->getName(), $otherRunner->getSurname()->getName());
-                if ($surnameDiff === -1 || $surnameDiff > 2) {
-                    continue;
-                }
-
-                $firstnameDiff = levenshtein($runner->getFirstname()->getName(), $otherRunner->getFirstname()->getName());
-                if ($firstnameDiff === -1 || $firstnameDiff > 3) {
-                    continue;
-                }
-
-                if (($surnameDiff + $firstnameDiff) < 4) {
-                    $duplicatedKeys[] = $checkKey;
-                    $testedRunner['duplicates'][] = $otherRunner;
-                }
-            }
-
-            if (empty($testedRunner['duplicates']) === false) {
-                $duplicates[] = $testedRunner;
-            }
-        }
-
-        return $duplicates;
+        return $this->saveRunner($runner);
     }
 
     /**

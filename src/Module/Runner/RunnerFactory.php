@@ -30,8 +30,9 @@ class RunnerFactory
             $birthYear = BirthYear::fromValue((int)$object->birthYear);
             $gender = Gender::fromString($object->gender);
             $ageGroup = AgeGroup::fromValues($birthYear, $gender, $configuration);
+            $proved = (bool)$object->proved;
 
-            return new Runner($runnerId, $surname, $firstname, $ageGroup);
+            return new Runner($runnerId, $surname, $firstname, $ageGroup, $proved);
         } catch (\InvalidArgumentException $exception) {
             return null;
         }

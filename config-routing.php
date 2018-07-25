@@ -25,9 +25,9 @@ return [
             'controller' => 'AdminController',
             'action' => 'findDuplicateNamesAction',
         ],
-        'findDuplicatesByLevenshtein' => [
-            'controller' => 'AdminController',
-            'action' => 'findDuplicatesByLevenshteinAction',
+        'noDuplicate' => [
+            'controller' => 'JsonController',
+            'action' => 'noDuplicateAction',
         ],
     ],
 ];

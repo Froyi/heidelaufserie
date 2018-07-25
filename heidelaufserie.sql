@@ -6,6 +6,7 @@ CREATE TABLE `heidelaufserie`.`runner` (
 	`firstname` VARCHAR(200) NOT NULL,
 	`birthYear` INT(4) NOT NULL,
 	`gender` ENUM('w','m') NOT NULL,
+	`proved` TINYINT(1) NOT NULL DEFAULT '0',
 	PRIMARY KEY (`runnerId`)
 )
 COLLATE='utf8_general_ci'

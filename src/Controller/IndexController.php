@@ -21,8 +21,9 @@ class IndexController extends DefaultController
     public function indexAction(): void
     {
         $runnerService = new RunnerService($this->database, $this->configuration);
-
+        $runner = $runnerService->getAllCompleteRunner();
         $this->viewRenderer->addViewConfig('page', 'home');
+        $this->viewRenderer->addViewConfig('allRunner', $runner);
         $this->viewRenderer->renderTemplate();
     }
 }

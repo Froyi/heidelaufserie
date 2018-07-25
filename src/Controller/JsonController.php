@@ -23,7 +23,7 @@ class JsonController extends DefaultController
      * JsonController constructor.
      *
      * @param Configuration $configuration
-     * @param string        $routeName
+     * @param string $routeName
      */
     public function __construct(Configuration $configuration, string $routeName)
     {
@@ -42,10 +42,13 @@ class JsonController extends DefaultController
 
         try {
             $runnerId = Id::fromString(Tools::getValue('runnerId'));
+            $runner = $runnerService->getRunnerByRunnerId($runnerId);
 
-            $runnerWithDuplicates = $runnerDuplicateService->findDuplicateToRunnerByRunnerId($runnerId);
+            $duplicates = $runnerDuplicateService->findDuplicateToRunner($runner);
 
-            foreach ($runnerWithDuplicates as $runner) {
+            $runnerService->markRunnerAsProved($runner);
+
+            foreach ($duplicates as $runner) {
                 $runnerService->markRunnerAsProved($runner);
             }
         } catch (\InvalidArgumentException $exception) {

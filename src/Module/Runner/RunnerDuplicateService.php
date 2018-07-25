@@ -142,9 +142,12 @@ class RunnerDuplicateService
                 }
             }
 
-            if (empty($testedRunner['duplicates']) === false) {
-                $duplicates[] = $testedRunner;
+            if (empty($testedRunner['duplicates']) === true) {
+                $this->runnerService->markRunnerAsProved($runner);
+                continue;
             }
+            
+            $duplicates[] = $testedRunner;
         }
 
         return $duplicates;

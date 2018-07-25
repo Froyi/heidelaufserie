@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Project\Module\Runner;
 
 use Project\Module\CompetitionData\Club;
+use Project\Module\CompetitionData\CompetitionData;
 use Project\Module\GenericValueObject\Id;
 use Project\Module\GenericValueObject\Name;
 
@@ -101,7 +102,10 @@ class Runner
 
     public function getActualClub(): Club
     {
-        return $this->competitionDataList['club'];
+        $competitionDataList = $this->competitionDataList;
+        usort($competitionDataList, [$this, 'sortByDate']);
+        $competitionData = reset($competitionDataList);
+        return $competitionData->getClub();
     }
 
     /**
@@ -118,5 +122,13 @@ class Runner
     public function setProved(bool $proved): void
     {
         $this->proved = $proved;
+    }
+
+    public function sortByDate(CompetitionData $competitionData1, CompetitionData $competitionData2)
+    {
+        if ($competitionData1->getDate()->toString() === $competitionData2->getDate()->toString()) {
+            return 0;
+        }
+        return ($competitionData1->getDate()->toString() < $competitionData2->getDate()->toString()) ? -1 : 1;
     }
 }

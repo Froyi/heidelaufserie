@@ -4,7 +4,7 @@
             {% for runnerDuplicate in duplicates %}
                 <div class="runner-duplicate-container js-runner-duplicate-container">
                     <div class="runner-data">
-                        {{ runnerDuplicate.runner.getFirstname }} {{ runnerDuplicate.runner.getSurname }} {{ runnerDuplicate.runner.getAgeGroup.getBirthYear }}
+                        {{ runnerDuplicate.runner.getFirstname }} {{ runnerDuplicate.runner.getSurname }} {{ runnerDuplicate.runner.getAgeGroup.getBirthYear }} {{ runnerDuplicate.runner.getActualClub }}
                     </div>
                     <button class="js-duplicat-original"
                             data-original-runner-id="{{ runnerDuplicate.runner.getRunnerId }}">Dies ist der Originale

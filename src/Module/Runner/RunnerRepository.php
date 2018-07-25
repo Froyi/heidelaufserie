@@ -75,6 +75,8 @@ class RunnerRepository extends DefaultRepository
         $query->set('gender', $runner->getAgeGroup()->getGender()->getGender());
         $query->set('proved', $runner->isProved());
         $query->where('runnerId', '=', $runner->getRunnerId()->toString());
+
+        return $this->database->execute($query);
     }
 
     /**

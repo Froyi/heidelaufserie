@@ -132,7 +132,7 @@ class RunnerService
     {
         $runner->setProved(true);
 
-        return $this->saveRunner($runner);
+        return $this->runnerRepository->updateRunner($runner);
     }
 
     /**

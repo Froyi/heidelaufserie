@@ -11,7 +11,7 @@
                     </button>
                     {% for runner in runnerDuplicate.duplicates %}
                         <div>
-                            {{ runner.getFirstname }} {{ runner.getSurname }} {{ runner.getAgeGroup.getBirthYear }}
+                            {{ runner.getFirstname }} {{ runner.getSurname }} {{ runner.getAgeGroup.getBirthYear }} {{ runner.getActualClub }}
                         </div>
                         <button class="js-duplicat-original" data-original-runner-id="{{ runner.getRunnerId }}">Dies ist
                             der Originale

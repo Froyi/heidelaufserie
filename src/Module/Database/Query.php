@@ -95,6 +95,10 @@ class Query
      */
     public function where(string $entity, string $operator, $value): void
     {
+        if (is_bool($value) === true){
+            $value = (int)$value;
+        }
+
         if (\is_string($value) === true) {
             $value = '\'' . $value . '\'';
         }
@@ -109,6 +113,10 @@ class Query
      */
     public function andWhere(string $entity, string $operator, $value): void
     {
+        if (is_bool($value) === true){
+            $value = (int)$value;
+        }
+
         if (\is_string($value) === true) {
             $value = '\'' . $value . '\'';
         }
@@ -123,6 +131,10 @@ class Query
      */
     public function orWhere(string $entity, string $operator, $value): void
     {
+        if (is_bool($value) === true){
+            $value = (int)$value;
+        }
+
         if (\is_string($value) === true) {
             $value = '\'' . $value . '\'';
         }
@@ -138,6 +150,10 @@ class Query
      */
     public function andOrWhere(string $entity, string $operator, $value, bool $asParam = false): void
     {
+        if (is_bool($value) === true){
+            $value = (int)$value;
+        }
+
         if (\is_string($value) === true && $asParam === false) {
             $value = '\'' . $value . '\'';
         }
@@ -151,6 +167,10 @@ class Query
      */
     public function set(string $entity, $value = null): void
     {
+        if (is_bool($value) === true){
+            $value = (int)$value;
+        }
+
         if ($value !== null && \is_string($value) === true) {
             $value = '\'' . $value . '\'';
         }
@@ -172,6 +192,9 @@ class Query
      */
     public function insert(string $entity, $value = null): void
     {
+        if (is_bool($value) === true){
+            $value = (int)$value;
+        }
         if (!isset($this->insert[$entity])) {
             $this->insert[$entity] = $value;
         }

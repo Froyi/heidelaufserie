@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Project\Module\Runner;
 
 use Project\Configuration;
+use Project\Module\CompetitionData\CompetitionDataService;
 use Project\Module\Database\Database;
 use Project\Module\GenericValueObject\Id;
 
@@ -27,12 +28,12 @@ class RunnerDuplicateService
      * @param Database $database
      * @param Configuration $configuration
      */
-    public function __construct(Database $database, Configuration $configuration)
+    public function __construct(Database $database, Configuration $configuration, CompetitionDataService $competitionDataService = null)
     {
         $this->runnerService = new RunnerService($database, $configuration);
 
         // generate all runner
-        $this->allRunner = $this->runnerService->getAllCompleteRunner();
+        $this->allRunner = $this->runnerService->getAllCompleteRunner($competitionDataService);
 
         // generate only not proven runner
         $this->notProvedRunner = $this->getAllNotProvedRunnerByRunnerList($this->allRunner);

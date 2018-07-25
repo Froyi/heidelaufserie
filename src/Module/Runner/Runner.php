@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Project\Module\Runner;
 
+use Project\Module\CompetitionData\Club;
 use Project\Module\GenericValueObject\Id;
 use Project\Module\GenericValueObject\Name;
 
@@ -96,6 +97,11 @@ class Runner
     public function setCompetitionDataList(array $competitionDataList): void
     {
         $this->competitionDataList = $competitionDataList;
+    }
+
+    public function getActualClub(): Club
+    {
+        return $this->competitionDataList['club'];
     }
 
     /**

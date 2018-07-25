@@ -63,7 +63,8 @@ class AdminController extends DefaultController
 
     public function findDuplicateNamesAction(): void
     {
-        $runnerDuplicateService = new RunnerDuplicateService($this->database, $this->configuration);
+        $competitionDataService = new CompetitionDataService($this->database);
+        $runnerDuplicateService = new RunnerDuplicateService($this->database, $this->configuration, $competitionDataService);
 
         $duplicates = $runnerDuplicateService->findNotProvedDuplicates();
 

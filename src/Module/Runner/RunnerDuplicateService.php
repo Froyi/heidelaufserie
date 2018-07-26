@@ -27,6 +27,7 @@ class RunnerDuplicateService
      *
      * @param Database $database
      * @param Configuration $configuration
+     * @param CompetitionDataService|null $competitionDataService
      */
     public function __construct(Database $database, Configuration $configuration, CompetitionDataService $competitionDataService = null)
     {
@@ -118,26 +119,19 @@ class RunnerDuplicateService
 
         $toCheckRunner = $this->allRunner;
 
-        $duplicatedKeys = [];
-
         $runnerArray = $this->notProvedRunner;
         if ($notProved === false) {
             $runnerArray = $this->allRunner;
         }
 
         /** @var Runner $runner */
-        foreach ($runnerArray as $key => $runner) {
-            if (\in_array($key, $duplicatedKeys, true)) {
-                continue;
-            }
-
+        foreach ($runnerArray as $runner) {
             $testedRunner['runner'] = $runner;
             $testedRunner['duplicates'] = [];
 
             /** @var Runner $otherRunner */
-            foreach ($toCheckRunner as $checkKey => $otherRunner) {
+            foreach ($toCheckRunner as $otherRunner) {
                 if ($this->isDuplicate($runner, $otherRunner) === true) {
-                    $duplicatedKeys[] = $checkKey;
                     $testedRunner['duplicates'][] = $otherRunner;
                 }
             }
@@ -146,7 +140,7 @@ class RunnerDuplicateService
                 $this->runnerService->markRunnerAsProved($runner);
                 continue;
             }
-            
+
             $duplicates[] = $testedRunner;
         }
 

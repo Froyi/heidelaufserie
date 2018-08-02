@@ -2,8 +2,48 @@ function hideNotifications() {
     $('.js-notification-container').hide();
 }
 
+function refreshSpeakerData() {
+    $.ajax({
+        type: 'POST',
+        url: 'index.php?route=refreshSpeakerData',
+        dataType: 'json',
+        success: function (response) {
+            if (response.status === 'success') {
+                $('.new-runner').remove();
+                $(response.view).prependTo('.js-speaker-runner-container').hide().slideDown();
+            }
+        },
+        complete: function () {
+            refreshSpeakerData();
+        }
+    })
+}
+
+function generateTimeMeasureData() {
+    $.ajax({
+        type: 'POST',
+        url: 'index.php?route=generateTimeMeasureData',
+        dataType: 'json',
+        success: function (response) {
+            if (response.status === 'success') {
+                console.log(response.timeMeasure);
+            }
+        }
+    })
+}
+
 $(document).ready(function () {
     window.setTimeout(hideNotifications, 5000); // 5 seconds
+
+    if ($('.js-speaker-page').length > 0) {
+        refreshSpeakerData();
+    }
+
+
+    if ($('.js-timemeasure-page').length > 0) {
+        window.setInterval(generateTimeMeasureData, 1000);
+    }
+
 });
 
 $(document).on('click', '.js-notification', function () {

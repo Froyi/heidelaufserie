@@ -132,6 +132,18 @@ class Database
     }
 
     /**
+     * @param string $query
+     *
+     * @return array
+     */
+    public function fetchAllQueryString(string $query): array
+    {
+        $sql = $this->connection->query($query);
+
+        return $sql->fetchAll(\PDO::FETCH_OBJ);
+    }
+
+    /**
      * @param Query $query
      *
      * @return mixed

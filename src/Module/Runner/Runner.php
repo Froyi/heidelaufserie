@@ -5,6 +5,7 @@ namespace Project\Module\Runner;
 
 use Project\Module\CompetitionData\Club;
 use Project\Module\CompetitionData\CompetitionData;
+use Project\Module\DefaultModel;
 use Project\Module\GenericValueObject\Id;
 use Project\Module\GenericValueObject\Name;
 
@@ -12,7 +13,7 @@ use Project\Module\GenericValueObject\Name;
  * Class Runner
  * @package     Project\Module\Runner
  */
-class Runner
+class Runner extends DefaultModel
 {
     /** @var Id $runnerId */
     protected $runnerId;
@@ -45,6 +46,8 @@ class Runner
      */
     public function __construct(Id $runnerId, Name $surname, Name $firstname, AgeGroup $ageGroup, bool $proved)
     {
+        parent::__construct();
+
         $this->runnerId = $runnerId;
         $this->surname = $surname;
         $this->firstname = $firstname;

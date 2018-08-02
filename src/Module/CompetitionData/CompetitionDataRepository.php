@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Project\Module\CompetitionData;
 
 use Project\Module\DefaultRepository;
+use Project\Module\GenericValueObject\Date;
 use Project\Module\GenericValueObject\Id;
 
 /**
@@ -29,7 +30,9 @@ class CompetitionDataRepository extends DefaultRepository
             $query->insert('startNumber', $competitionData->getStartNumber()->getStartNumber());
             $query->insert('date', $competitionData->getDate()->toString());
             $query->insert('transponderNumber', $competitionData->getTransponderNumber()->getTransponderNumber());
-            $query->insert('club', $competitionData->getClub()->getClub());
+            if ($competitionData->getClub() !== null) {
+                $query->insert('club', $competitionData->getClub()->getClub());
+            }
 
             return $this->database->execute($query);
         }
@@ -61,5 +64,31 @@ class CompetitionDataRepository extends DefaultRepository
         $query->where('runnerId', '=', $runnerId->toString());
 
         return $this->database->fetchAll($query);
+    }
+
+    /**
+     * @param Date $date
+     *
+     * @return array
+     */
+    public function getCompetitionDataByDate(Date $date): array
+    {
+        $query = $this->database->getNewSelectQuery(self::TABLE);
+        $query->where('date', '=', $date->toString());
+
+        return $this->database->fetchAll($query);
+    }
+
+    /**
+     * @param Date $date
+     *
+     * @return array
+     */
+    public function getSpeakerCompetitionDataByCompetitionDate(Date $date): array
+    {
+        $query = /** @lang text */
+            'SELECT * FROM competitionData, timeMeasure WHERE competitionData.transponderNumber = timeMeasure.transponderNumber AND timeMeasure.shown = 0 AND competitionData.date = "' . $date->toString() . '"';
+
+        return $this->database->fetchAllQueryString($query);
     }
 }

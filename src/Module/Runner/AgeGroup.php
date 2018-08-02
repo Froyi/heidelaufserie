@@ -90,14 +90,14 @@ class AgeGroup extends DefaultGenericValueObject
      */
     protected static function generateAgeGroup(BirthYear $birthYear, Gender $gender, Configuration $configuration): string
     {
-        $ageGroup = $gender->getGender();
+        $ageGroup = strtoupper($gender->getGender());
 
         $age = $birthYear->getAge();
 
         /** @var array $ageTable */
         $ageTable = $configuration->getEntryByName('ageTable');
         foreach ($ageTable as $tableAgeName => $ageEntry) {
-            if ($age > $ageEntry['min'] && $age < $ageEntry['max']) {
+            if ($age >= $ageEntry['min'] && $age <= $ageEntry['max']) {
                 $ageGroup .= $tableAgeName;
             }
         }

@@ -26,4 +26,14 @@ class IndexController extends DefaultController
         $this->viewRenderer->addViewConfig('allRunner', $runner);
         $this->viewRenderer->renderTemplate();
     }
+
+    public function speakerAction(): void
+    {
+        $this->showStandardPage('speaker');
+    }
+
+    public function generateTimeMeasurePageAction(): void
+    {
+        $this->showStandardPage('timemeasure');
+    }
 }

@@ -386,25 +386,29 @@ template {
   display: none;
 }
 @font-face {
-  font-family: 'soria';
-  src: url('../font/soria-font.ttf');
+  font-family: 'nirmalaRegular';
+  src: url('../font/Nirmala.ttf');
+}
+@font-face {
+  font-family: 'nirmalaSemilight';
+  src: url('../font/NirmalaS.ttf');
+}
+@font-face {
+  font-family: 'nirmalaBold';
+  src: url('../font/NirmalaB.ttf');
 }
 * {
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
-  font-size: 1em;
-  color: #000000;
-}
-body {
-  /*background: url('@{basic-path}img/bg.jpg') @color-1 no-repeat;
-    background-attachment: fixed;*/
+  font-family: 'nirmalaRegular', sans-serif;
+  font-size: 20px;
+  color: #707070;
 }
 a {
   text-decoration: none;
 }
 .content-main-wrapper {
-  width: 1920px;
+  width: 1024px;
   position: relative;
   margin: 0 auto;
   padding: 0 20px;
@@ -420,7 +424,7 @@ a {
   height: 50px;
   margin-left: -31px;
   margin-top: -10px;
-  background-color: #000000;
+  background-color: #707070;
   z-index: 2;
   position: relative;
 }
@@ -467,10 +471,73 @@ a {
 }
 .notification-container .notification.alert,
 .notification-container .notification.error {
-  background-color: rgba(205, 43, 43, 0.9);
+  background-color: rgba(188, 212, 186, 0.9);
 }
 .notification-container .notification.info,
 .notification-container .notification.success {
-  background-color: rgba(93, 233, 107, 0.9);
+  background-color: rgba(188, 212, 186, 0.9);
+}
+.speaker-page {
+  padding: 15px 50px;
+}
+.speaker-page .runner-speaker {
+  width: 100%;
+  height: 65px;
+  padding-top: 15px;
+  display: flex;
+  justify-content: flex-start;
+  border-bottom: 1px solid #707070;
+  position: relative;
+}
+.speaker-page .runner-speaker.female-runner .runner-name,
+.speaker-page .runner-speaker.female-runner .runner-age-group,
+.speaker-page .runner-speaker.female-runner .runner-club {
+  color: #D53D3D;
+}
+.speaker-page .runner-speaker.last-round {
+  background-color: rgba(188, 212, 186, 0.53);
+}
+.speaker-page .runner-speaker.more-rounds {
+  background-color: rgba(255, 223, 97, 0.53);
+}
+.speaker-page .runner-speaker:last-of-type {
+  border-bottom: none;
+}
+.speaker-page .runner-speaker .new-runner {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-bottom: 10px solid #BCD4BA;
+}
+.speaker-page .runner-speaker .startnumber {
+  font-family: 'nirmalaSemilight', sans-serif;
+  font-size: 49px;
+  width: 100px;
+  margin-right: 40px;
+  margin-left: 15px;
+  text-align: center;
+}
+.speaker-page .runner-speaker .runner-data {
+  margin-right: 40px;
+  width: 300px;
+}
+.speaker-page .runner-speaker .runner-data .runner-name {
+  font-family: 'nirmalaBold', sans-serif;
+  margin-right: 40px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  height: 26px;
+}
+.speaker-page .rounds {
+  display: flex;
+  justify-content: space-between;
+}
+.speaker-page .rounds .round-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 110px;
 }
 /*# sourceMappingURL=main.css.map */

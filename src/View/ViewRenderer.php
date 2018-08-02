@@ -64,6 +64,18 @@ class ViewRenderer
     }
 
     /**
+     * @param string $template
+     * @return string
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function renderJsonView(string $template = self::DEFAULT_PAGE_TEMPLATE): string
+    {
+        return $this->viewRenderer->render($template, $this->config);
+    }
+
+    /**
      * Add filter
      */
     protected function addViewFilter(): void
@@ -91,6 +103,12 @@ class ViewRenderer
         });
 
         $this->viewRenderer->addFunction($shortenFilter);
+
+        $convertDiffFilter = new \Twig_SimpleFilter('convertDiff', function ($integer) {
+            return Converter::convertDiff($integer);
+        });
+
+        $this->viewRenderer->addFilter($convertDiffFilter);
     }
 
     /**

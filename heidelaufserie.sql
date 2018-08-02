@@ -6,7 +6,7 @@ CREATE TABLE `heidelaufserie`.`runner` (
 	`firstname` VARCHAR(200) NOT NULL,
 	`birthYear` INT(4) NOT NULL,
 	`gender` ENUM('w','m') NOT NULL,
-	`proved` TINYINT(1) NOT NULL DEFAULT '0',
+	`proved` TINYINT(1) NOT NULL DEFAULT 0,
 	PRIMARY KEY (`runnerId`)
 )
 COLLATE='utf8_general_ci'
@@ -30,7 +30,7 @@ CREATE TABLE `heidelaufserie`.`competitionType` (
 	`competitionName` VARCHAR(200) NOT NULL,
 	`distance` INT(6) NOT NULL,
 	`rounds` INT(3) NOT NULL,
-	`standardSet` TINYINT(1) NOT NULL DEFAULT '0',
+	`standardSet` TINYINT(1) NOT NULL DEFAULT 0,
 	PRIMARY KEY (`competitionTypeId`)
 )
 COLLATE='utf8_general_ci'
@@ -52,10 +52,11 @@ ENGINE=MyISAM
 ;
 
 CREATE TABLE `heidelaufserie`.`timemeasure` (
-  `timeMeasureId` VARCHAR(200) NOT NULL,
-  `transponderNumber` VARCHAR(200) NOT NULL,
-    `startTime` DATETIME NOT NULL,
-  PRIMARY KEY (`timeMeasureId`)
+`timeMeasureId` VARCHAR(200) NOT NULL,
+`transponderNumber` VARCHAR(200) NOT NULL,
+`timestamp` DATETIME NOT NULL,
+`shown` TINYINT(1) NOT NULL DEFAULT 0,
+PRIMARY KEY (`timeMeasureId`)
 )
 COLLATE='utf8_general_ci'
 ENGINE=MyISAM

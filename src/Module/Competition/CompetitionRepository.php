@@ -77,6 +77,19 @@ class CompetitionRepository extends DefaultRepository
     }
 
     /**
+     * @param int $competitionTypeId
+     *
+     * @return mixed
+     */
+    public function getCompetitionTypeByCompetitionTypeId(int $competitionTypeId)
+    {
+        $query = $this->database->getNewSelectQuery(self::TABLE_COMPETITION_TYPE);
+        $query->where('competitionTypeId', '=', $competitionTypeId);
+
+        return $this->database->fetch($query);
+    }
+
+    /**
      * @param Date $date
      *
      * @return array

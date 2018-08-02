@@ -87,4 +87,16 @@ class Datetime extends AbstractDatetime implements DatetimeInterface
     {
         return ($this->datetime < strtotime('-' . $days . ' days'));
     }
+
+    /**
+     * @param DatetimeInterface $datetime
+     *
+     * @return \DateTime|false|int
+     */
+    public function getDifference(DatetimeInterface $datetime)
+    {
+        $date = strtotime($datetime->toString());
+
+        return $this->datetime - $date;
+    }
 }

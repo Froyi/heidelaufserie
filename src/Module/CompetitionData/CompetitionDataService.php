@@ -4,8 +4,12 @@ declare(strict_types=1);
 namespace Project\Module\CompetitionData;
 
 use Project\Module\Competition\Competition;
+use Project\Module\Competition\CompetitionService;
 use Project\Module\Database\Database;
+use Project\Module\GenericValueObject\Date;
 use Project\Module\GenericValueObject\Id;
+use Project\Module\Runner\RunnerService;
+use Project\TimeMeasure\TimeMeasureService;
 
 /**
  * Class CompetitionDataService
@@ -56,6 +60,12 @@ class CompetitionDataService
         return $competitionDataArray;
     }
 
+    public function getCompetitionDataByDate(Date $date): array
+    {
+        $competitionDataData = $this->competitionDataRepository->getCompetitionDataByDate($date);
+
+        return $this->createCompetitionData($competitionDataData);
+    }
     /**
      * @param CompetitionData $competitionData
      *
@@ -64,6 +74,33 @@ class CompetitionDataService
     public function saveCompetitionData(CompetitionData $competitionData): bool
     {
         return $this->competitionDataRepository->saveCompetitionData($competitionData);
+    }
+
+    /**
+     * @param Id $runnerId
+     *
+     * @return array
+     */
+    public function getCompetitionDataByRunnerId(Id $runnerId): array
+    {
+        $competitionDataData = $this->competitionDataRepository->getCompetitionDataByRunnerId($runnerId);
+
+        return $this->createCompetitionData($competitionDataData);
+    }
+
+    /**
+     * @param Date $date
+     * @param TimeMeasureService $timeMeasureService
+     * @param RunnerService $runnerService
+     * @param CompetitionService $competitionService
+     *
+     * @return array
+     */
+    public function getSpeakerCompetitionData(Date $date, TimeMeasureService $timeMeasureService, RunnerService $runnerService, CompetitionService $competitionService): array
+    {
+        $competitionDataData = $this->competitionDataRepository->getSpeakerCompetitionDataByCompetitionDate($date);
+
+        return $this->createCompetitionData($competitionDataData, $timeMeasureService, $runnerService, $competitionService);
     }
 
     /**
@@ -85,20 +122,44 @@ class CompetitionDataService
     }
 
     /**
-     * @param Id $runnerId
+     * @param array $competitionDataData
+     * @param TimeMeasureService|null $timeMeasureService
+     * @param RunnerService|null $runnerService
+     * @param CompetitionService|null $competitionService
      *
      * @return array
      */
-    public function getCompetitionDataByRunnerId(Id $runnerId): array
+    protected function createCompetitionData(array $competitionDataData, TimeMeasureService $timeMeasureService = null, RunnerService $runnerService = null, CompetitionService $competitionService = null): array
     {
         $competitionDataArray = [];
-        $competitionDataData = $this->competitionDataRepository->getCompetitionDataByRunnerId($runnerId);
 
         foreach ($competitionDataData as $singleCompetitionData) {
             /** @var CompetitionData $competitionData */
             $competitionData = $this->competitionDataFactory->getCompetitionData($singleCompetitionData);
 
             if ($competitionData !== null) {
+                if ($timeMeasureService !== null) {
+                    $timeMeasureList = $timeMeasureService->getAllTimeMeasuresByTransponderNumber($competitionData->getTransponderNumber());
+
+                    $competitionData->setTimeMeasureList($timeMeasureList);
+                }
+
+                if ($runnerService !== null) {
+                    $runner = $runnerService->getRunnerByRunnerId($competitionData->getRunnerId());
+
+                    if ($runner !== null) {
+                        $competitionData->setRunner($runner);
+                    }
+                }
+
+                if ($competitionService !== null) {
+                    $competition = $competitionService->getCompetitionByCompetitionId($competitionData->getCompetitionId());
+
+                    if ($competition !== null) {
+                        $competitionData->setCompetition($competition);
+                    }
+                }
+
                 $competitionDataArray[$competitionData->getCompetitionDataId()->toString()] = $competitionData;
             }
         }

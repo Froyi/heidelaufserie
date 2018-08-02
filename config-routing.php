@@ -5,6 +5,10 @@ return [
             'controller' => 'IndexController',
             'action' => 'indexAction',
         ],
+        'speaker' => [
+            'controller' => 'IndexController',
+            'action' => 'speakerAction',
+        ],
         'admin' => [
             'controller' => 'AdminController',
             'action' => 'adminAction',
@@ -17,10 +21,6 @@ return [
             'controller' => 'AdminController',
             'action' => 'uploadRunnerFileAction',
         ],
-        'sendmail' => [
-            'controller' => 'MailerController',
-            'action' => 'sendMailAction',
-        ],
         'findDuplicateNames' => [
             'controller' => 'AdminController',
             'action' => 'findDuplicateNamesAction',
@@ -28,6 +28,18 @@ return [
         'noDuplicate' => [
             'controller' => 'JsonController',
             'action' => 'noDuplicateAction',
+        ],
+        'refreshSpeakerData' => [
+            'controller' => 'JsonController',
+            'action' => 'refreshSpeakerDataAction',
+        ],
+        'generateTimeMeasureData' => [
+            'controller' => 'JsonController',
+            'action' => 'generateTimeMeasureDataAction',
+        ],
+        'generateTimeMeasurePage' => [
+            'controller' => 'IndexController',
+            'action' => 'generateTimeMeasurePageAction',
         ],
     ],
 ];

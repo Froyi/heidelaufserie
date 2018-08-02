@@ -40,6 +40,9 @@ class Competition extends DefaultModel
      */
     public function __construct(Id $competitionId, CompetitionType $competitionType, Title $title, Date $date, Datetime $startTime)
     {
+
+        parent::__construct();
+
         $this->competitionId = $competitionId;
         $this->competitionType = $competitionType;
         $this->title = $title;

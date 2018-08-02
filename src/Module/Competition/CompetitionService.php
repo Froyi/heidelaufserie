@@ -4,6 +4,7 @@ namespace Project\Module\Competition;
 
 use Project\Module\Database\Database;
 use Project\Module\GenericValueObject\Date;
+use Project\Module\GenericValueObject\Id;
 
 /**
  * Class CompetitionService
@@ -50,6 +51,44 @@ class CompetitionService
         }
 
         return $allCompetitionsArray;
+    }
+
+    /**
+     * @param int $competitionTypeId
+     *
+     * @return null|CompetitionType
+     */
+    public function getCompetitionTypeByCompetitionTypeId(int $competitionTypeId): ?CompetitionType
+    {
+        $competitionTypeData = $this->competitionRepository->getCompetitionTypeByCompetitionTypeId($competitionTypeId);
+
+        if (empty($competitionTypeData) === true) {
+            return null;
+        }
+
+        return $this->competitionFactory->getCompetitionTypeByObject($competitionTypeData);
+    }
+
+    /**
+     * @param Id $competitionId
+     *
+     * @return null|Competition
+     */
+    public function getCompetitionByCompetitionId(Id $competitionId): ?Competition
+    {
+        $competitionData = $this->competitionRepository->getCompetitionByCompetitionId($competitionId);
+
+        if (empty($competitionData) === true || empty($competitionData->competitionTypeId) === true) {
+            return null;
+        }
+
+        $competitionType = $this->getCompetitionTypeByCompetitionTypeId((int)$competitionData->competitionTypeId);
+
+        if ($competitionType === null) {
+            return null;
+        }
+
+        return $this->competitionFactory->getCompetitionByObject($competitionData, $competitionType);
     }
 
     /**

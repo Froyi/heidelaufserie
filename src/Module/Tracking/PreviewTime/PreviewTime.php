@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Project\Module\Tracking\PreviewTime;
 
+use Project\Module\DefaultModel;
 use Project\Module\GenericValueObject\Date;
 use Project\Module\GenericValueObject\Distance;
 use Project\Module\GenericValueObject\Id;
@@ -12,7 +13,7 @@ use Project\Module\Tracking\RoundTime;
  * Class PreviewTime
  * @package Project\Module\Tracking\PreviewTime
  */
-class PreviewTime
+class PreviewTime extends DefaultModel
 {
     /** @var Id $previewTimeId */
     protected $previewTimeId;
@@ -91,6 +92,8 @@ class PreviewTime
      */
     public function __construct(Id $previewTimeId, Id $competitionId, Date $start, Date $end, Distance $distance)
     {
+        parent::__construct();
+
         $this->previewTimeId = $previewTimeId;
         $this->competitionId = $competitionId;
         $this->start = $start;

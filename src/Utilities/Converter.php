@@ -57,4 +57,32 @@ class Converter
 
         return self::GERMAN_WEEKDAYS['short'][$day];
     }
+
+    /**
+     * @param int $seconds
+     *
+     * @return string
+     */
+    public static function convertDiff(int $seconds): string
+    {
+        // Hour
+        $hour = floor($seconds / 3600);
+        if ($hour < 10) {
+            $hour = '0' . $hour;
+        }
+
+        // Minute
+        $minute = floor(($seconds % 3600) / 60);
+        if ($minute < 10) {
+            $minute = '0' . $minute;
+        }
+
+        // Second
+        $second = $seconds - ($hour * 3600 + $minute * 60);
+        if ($second < 10) {
+            $second = '0' . $second;
+        }
+
+        return $hour . ':' . $minute . ':' . $second;
+    }
 }

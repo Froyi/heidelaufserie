@@ -1,0 +1,74 @@
+.speaker-page {
+  padding: 15px 50px;
+
+  .runner-speaker {
+    width: 100%;
+    height: 65px;
+    padding-top: 15px;
+    display: flex;
+    justify-content: flex-start;
+    border-bottom: 1px solid @color-1;
+    position: relative;
+
+    &.female-runner {
+      .runner-name, .runner-age-group, .runner-club {
+        color: @color-5;
+      }
+    }
+
+    &.last-round {
+      background-color:fade(@color-3, 53%);
+    }
+
+    &.more-rounds {
+      background-color:fade(@color-4, 53%);
+    }
+
+    &:last-of-type {
+      border-bottom: none;
+    }
+
+    .new-runner {
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      border-bottom: 10px solid @color-3;
+    }
+
+    .startnumber {
+      font-family: @font-family-2;
+      font-size: 49px;
+      width: 100px;
+      margin-right: 40px;
+      margin-left: 15px;
+      text-align: center;
+    }
+
+    .runner-data {
+      margin-right: 40px;
+      width: 300px;
+
+      .runner-name {
+        font-family: @font-family-3;
+        margin-right: 40px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        height: 26px;
+      }
+    }
+  }
+
+  .rounds {
+    display: flex;
+    justify-content: space-between;
+
+    .round-container {
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      width: 110px;
+    }
+  }
+}

@@ -88,4 +88,16 @@ class Tools
 
         return $newText;
     }
+
+    /**
+     * @param int $percentage
+     *
+     * @return bool
+     */
+    public static function shallWeRefresh(int $percentage = 10): bool
+    {
+        $randomNumber = random_int(1, 100);
+
+        return $randomNumber <= $percentage;
+    }
 }

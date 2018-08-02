@@ -144,7 +144,7 @@ class JsonController extends DefaultController
 
             $competitionDatas = $competitionDataService->getCompetitionDataByDate($date, $timeMeasureService, $runnerService, $competitionService);
 
-            for ($i = 0; $i <= 20; $i++) {
+            for ($i = 0; $i <= 5; $i++) {
                 $randomCompetitionKey = array_rand($competitionDatas);
 
                 /** @var CompetitionData $chosenCompetitionData */

@@ -11,7 +11,7 @@ function refreshSpeakerData() {
             if (response.status === 'success') {
                 $('.new-runner').remove();
                 $(response.view).prependTo('.js-speaker-runner-container').hide().slideDown();
-                // refreshRankingData();
+                refreshRankingData();
             }
         },
         complete: function () {

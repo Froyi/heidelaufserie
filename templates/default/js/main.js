@@ -11,10 +11,25 @@ function refreshSpeakerData() {
             if (response.status === 'success') {
                 $('.new-runner').remove();
                 $(response.view).prependTo('.js-speaker-runner-container').hide().slideDown();
+                refreshRankingData();
             }
         },
         complete: function () {
             refreshSpeakerData();
+        }
+    })
+}
+
+function refreshRankingData() {
+    var $rankingContainer = $('.js-speaker-competition-status');
+    $.ajax({
+        type: 'POST',
+        url: 'index.php?route=refreshRankingData',
+        dataType: 'json',
+        success: function (response) {
+            if (response.status === 'success') {
+                $rankingContainer.html(response.view);
+            }
         }
     })
 }

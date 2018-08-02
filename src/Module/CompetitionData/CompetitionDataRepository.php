@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace Project\Module\CompetitionData;
 
+use Project\Module\Competition\CompetitionType;
 use Project\Module\DefaultRepository;
 use Project\Module\GenericValueObject\Date;
+use Project\Module\GenericValueObject\Gender;
 use Project\Module\GenericValueObject\Id;
 
 /**
@@ -88,6 +90,24 @@ class CompetitionDataRepository extends DefaultRepository
     {
         $query = /** @lang text */
             'SELECT * FROM competitionData, timeMeasure WHERE competitionData.transponderNumber = timeMeasure.transponderNumber AND timeMeasure.shown = 0 AND competitionData.date = "' . $date->toString() . '"';
+
+        return $this->database->fetchAllQueryString($query);
+    }
+
+    public function getSpeakerRankingUpdateData(Date $date, Gender $gender, int $competitionTypeId): array
+    {
+        $query = /** @lang text */
+            'SELECT DISTINCT (competitionDataId)
+            FROM competitiondata CD,
+                 timemeasure TM,
+                 competition C,
+                 runner R
+            WHERE CD.transponderNumber = TM.transponderNumber
+              AND CD.competitionId = C.competitionId
+              AND CD.runnerId = R.runnerId
+              AND CD.date = "' . $date->toString() . '"
+              AND C.competitionTypeId = ' . $competitionTypeId . '
+              AND R.gender = "' . $gender->getGender() . '"';
 
         return $this->database->fetchAllQueryString($query);
     }

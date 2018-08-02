@@ -218,6 +218,36 @@ class CompetitionData extends DefaultModel
     }
 
     /**
+     * @return int
+     */
+    public function getLastRoundTime(): ?int
+    {
+        $rounds = $this->getRoundTimes();
+        $lastKey = end($rounds);
+
+        if ($lastKey === false) {
+            return null;
+        }
+
+        return $lastKey['round'];
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getLastTimeOverall(): ?int
+    {
+        $rounds = $this->getRoundTimes();
+        $lastKey = end($rounds);
+
+        if ($lastKey === false) {
+            return null;
+        }
+
+        return $lastKey['timeOverall'];
+    }
+
+    /**
      * @return bool
      */
     public function isLastRound(): bool

@@ -19,7 +19,11 @@
                         <img src="{{ templateDir }}/img/runner{{ loop.index }}.png" alt="">
 
                         <div>
-                            <div>{{ round.round | convertDiff }}</div>
+                            <div>
+                                {% if loop.index > 1 %}
+                                    ({{ round.round | convertDiff }})
+                                {% endif %}
+                            </div>
                             <div>{{ round.timeOverall | convertDiff }}</div>
                         </div>
                     </div>

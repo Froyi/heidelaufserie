@@ -49,4 +49,16 @@ return [
         '90' => ['min' => 90, 'max' => 94],
     ],
     'startingTime' => '2018-08-02 10:00:00',
+    'ranking' => [
+        'woman' => [
+            'gender' => 'w',
+            'competitionTypeId' => 2,
+            'amount' => 3,
+        ],
+        'man' => [
+            'gender' => 'm',
+            'competitionTypeId' => 3,
+            'amount' => 6,
+        ],
+    ],
 ];

@@ -1,0 +1,43 @@
+<div class="flex">
+    <div class="gender-competition">
+        {% if womanCompetitionData %}
+            <h1>Frauen 10 km</h1>
+            {% for competitionData in womanCompetitionData %}
+                <div class="runner flex">
+                    <div class="ranking">{{ loop.index }}</div>
+
+                    <div class="runner-data">
+                        <div class="flex">
+                            <div class="runner-name">{{ competitionData.getRunner.getFirstname }} {{ competitionData.getRunner.getSurname }}</div>
+                            <div class="runner-age-group">{{ competitionData.getRunner.getAgeGroup }}</div>
+                        </div>
+                        <div class="runner-club">{{ competitionData.getClub }}</div>
+                    </div>
+
+                    <div class="runner-time">{{ competitionData.getLastTimeOverall | convertDiff }}</div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="gender-competition">
+    {% if manCompetitionData %}
+        <h1>Männer 15 km</h1>
+        {% for competitionData in manCompetitionData %}
+            <div class="runner flex">
+                <div class="ranking">{{ loop.index }}</div>
+
+                <div class="runner-data">
+                    <div class="flex">
+                        <div class="runner-name">{{ competitionData.getRunner.getFirstname }} {{ competitionData.getRunner.getSurname }}</div>
+                        <div class="runner-age-group">{{ competitionData.getRunner.getAgeGroup }}</div>
+                    </div>
+                    <div class="runner-club">{{ competitionData.getClub }}</div>
+                </div>
+
+                <div class="runner-time">{{ competitionData.getLastTimeOverall | convertDiff }}</div>
+            </div>
+        {% endfor %}
+    {% endif %}
+    </div>
+</div>

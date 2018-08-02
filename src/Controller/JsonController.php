@@ -99,6 +99,34 @@ class JsonController extends DefaultController
         $this->jsonModel->send();
     }
 
+    /**
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function refreshRankingDataAction(): void
+    {
+        /** @var Date $date */
+        $date = Date::fromValue('2018-07-27');
+        $genderConfig = $this->configuration->getEntryByName('ranking');
+
+        $timeMeasureService = new TimeMeasureService($this->database);
+        $runnerService = new RunnerService($this->database, $this->configuration);
+        $competitionService = new CompetitionService($this->database);
+        $competitionDataService = new CompetitionDataService($this->database);
+
+        $womanCompetitionData = $competitionDataService->getSpeakerRankingUpdateByGender($genderConfig['woman'], $date, $timeMeasureService, $runnerService, $competitionService);
+
+        $manCompetitionData = $competitionDataService->getSpeakerRankingUpdateByGender($genderConfig['man'], $date, $timeMeasureService, $runnerService, $competitionService);
+
+        $this->viewRenderer->addViewConfig('womanCompetitionData', $womanCompetitionData);
+        $this->viewRenderer->addViewConfig('manCompetitionData', $manCompetitionData);
+
+
+        $this->jsonModel->addJsonConfig('view', $this->viewRenderer->renderJsonView('module/rankingUpdate.twig'));
+        $this->jsonModel->send();
+    }
+
     public function generateTimeMeasureDataAction(): void
     {
         /** @var Date $date */
@@ -107,18 +135,31 @@ class JsonController extends DefaultController
         if (Tools::shallWeRefresh(20) === true) {
             $competitionDataService = new CompetitionDataService($this->database);
             $timeMeasureService = new TimeMeasureService($this->database);
+            $runnerService = new RunnerService($this->database, $this->configuration);
+            $competitionService = new CompetitionService($this->database);
 
-            $competitionData = $competitionDataService->getCompetitionDataByDate($date);
+            $competitionDatas = $competitionDataService->getCompetitionDataByDate($date, $timeMeasureService, $runnerService, $competitionService);
 
-            $randomCompetitionKey = array_rand($competitionData);
+            for ($i = 0; $i <= 20; $i++) {
+                $randomCompetitionKey = array_rand($competitionDatas);
 
-            $timeMeasure = $timeMeasureService->generateTimeMeasureByData($competitionData[$randomCompetitionKey]);
+                /** @var CompetitionData $chosenCompetitionData */
+                $chosenCompetitionData = $competitionDatas[$randomCompetitionKey];
 
-            if ($timeMeasure !== null) {
-                $timeMeasureService->saveTimeMeasure($timeMeasure);
+                if (($chosenCompetitionData->isLastRound() === true && random_int(0, 10) !== 3) || $chosenCompetitionData->getActualRound() === 3) {
+                    continue;
+                }
+
+                $timeMeasure = $timeMeasureService->generateTimeMeasureByData($chosenCompetitionData);
+
+                if ($timeMeasure !== null) {
+                    $timeMeasureService->saveTimeMeasure($timeMeasure);
+                }
+
+                $this->jsonModel->addJsonConfig('timeMeasure', $timeMeasure);
+
+                $this->jsonModel->send();
             }
-
-            $this->jsonModel->addJsonConfig('timeMeasure', $timeMeasure);
         }
 
         $this->jsonModel->send();

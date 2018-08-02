@@ -33,6 +33,10 @@ return [
             'controller' => 'JsonController',
             'action' => 'refreshSpeakerDataAction',
         ],
+        'refreshRankingData' => [
+            'controller' => 'JsonController',
+            'action' => 'refreshRankingDataAction',
+        ],
         'generateTimeMeasureData' => [
             'controller' => 'JsonController',
             'action' => 'generateTimeMeasureDataAction',

@@ -556,4 +556,19 @@ a {
   font-size: 37px;
   font-family: 'nirmalaBold', sans-serif;
 }
+.speaker-competition-status .gender-container {
+  display: flex;
+  justify-content: space-around;
+}
+.speaker-competition-status .gender-competition {
+  width: 430px;
+}
+.speaker-competition-status .gender-competition .runner {
+  display: flex;
+  justify-content: flex-start;
+}
+.speaker-competition-status .gender-competition .runner .ranking {
+  font-size: 58px;
+  font-family: 'nirmalaRegular', sans-serif;
+}
 /*# sourceMappingURL=main.css.map */

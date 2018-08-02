@@ -13,6 +13,7 @@ use Project\Module\Runner\RunnerService;
 use Project\TimeMeasure\TimeMeasureService;
 use Project\Utilities\Tools;
 use Project\View\JsonModel;
+use SebastianBergmann\Timer\Timer;
 
 /**
  * Class JsonController
@@ -75,6 +76,7 @@ class JsonController extends DefaultController
      */
     public function refreshSpeakerDataAction(): void
     {
+        Timer::start();
         /** @var Date $date */
         $date = Date::fromValue('2018-07-27');
 
@@ -96,6 +98,8 @@ class JsonController extends DefaultController
 
         $this->viewRenderer->addViewConfig('competitionDatas', $competitionDatas);
         $this->jsonModel->addJsonConfig('view', $this->viewRenderer->renderJsonView('module/runnerSpeakerUpdate.twig'));
+        $time = Timer::stop();
+        $this->jsonModel->addJsonConfig('time', $time);
         $this->jsonModel->send();
     }
 

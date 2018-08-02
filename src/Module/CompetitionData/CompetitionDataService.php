@@ -109,7 +109,6 @@ class CompetitionDataService
     public function getSpeakerCompetitionData(Date $date, TimeMeasureService $timeMeasureService, RunnerService $runnerService, CompetitionService $competitionService): array
     {
         $competitionDataData = $this->competitionDataRepository->getSpeakerCompetitionDataByCompetitionDate($date);
-
         return $this->createCompetitionData($competitionDataData, $timeMeasureService, $runnerService, $competitionService);
     }
 

@@ -138,4 +138,16 @@ class AdminController extends DefaultController
         header('Location: ' . Tools::getRouteUrl('admin'));
         exit;
     }
+
+    public function uploadCompetitionResultsFileAction(): void
+    {
+        $readerService = new ReaderService();
+        // $runnerService = new RunnerService($this->database, $this->configuration);
+        //$competitionService = new CompetitionService($this->database);
+        //$competitionDataService = new CompetitionDataService($this->database);
+
+        $competitionResultsData = $readerService->readCompetitionResultsFile($_FILES['resultsFile']['tmp_name']);
+
+        var_dump($competitionResultsData);
+    }
 }

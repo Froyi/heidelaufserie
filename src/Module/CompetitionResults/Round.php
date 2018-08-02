@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Project\Module\Tracking\Round;
+namespace Project\Module\CompetitionResults;
 
 /**
  * Class Round
- * @package Project\Module\Tracking\Round
+ * @package Project\Module\CompetitionResults
  */
 class Round
 {

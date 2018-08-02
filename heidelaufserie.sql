@@ -62,6 +62,22 @@ COLLATE='utf8_general_ci'
 ENGINE=MyISAM
 ;
 
+CREATE TABLE heidelaufserie.competitionResults
+(
+    competitionResultsId VARCHAR(200) PRIMARY KEY NOT NULL,
+    competitionDataId VARCHAR(200) NOT NULL,
+    runnerId VARCHAR(200) NOT NULL,
+    timeOverall INT(5),
+    points FLOAT,
+    firstRound INT(5),
+    secondRound INT(5),
+    thirdRound INT(5)
+)
+COLLATE='utf8_general_ci'
+ENGINE=MyISAM
+;
+
+
 INSERT INTO `heidelaufserie`.`competitiontype` (`competitionTypeId`, `competitionName`, `distance`, `rounds`, `standardSet`) VALUES ('1', '5km Laufen', '5000', '1', '1');
 INSERT INTO `heidelaufserie`.`competitiontype` (`competitionTypeId`, `competitionName`, `distance`, `rounds`, `standardSet`) VALUES ('2', '10km Laufen', '10000', '2', '1');
 INSERT INTO `heidelaufserie`.`competitiontype` (`competitionTypeId`, `competitionName`, `distance`, `rounds`, `standardSet`) VALUES ('3', '15km Laufen', '15000', '3', '1');

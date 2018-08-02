@@ -45,5 +45,9 @@ return [
             'controller' => 'IndexController',
             'action' => 'generateTimeMeasurePageAction',
         ],
+        'uploadCompetitionResultsFile' => [
+            'controller' => 'AdminController',
+            'action' => 'uploadCompetitionResultsFileAction',
+        ],
     ],
 ];

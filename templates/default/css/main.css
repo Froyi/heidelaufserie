@@ -543,7 +543,7 @@ a {
 }
 .speaker-competition-status {
   position: fixed;
-  height: 500px;
+  height: 200px;
   width: 100%;
   left: 0;
   bottom: 0;
@@ -571,4 +571,3 @@ a {
   font-size: 58px;
   font-family: 'nirmalaRegular', sans-serif;
 }
-/*# sourceMappingURL=main.css.map */

@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Project\Module\Competition;
 
+use Project\Module\CompetitionResults\Round;
 use Project\Module\GenericValueObject\Distance;
 use Project\Module\GenericValueObject\Name;
-use Project\Module\Tracking\Round\Round;
 
 /**
  * Class CompetitionType

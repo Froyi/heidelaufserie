@@ -78,7 +78,7 @@ class JsonController extends DefaultController
     {
         Timer::start();
         /** @var Date $date */
-        $date = Date::fromValue('2018-07-27');
+        $date = Date::fromValue('2018-07-28');
 
         $timeMeasureService = new TimeMeasureService($this->database);
         $runnerService = new RunnerService($this->database, $this->configuration);
@@ -111,7 +111,7 @@ class JsonController extends DefaultController
     public function refreshRankingDataAction(): void
     {
         /** @var Date $date */
-        $date = Date::fromValue('2018-07-27');
+        $date = Date::fromValue('2018-07-28');
         $genderConfig = $this->configuration->getEntryByName('ranking');
 
         $timeMeasureService = new TimeMeasureService($this->database);
@@ -134,7 +134,7 @@ class JsonController extends DefaultController
     public function generateTimeMeasureDataAction(): void
     {
         /** @var Date $date */
-        $date = Date::fromValue('2018-07-27');
+        $date = Date::fromValue('2018-07-28');
 
         if (Tools::shallWeRefresh(20) === true) {
             $competitionDataService = new CompetitionDataService($this->database);
@@ -144,7 +144,7 @@ class JsonController extends DefaultController
 
             $competitionDatas = $competitionDataService->getCompetitionDataByDate($date, $timeMeasureService, $runnerService, $competitionService);
 
-            for ($i = 0; $i <= 20; $i++) {
+            for ($i = 0; $i <= 5; $i++) {
                 $randomCompetitionKey = array_rand($competitionDatas);
 
                 /** @var CompetitionData $chosenCompetitionData */

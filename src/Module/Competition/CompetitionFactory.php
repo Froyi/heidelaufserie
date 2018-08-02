@@ -2,13 +2,13 @@
 
 namespace Project\Module\Competition;
 
+use Project\Module\CompetitionResults\Round;
 use Project\Module\GenericValueObject\Date;
 use Project\Module\GenericValueObject\Datetime;
 use Project\Module\GenericValueObject\Distance;
 use Project\Module\GenericValueObject\Id;
 use Project\Module\GenericValueObject\Name;
 use Project\Module\GenericValueObject\Title;
-use Project\Module\Tracking\Round\Round;
 
 
 /**

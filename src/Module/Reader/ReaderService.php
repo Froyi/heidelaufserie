@@ -24,8 +24,24 @@ class ReaderService
         'competitionTypeId' => 8,
     ];
 
+    public const COMPETITION_RESULTS_FILE_INDEX = [
+        'startNumber' => 0,
+        'firstname' => 1,
+        'surname' => 2,
+        'timeOverall' => 3,
+        'points' => 4,
+        'date' => 5,
+        'firstRound' => 6,
+        'secondRound' => 7,
+        'thirdRound' => 8,
+    ];
+
+
     /** @var bool TRANSPONDER_HAS_LEGEND */
     protected const RUNNER_HAS_LEGEND = true;
+
+    /** @var bool COMPETITION_RESULTS_HAS_LEGEND */
+    protected const COMPETITION_RESULTS_HAS_LEGEND = true;
 
     /** @var string TRANSPONDER_FILE */
     public const TRANSPONDER_FILE = 'transponder.csv';
@@ -78,7 +94,7 @@ class ReaderService
             $runnerSingleData['startNumber'] = $runnerData[self::RUNNER_FILE_INDEX['startNumber']];
             $runnerSingleData['competitionTypeId'] = $runnerData[self::RUNNER_FILE_INDEX['competitionTypeId']];
 
-            $runnerArray[$runnerSingleData['runnerId'] ] = $runnerSingleData;
+            $runnerArray[$runnerSingleData['runnerId']] = $runnerSingleData;
         }
 
         return $runnerArray;
@@ -114,5 +130,42 @@ class ReaderService
         }
 
         return $transponderArray;
+    }
+
+    public function readCompetitionResultsFile(?string $resultsFile = null): array
+    {
+        $competitionResultsArray = [];
+
+        if ($resultsFile === null) {
+            return $competitionResultsArray;
+        }
+
+        $file = file($resultsFile);
+        $count = \count($file);
+
+        $startEntry = 0;
+        if (self::COMPETITION_RESULTS_HAS_LEGEND === true) {
+            $startEntry = 1;
+        }
+
+        for ($i = $startEntry; $i < $count; $i++) {
+            $competitionResultsData = explode(';', $file[$i]);
+
+            $competitionResultsSingleData = [];
+            $competitionResultsSingleData['competitionResultsId'] = Id::generateId()->toString();
+            $competitionResultsSingleData['startNumber'] = $competitionResultsData[self::COMPETITION_RESULTS_FILE_INDEX['startNumber']];
+            $competitionResultsSingleData['firstname'] = $competitionResultsData[self::COMPETITION_RESULTS_FILE_INDEX['firstname']];
+            $competitionResultsSingleData['surname'] = $competitionResultsData[self::COMPETITION_RESULTS_FILE_INDEX['surname']];
+            $competitionResultsSingleData['timeOverall'] = $competitionResultsData[self::COMPETITION_RESULTS_FILE_INDEX['timeOverall']];
+            $competitionResultsSingleData['points'] = $competitionResultsData[self::COMPETITION_RESULTS_FILE_INDEX['points']];
+            $competitionResultsSingleData['date'] = $competitionResultsData[self::COMPETITION_RESULTS_FILE_INDEX['date']];
+            $competitionResultsSingleData['firstRound'] = $competitionResultsData[self::COMPETITION_RESULTS_FILE_INDEX['firstRound']];
+            $competitionResultsSingleData['secondRound'] = $competitionResultsData[self::COMPETITION_RESULTS_FILE_INDEX['secondRound']];
+            $competitionResultsSingleData['thirdRound'] = $competitionResultsData[self::COMPETITION_RESULTS_FILE_INDEX['thirdRound']];
+
+            $competitionResultsArray[$competitionResultsSingleData['competitionResultsId']] = $competitionResultsSingleData;
+        }
+
+        return $competitionResultsArray;
     }
 }

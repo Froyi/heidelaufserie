@@ -1,0 +1,33 @@
+{% if competitionDatas %}
+    {% for competitionData in competitionDatas %}
+        <div class="runner-speaker js-runner-speaker {% if competitionData.hasMoreRounds is same as(true) %}more-rounds{% elseif competitionData.isLastRound is same as(true) %}last-round{% endif %} {% if competitionData.getRunner.getAgeGroup.getGender.getGender is same as ('w') %}female-runner{% endif %}">
+            <div class="new-runner "></div>
+
+            <div class="startnumber">{{ competitionData.getStartNumber }}</div>
+
+            <div class="runner-data">
+                <div class="flex">
+                    <div class="runner-name">{{ competitionData.getRunner.getFirstname }} {{ competitionData.getRunner.getSurname }}</div>
+                    <div class="runner-age-group">{{ competitionData.getRunner.getAgeGroup }}</div>
+                </div>
+                <div class="runner-club">{{ competitionData.getClub }}</div>
+            </div>
+
+            <div class="rounds">
+                {% for round in competitionData.getRoundTimes %}
+                    <div class="round-container">
+                        <img src="{{ templateDir }}/img/runner{{ loop.index }}.png" alt="">
+
+                        <div>
+                            <div>{{ round.round | convertDiff }}</div>
+                            <div>{{ round.timeOverall | convertDiff }}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="ranking-last-year">
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}

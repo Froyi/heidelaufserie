@@ -3,7 +3,7 @@
         {% if womanCompetitionData %}
             <h1>Frauen 10 km</h1>
             {% for competitionData in womanCompetitionData %}
-                <div class="runner">
+                <div class="runner {% if competitionData.isLastRound is same as(true) %}last-round{% endif %}">
                     <div class="ranking">{{ loop.index }}</div>
 
                     <div class="runner-data">
@@ -24,7 +24,7 @@
     {% if manCompetitionData %}
         <h1>Männer 15 km</h1>
         {% for competitionData in manCompetitionData %}
-            <div class="runner">
+            <div class="runner {% if competitionData.isLastRound is same as(true) %}last-round{% endif %}">
                 <div class="ranking">{{ loop.index }}</div>
 
                 <div class="runner-data">

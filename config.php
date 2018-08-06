@@ -48,7 +48,7 @@ return [
         '85' => ['min' => 85, 'max' => 89],
         '90' => ['min' => 90, 'max' => 94],
     ],
-    'startingTime' => '2018-08-02 10:00:00',
+    'startingTime' => '2018-08-03 14:10:00',
     'ranking' => [
         'woman' => [
             'gender' => 'w',

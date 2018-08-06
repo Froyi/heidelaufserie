@@ -11,7 +11,7 @@ use Project\Module\GenericValueObject\DefaultGenericValueObject;
  */
 class Club extends DefaultGenericValueObject
 {
-    protected const CLUB_MIN_LENGTH = 5;
+    protected const CLUB_MIN_LENGTH = 3;
 
     /** @var string $club */
     protected $club;

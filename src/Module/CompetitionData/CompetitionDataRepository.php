@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Project\Module\CompetitionData;
 
-use Project\Module\Competition\CompetitionType;
 use Project\Module\DefaultRepository;
 use Project\Module\GenericValueObject\Date;
 use Project\Module\GenericValueObject\Gender;
@@ -83,6 +82,21 @@ class CompetitionDataRepository extends DefaultRepository
 
     /**
      * @param Date $date
+     * @param StartNumber $startNumber
+     *
+     * @return mixed
+     */
+    public function getCompetitionDataByDateAndStartNumber(Date $date, StartNumber $startNumber)
+    {
+        $query = $this->database->getNewSelectQuery(self::TABLE);
+        $query->where('date', '=', $date->toString());
+        $query->andWhere('startNumber', '=', $startNumber->getStartNumber());
+
+        return $this->database->fetch($query);
+    }
+
+    /**
+     * @param Date $date
      *
      * @return array
      */
@@ -94,6 +108,13 @@ class CompetitionDataRepository extends DefaultRepository
         return $this->database->fetchAllQueryString($query);
     }
 
+    /**
+     * @param Date $date
+     * @param Gender $gender
+     * @param int $competitionTypeId
+     *
+     * @return array
+     */
     public function getSpeakerRankingUpdateData(Date $date, Gender $gender, int $competitionTypeId): array
     {
         $query = /** @lang text */

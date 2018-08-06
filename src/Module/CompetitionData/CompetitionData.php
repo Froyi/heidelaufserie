@@ -189,8 +189,13 @@ class CompetitionData extends DefaultModel
         $rounds = [];
         $lastRoundTime = null;
 
-        /** @var Datetime $startingTime */
-        $startingTime = Datetime::fromValue($this->configuration->getEntryByName('startingTime'));
+        if ($this->competition !== null) {
+            /** @var Datetime $startingTime */
+            $startingTime = $this->competition->getStartTime();
+        } else {
+            /** @var Datetime $startingTime */
+            $startingTime = Datetime::fromValue($this->configuration->getEntryByName('startingTime'));
+        }
 
         usort($this->timeMeasureList, [$this, 'sortByTimestamp']);
 

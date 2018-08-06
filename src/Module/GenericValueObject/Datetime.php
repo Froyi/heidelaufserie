@@ -9,17 +9,17 @@ namespace Project\Module\GenericValueObject;
  */
 class Datetime extends AbstractDatetime implements DatetimeInterface
 {
-    public const DATETIME_FORMAT = 'Y-m-d H:i';
+    public const DATETIME_FORMAT = 'Y-m-d H:i:s';
 
     public const FORM_FORMAT = 'Y-m-d\TH:i:s';
 
     public const DATE_FORMAT = 'Y-m-d';
 
-    public const DATETIME_OUTPUT_FORMAT = 'd.m.Y H:i';
+    public const DATETIME_OUTPUT_FORMAT = 'd.m.Y H:i:s';
 
     public const DATE_OUTPUT_FORMAT = 'd.m.Y';
 
-    public const TIME_FORMAT = 'H:i';
+    public const TIME_FORMAT = 'H:i:s';
 
     public const WEEKDAY_FORMAT = 'w';
 

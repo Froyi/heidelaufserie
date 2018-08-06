@@ -41,6 +41,10 @@ return [
             'controller' => 'JsonController',
             'action' => 'generateTimeMeasureDataAction',
         ],
+        'refreshFinishedRunner' => [
+            'controller' => 'JsonController',
+            'action' => 'refreshFinishedRunnerAction',
+        ],
         'generateTimeMeasurePage' => [
             'controller' => 'IndexController',
             'action' => 'generateTimeMeasurePageAction',

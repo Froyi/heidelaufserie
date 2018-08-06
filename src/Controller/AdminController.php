@@ -3,8 +3,11 @@ declare (strict_types=1);
 
 namespace Project\Controller;
 
+use Project\Configuration;
 use Project\Module\Competition\CompetitionService;
 use Project\Module\CompetitionData\CompetitionDataService;
+use Project\Module\CompetitionData\StartNumber;
+use Project\Module\CompetitionResults\CompetitionResultsService;
 use Project\Module\GenericValueObject\Date;
 use Project\Module\Reader\ReaderService;
 use Project\Module\Runner\Runner;
@@ -18,6 +21,19 @@ use Project\Utilities\Tools;
  */
 class AdminController extends DefaultController
 {
+    /**
+     * AdminController constructor.
+     *
+     * @param Configuration $configuration
+     * @param string $routeName
+     */
+    public function __construct(Configuration $configuration, string $routeName)
+    {
+        session_start();
+
+        parent::__construct($configuration, $routeName);
+    }
+
     /**
      * @throws \InvalidArgumentException
      * @throws \Twig_Error_Loader
@@ -36,6 +52,9 @@ class AdminController extends DefaultController
         $this->viewRenderer->renderTemplate();
     }
 
+    /**
+     *
+     */
     public function createCompetitionAction(): void
     {
         $competitionService = new CompetitionService($this->database);
@@ -61,6 +80,11 @@ class AdminController extends DefaultController
         exit;
     }
 
+    /**
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
     public function findDuplicateNamesAction(): void
     {
         $competitionDataService = new CompetitionDataService($this->database);
@@ -108,10 +132,8 @@ class AdminController extends DefaultController
                 $runnerData[$runner->getRunnerId()->toString()] = $runnerData[$singleRunner->getRunnerId()->toString()];
 
                 unset($runnerData[$singleRunner->getRunnerId()->toString()]);
-            } else {
-                if ($runnerService->saveRunner($singleRunner) === false) {
-                    $errorRunner[] = $singleRunner;
-                }
+            } else if ($runnerService->saveRunner($singleRunner) === false) {
+                $errorRunner[] = $singleRunner;
             }
         }
 
@@ -139,15 +161,44 @@ class AdminController extends DefaultController
         exit;
     }
 
+    /**
+     *
+     */
     public function uploadCompetitionResultsFileAction(): void
     {
         $readerService = new ReaderService();
-        // $runnerService = new RunnerService($this->database, $this->configuration);
-        //$competitionService = new CompetitionService($this->database);
-        //$competitionDataService = new CompetitionDataService($this->database);
+        $competitionDataService = new CompetitionDataService($this->database);
+        $competitionResultsService = new CompetitionResultsService($this->database);
 
-        $competitionResultsData = $readerService->readCompetitionResultsFile($_FILES['resultsFile']['tmp_name']);
+        $competitionResultsDatas = $readerService->readCompetitionResultsFile($_FILES['resultsFile']['tmp_name']);
 
-        var_dump($competitionResultsData);
+        $countData = \count($competitionResultsDatas);
+        $savedData = 0;
+
+        foreach ($competitionResultsDatas as $competitionResultsData) {
+            /** @var Date $date */
+            $date = Date::fromValue($competitionResultsData['date']);
+            $startNumber = StartNumber::fromValue($competitionResultsData['startNumber']);
+
+            $competitionData = $competitionDataService->getCompetitionDataByDateAndStartNumber($date, $startNumber);
+
+            if ($competitionData !== null) {
+                $competitionResults = $competitionResultsService->getCompetitionResultsByUploadData($competitionResultsData, $competitionData);
+
+                if ($competitionResults !== null && $competitionResultsService->saveCompetitionResults($competitionResults) === true) {
+                    $savedData++;
+                }
+            }
+        }
+
+        if ($savedData !== $countData) {
+            $this->notificationService->setError('Es wurden nicht alle Daten gespeichert: ' . $savedData . ' / ' . $countData);
+            header('Location: ' . Tools::getRouteUrl('admin'));
+            exit;
+        }
+
+        $this->notificationService->setSuccess('Die Results konnten erfolgreich importiert werden.');
+        header('Location: ' . Tools::getRouteUrl('admin'));
+        exit;
     }
 }

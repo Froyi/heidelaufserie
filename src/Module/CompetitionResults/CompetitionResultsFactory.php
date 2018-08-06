@@ -40,7 +40,7 @@ class CompetitionResultsFactory
             }
 
             if (empty($object->secondRound) === false) {
-                $secondRound = Round::fromValue($object->SecondRound);
+                $secondRound = Round::fromValue($object->secondRound);
 
                 $competitionResults->setSecondRound($secondRound);
             }

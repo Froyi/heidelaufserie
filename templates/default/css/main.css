@@ -519,18 +519,6 @@ a {
   margin-left: 15px;
   text-align: center;
 }
-.speaker-page .runner-speaker .runner-data {
-  margin-right: 40px;
-  width: 300px;
-}
-.speaker-page .runner-speaker .runner-data .runner-name {
-  font-family: 'nirmalaBold', sans-serif;
-  margin-right: 40px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  height: 26px;
-}
 .speaker-page .rounds {
   display: flex;
   justify-content: space-between;
@@ -540,11 +528,27 @@ a {
   justify-content: flex-start;
   align-items: flex-start;
   width: 110px;
+  margin-right: 20px;
+}
+.runner-data {
+  margin-right: 40px;
+  width: 300px;
+}
+.runner-data .runner-name {
+  font-family: 'nirmalaBold', sans-serif;
+  margin-right: 40px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  height: 26px;
+}
+.runner-data .runner-age-group {
+  max-width: 80px;
 }
 .speaker-competition-status {
   position: fixed;
-  height: 200px;
-  width: 100%;
+  height: 600px;
+  width: 92%;
   left: 0;
   bottom: 0;
   border-top: 1px solid #707070;
@@ -558,16 +562,36 @@ a {
 }
 .speaker-competition-status .gender-container {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 .speaker-competition-status .gender-competition {
-  width: 430px;
+  width: 500px;
 }
 .speaker-competition-status .gender-competition .runner {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.speaker-competition-status .gender-competition .runner.last-round {
+  background-color: rgba(188, 212, 186, 0.53);
 }
 .speaker-competition-status .gender-competition .runner .ranking {
   font-size: 58px;
   font-family: 'nirmalaRegular', sans-serif;
+  margin-right: 20px;
 }
+.speaker-competition-status .gender-competition .runner .runner-time {
+  font-size: 33px;
+  font-family: 'nirmalaBold', sans-serif;
+}
+.speaker-competition-status .gender-competition .runner .runner-name {
+  margin-right: 20px;
+}
+.runner-count {
+  position: fixed;
+  z-index: 3;
+  bottom: 0;
+  left: 50px;
+}
+/*# sourceMappingURL=main.css.map */

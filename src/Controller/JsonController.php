@@ -78,7 +78,7 @@ class JsonController extends DefaultController
     {
         Timer::start();
         /** @var Date $date */
-        $date = Date::fromValue('2018-07-28');
+        $date = Date::fromValue('2018-07-27');
 
         $timeMeasureService = new TimeMeasureService($this->database);
         $runnerService = new RunnerService($this->database, $this->configuration);
@@ -86,6 +86,7 @@ class JsonController extends DefaultController
 
         $competitionDataService = new CompetitionDataService($this->database);
         $competitionDatas = $competitionDataService->getSpeakerCompetitionData($date, $timeMeasureService, $runnerService, $competitionService);
+
 
         if (empty($competitionDatas) === true) {
             $this->jsonModel->send('noRefresh');
@@ -100,6 +101,34 @@ class JsonController extends DefaultController
         $this->jsonModel->addJsonConfig('view', $this->viewRenderer->renderJsonView('module/runnerSpeakerUpdate.twig'));
         $time = Timer::stop();
         $this->jsonModel->addJsonConfig('time', $time);
+
+        $this->jsonModel->send();
+    }
+
+    public function refreshFinishedRunnerAction(): void
+    {
+        /** @var Date $date */
+        $date = Date::fromValue('2018-07-27');
+
+        $timeMeasureService = new TimeMeasureService($this->database);
+        $runnerService = new RunnerService($this->database, $this->configuration);
+        $competitionService = new CompetitionService($this->database);
+
+        $competitionDataService = new CompetitionDataService($this->database);
+        $allCompetitionDatas = $competitionDataService->getCompetitionDataByDate($date, $timeMeasureService, $runnerService, $competitionService);
+        $completeRunnerCount = 0;
+        $allRunnerCount = \count($allCompetitionDatas);
+
+        /** @var CompetitionData $competitionData */
+        foreach ($allCompetitionDatas as $competitionData) {
+            if ($competitionData->isLastRound() === true || $competitionData->hasMoreRounds()) {
+                $completeRunnerCount++;
+            }
+        }
+
+        $this->jsonModel->addJsonConfig('allRunnerCount', $allRunnerCount);
+        $this->jsonModel->addJsonConfig('completeRunnerCount', $completeRunnerCount);
+
         $this->jsonModel->send();
     }
 
@@ -111,7 +140,7 @@ class JsonController extends DefaultController
     public function refreshRankingDataAction(): void
     {
         /** @var Date $date */
-        $date = Date::fromValue('2018-07-28');
+        $date = Date::fromValue('2018-07-27');
         $genderConfig = $this->configuration->getEntryByName('ranking');
 
         $timeMeasureService = new TimeMeasureService($this->database);
@@ -131,10 +160,13 @@ class JsonController extends DefaultController
         $this->jsonModel->send();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function generateTimeMeasureDataAction(): void
     {
         /** @var Date $date */
-        $date = Date::fromValue('2018-07-28');
+        $date = Date::fromValue('2018-07-27');
 
         if (Tools::shallWeRefresh(20) === true) {
             $competitionDataService = new CompetitionDataService($this->database);
@@ -150,7 +182,7 @@ class JsonController extends DefaultController
                 /** @var CompetitionData $chosenCompetitionData */
                 $chosenCompetitionData = $competitionDatas[$randomCompetitionKey];
 
-                if (($chosenCompetitionData->isLastRound() === true && random_int(0, 10) !== 3) || $chosenCompetitionData->getActualRound() === 3) {
+                if ($chosenCompetitionData->getActualRound() === 3 || ($chosenCompetitionData->isLastRound() === true && random_int(0, 10) !== 3)) {
                     continue;
                 }
 

@@ -6,6 +6,7 @@ use Project\Controller\IndexController;
 use Project\Utilities\Tools;
 
 \define('ROOT_PATH', getcwd());
+date_default_timezone_set('Europe/Berlin');
 
 //session_start();
 

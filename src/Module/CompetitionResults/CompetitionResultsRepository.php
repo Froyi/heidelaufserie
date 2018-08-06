@@ -18,4 +18,56 @@ class CompetitionResultsRepository extends DefaultRepository
 
         return $this->database->fetch($query);
     }
+
+    /**
+     * @param Id $competitionResultsId
+     *
+     * @return mixed
+     */
+    public function getCompetitionResultByCompetitionResultsId(Id $competitionResultsId)
+    {
+        $query = $this->database->getNewSelectQuery(self::TABLE);
+        $query->where('competitionResultsId', '=', $competitionResultsId->toString());
+
+        return $this->database->fetch($query);
+    }
+
+    /**
+     * @param CompetitionResults $competitionResults
+     *
+     * @return bool
+     */
+    public function saveCompetitionResults(CompetitionResults $competitionResults): bool
+    {
+        if (empty($this->getCompetitionResultByCompetitionResultsId($competitionResults->getCompetitionResultsId())) === false) {
+            return false;
+        }
+
+        $query = $this->database->getNewInsertQuery(self::TABLE);
+        $query->insert('competitionResultsId', $competitionResults->getCompetitionResultsId()->toString());
+        $query->insert('competitionDataId', $competitionResults->getCompetitionDataId()->toString());
+        $query->insert('runnerId', $competitionResults->getRunnerId()->toString());
+        
+        if ($competitionResults->getTimeOverall() !== null) {
+            $query->insert('timeOverall', $competitionResults->getTimeOverall()->getTimeOverall());
+        }
+
+        if ($competitionResults->getPoints() !== null) {
+            $query->insert('points', $competitionResults->getPoints()->getPoints());
+        }
+
+        if ($competitionResults->getFirstRound() !== null) {
+            $query->insert('firstRound', $competitionResults->getFirstRound()->getRound());
+        }
+
+        if ($competitionResults->getSecondRound() !== null) {
+            $query->insert('secondRound', $competitionResults->getSecondRound()->getRound());
+        }
+
+        if ($competitionResults->getThirdRound() !== null) {
+            $query->insert('thirdRound', $competitionResults->getThirdRound()->getRound());
+        }
+
+        return $this->database->execute($query);
+    }
 }

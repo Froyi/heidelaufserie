@@ -34,6 +34,19 @@ function refreshRankingData() {
     })
 }
 
+function refreshFinishedRunner() {
+    $.ajax({
+        type: 'POST',
+        url: 'index.php?route=refreshFinishedRunner',
+        dataType: 'json',
+        success: function (response) {
+            if (response.status === 'success') {
+                $('.js-runner-count').html(response.completeRunnerCount + '/' + response.allRunnerCount);
+            }
+        }
+    })
+}
+
 function generateTimeMeasureData() {
     $.ajax({
         type: 'POST',
@@ -52,13 +65,14 @@ $(document).ready(function () {
 
     if ($('.js-speaker-page').length > 0) {
         refreshSpeakerData();
+
+        // window.setInterval(refreshFinishedRunner, 10000);
     }
 
 
     if ($('.js-timemeasure-page').length > 0) {
         window.setInterval(generateTimeMeasureData, 1000);
     }
-
 });
 
 $(document).on('click', '.js-notification', function () {

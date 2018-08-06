@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Project\Module\CompetitionData;
 
-use Project\Configuration;
 use Project\Module\Competition\Competition;
 use Project\Module\Competition\CompetitionService;
 use Project\Module\Database\Database;
@@ -62,11 +61,39 @@ class CompetitionDataService
         return $competitionDataArray;
     }
 
+    /**
+     * @param Date $date
+     * @param TimeMeasureService|null $timeMeasureService
+     * @param RunnerService|null $runnerService
+     * @param CompetitionService|null $competitionService
+     *
+     * @return array
+     */
     public function getCompetitionDataByDate(Date $date, TimeMeasureService $timeMeasureService = null, RunnerService $runnerService = null, CompetitionService $competitionService = null): array
     {
         $competitionDataData = $this->competitionDataRepository->getCompetitionDataByDate($date);
 
         return $this->createCompetitionData($competitionDataData, $timeMeasureService, $runnerService, $competitionService);
+    }
+
+    /**
+     * @param Date $date
+     * @param StartNumber $startNumber
+     * @param TimeMeasureService|null $timeMeasureService
+     * @param RunnerService|null $runnerService
+     * @param CompetitionService|null $competitionService
+     *
+     * @return null|CompetitionData
+     */
+    public function getCompetitionDataByDateAndStartNumber(Date $date, StartNumber $startNumber, TimeMeasureService $timeMeasureService = null, RunnerService $runnerService = null, CompetitionService $competitionService = null): ?CompetitionData
+    {
+        $competitionDataData = $this->competitionDataRepository->getCompetitionDataByDateAndStartNumber($date, $startNumber);
+
+        if (empty($competitionDataData) === true) {
+            return null;
+        }
+
+        return $this->createSingleCompetitionData($competitionDataData, $timeMeasureService, $runnerService, $competitionService);
     }
 
     /**
@@ -113,11 +140,11 @@ class CompetitionDataService
     }
 
     /**
+     * @param array $genderConfig
      * @param Date $date
      * @param TimeMeasureService $timeMeasureService
      * @param RunnerService $runnerService
      * @param CompetitionService $competitionService
-     * @param Configuration $configuration
      *
      * @return array
      */
@@ -168,7 +195,7 @@ class CompetitionDataService
             return ($competitionData1->getLastTimeOverall() < $competitionData2->getLastTimeOverall()) ? -1 : 1;
         }
 
-        return ($competitionData1->getActualRound() < $competitionData2->getActualRound()) ? -1 : 1;
+        return ($competitionData1->getActualRound() > $competitionData2->getActualRound()) ? -1 : 1;
     }
 
     /**

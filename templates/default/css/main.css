@@ -530,6 +530,22 @@ a {
   width: 110px;
   margin-right: 20px;
 }
+.speaker-page .ranking-last-year {
+  margin-left: 20px;
+  display: flex;
+}
+.speaker-page .ranking-last-year .last-year {
+  height: 38px;
+  width: 28px;
+  text-align: center;
+  font-size: 14px;
+  line-height: 55px;
+  background: url('..//img/ranking.png') no-repeat center center;
+}
+.speaker-page .ranking-last-year .last-year-rank {
+  margin-left: 10px;
+  line-height: 40px;
+}
 .runner-data {
   margin-right: 40px;
   width: 300px;

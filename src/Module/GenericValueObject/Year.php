@@ -64,6 +64,14 @@ class Year extends DefaultGenericValueObject
     }
 
     /**
+     * @return int
+     */
+    public function getYearShort(): int
+    {
+        return $this->year - 2000;
+    }
+
+    /**
      * @return string
      */
     public function __toString(): string

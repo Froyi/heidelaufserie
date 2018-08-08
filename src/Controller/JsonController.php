@@ -9,6 +9,7 @@ use Project\Module\CompetitionData\CompetitionDataService;
 use Project\Module\CompetitionStatistic\CompetitionStatisticService;
 use Project\Module\GenericValueObject\Date;
 use Project\Module\GenericValueObject\Id;
+use Project\Module\GenericValueObject\Year;
 use Project\Module\Runner\RunnerDuplicateService;
 use Project\Module\Runner\RunnerService;
 use Project\TimeMeasure\TimeMeasureService;
@@ -94,21 +95,16 @@ class JsonController extends DefaultController
             $this->jsonModel->send('noRefresh');
         }
 
-        $rankings = [];
         /** @var CompetitionData $competitionData */
         foreach ($competitionDatas as $competitionData) {
             $timeMeasureService->markTimeMeasureListAsShown($competitionData->getTimeMeasureList());
-
-            if ($competitionData->getCompetitionStatistic() !== null && $competitionData->getCompetitionStatistic()->getRanking() !== null) {
-                $rankings[] = $competitionData->getCompetitionStatistic()->getRanking()->getRanking();
-            }
         }
 
         $this->viewRenderer->addViewConfig('competitionDatas', $competitionDatas);
+        $this->viewRenderer->addViewConfig('year', Year::fromValue(date("Y",strtotime("-1 year")))->getYearShort());
         $this->jsonModel->addJsonConfig('view', $this->viewRenderer->renderJsonView('module/runnerSpeakerUpdate.twig'));
         $time = Timer::stop();
         $this->jsonModel->addJsonConfig('time', $time);
-        $this->jsonModel->addJsonConfig('ranking', $rankings);
 
         $this->jsonModel->send();
     }

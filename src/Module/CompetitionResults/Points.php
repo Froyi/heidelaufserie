@@ -4,12 +4,15 @@ declare (strict_types=1);
 
 namespace Project\Module\CompetitionResults;
 
-class Points
+use Project\Configuration;
+use Project\Module\GenericValueObject\DefaultGenericValueObject;
+
+class Points extends DefaultGenericValueObject
 {
     /**
      *
      */
-    protected const ROUND_PRECISION = 2;
+    public const ROUND_PRECISION = 2;
 
     /** @var  float $points */
     protected $points;
@@ -49,8 +52,17 @@ class Points
      */
     protected static function convertPoints($points): float
     {
-        $result = (float)$points;
-        return round($result, self::ROUND_PRECISION);
+        $value = str_replace(',', '.', $points);
+
+        return round($value, self::ROUND_PRECISION);
+    }
+
+    /**
+     * @return Configuration
+     */
+    protected static function getConfiguration(): Configuration
+    {
+        return new Configuration();
     }
 
     /**
@@ -67,5 +79,27 @@ class Points
     public function __toString(): string
     {
         return (string)$this->getPoints();
+    }
+
+    /**
+     * @param TimeOverall $timeOverall
+     * @param Round $rounds
+     *
+     * @return null|Points
+     */
+    public static function fromTimeAndRounds(TimeOverall $timeOverall, Round $rounds, int $competitionTypeId): ?self
+    {
+        if ($rounds->getRound() === 0 || $timeOverall->getTimeOverall() === null) {
+            return null;
+        }
+        $competitionTime = self::getConfiguration()->getEntryByName('competitionTime');
+
+        $defaultTime = $competitionTime[$competitionTypeId];
+
+        if ($rounds->getRound() !== $defaultTime['rounds']) {
+            return null;
+        }
+
+        return self::fromValue($defaultTime['time'] / $timeOverall->getTimeOverall() * 100);
     }
 }

@@ -8,7 +8,9 @@ use Project\Module\Competition\CompetitionService;
 use Project\Module\CompetitionData\CompetitionDataService;
 use Project\Module\CompetitionData\StartNumber;
 use Project\Module\CompetitionResults\CompetitionResultsService;
+use Project\Module\CompetitionStatistic\CompetitionStatisticService;
 use Project\Module\GenericValueObject\Date;
+use Project\Module\GenericValueObject\Year;
 use Project\Module\Reader\ReaderService;
 use Project\Module\Runner\Runner;
 use Project\Module\Runner\RunnerDuplicateService;
@@ -168,24 +170,35 @@ class AdminController extends DefaultController
     {
         $readerService = new ReaderService();
         $competitionDataService = new CompetitionDataService($this->database);
+        $competitionService = new CompetitionService($this->database);
         $competitionResultsService = new CompetitionResultsService($this->database);
 
         $competitionResultsDatas = $readerService->readCompetitionResultsFile($_FILES['resultsFile']['tmp_name']);
 
         $countData = \count($competitionResultsDatas);
         $savedData = 0;
+        $falsePoints = '';
 
         foreach ($competitionResultsDatas as $competitionResultsData) {
             /** @var Date $date */
             $date = Date::fromValue($competitionResultsData['date']);
             $startNumber = StartNumber::fromValue($competitionResultsData['startNumber']);
 
-            $competitionData = $competitionDataService->getCompetitionDataByDateAndStartNumber($date, $startNumber);
+            $competitionData = $competitionDataService->getCompetitionDataByDateAndStartNumber($date, $startNumber, null, null, $competitionService);
 
             if ($competitionData !== null) {
                 $competitionResults = $competitionResultsService->getCompetitionResultsByUploadData($competitionResultsData, $competitionData);
 
                 if ($competitionResults !== null && $competitionResultsService->saveCompetitionResults($competitionResults) === true) {
+                    $competition = $competitionData->getCompetition();
+                    if ($competition !== null && $competitionResultsService->provePoints($competitionResults, $competition) === false) {
+                        if ($competitionResults->getPoints() !== null) {
+                            $falsePoints .= 'PunkteDatei: ' . $competitionResults->getPoints()->getPoints() . ' PunkteGeneriert: ' . $competitionResultsService->getPointsByResult($competitionResults, $competition);
+                        } else {
+                            $falsePoints .= 'PunkteDatei: null!';
+                        }
+                    }
+
                     $savedData++;
                 }
             }
@@ -197,8 +210,31 @@ class AdminController extends DefaultController
             exit;
         }
 
-        $this->notificationService->setSuccess('Die Results konnten erfolgreich importiert werden.');
+        if (empty($falsePoints) === true) {
+            $falsePoints = 'keine';
+        }
+
+        $this->notificationService->setSuccess('Die Results konnten erfolgreich importiert werden. Es gab folgende Fehler: ' . $falsePoints);
         header('Location: ' . Tools::getRouteUrl('admin'));
         exit;
+    }
+
+    public function generateStatisticsByYearAction(): void
+    {
+        $runnerService = new RunnerService($this->database, $this->configuration);
+        try {
+            $year = Year::fromValue(Tools::getValue('year'));
+        } catch (\InvalidArgumentException $exception) {
+            $this->notificationService->setError('Die Statistik wurde nicht erfolgreich erstellt. Das Jahr passt leider nicht.');
+            header('Location: ' . Tools::getRouteUrl('admin'));
+            exit;
+        }
+
+        $competitionStatisticService = new CompetitionStatisticService($this->database);
+        $statistics = $competitionStatisticService->generateStatisticsByYear($year, $runnerService);
+
+        foreach ($statistics as $statistic) {
+            $competitionStatisticService->saveCompetitionStatistic($statistic);
+        }
     }
 }

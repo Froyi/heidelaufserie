@@ -61,4 +61,26 @@ return [
             'amount' => 6,
         ],
     ],
+    'competitionTime' => [
+        1 => [
+            'rounds' => 1,
+            'time' => 1050 // 17:30 min
+        ],
+        2 => [
+            'rounds' => 2,
+            'time' => 2250 // 37:30 min
+        ],
+        3 => [
+            'rounds' => 3,
+            'time' => 3600 // 01:00:00 min
+        ],
+        4 => [
+            'rounds' => 1,
+            'time' => 2100 // 35:00 min
+        ],
+        5 => [
+            'rounds' => 2,
+            'time' => 4350 // 01:12:30 min
+        ],
+    ]
 ];

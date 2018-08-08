@@ -8,6 +8,11 @@ use Project\Module\GenericValueObject\Id;
 
 class CompetitionResultsFactory
 {
+    /**
+     * @param $object
+     *
+     * @return null|CompetitionResults
+     */
     public function getCompetitionResultsByObject($object): ?CompetitionResults
     {
         try {
@@ -34,19 +39,19 @@ class CompetitionResultsFactory
             }
 
             if (empty($object->firstRound) === false) {
-                $firstRound = Round::fromValue($object->firstRound);
+                $firstRound = RoundTime::fromValue($object->firstRound);
 
                 $competitionResults->setFirstRound($firstRound);
             }
 
             if (empty($object->secondRound) === false) {
-                $secondRound = Round::fromValue($object->secondRound);
+                $secondRound = RoundTime::fromValue($object->secondRound);
 
                 $competitionResults->setSecondRound($secondRound);
             }
 
             if (empty($object->thirdRound) === false) {
-                $thirdRound = Round::fromValue($object->thirdRound);
+                $thirdRound = RoundTime::fromValue($object->thirdRound);
 
                 $competitionResults->setThirdRound($thirdRound);
             }
@@ -57,6 +62,4 @@ class CompetitionResultsFactory
             return null;
         }
     }
-
-
 }

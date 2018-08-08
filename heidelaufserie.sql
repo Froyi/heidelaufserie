@@ -77,6 +77,30 @@ COLLATE='utf8_general_ci'
 ENGINE=MyISAM
 ;
 
+create table heidelaufserie.competitionstatistic
+(
+	competitionStatisticId varchar(200)       not null
+		primary key,
+	runnerId               varchar(200)       not null,
+	year                   int(4)             not null,
+	competitionCount       int(2) default '0' not null,
+	totalPoints            float              null,
+	averagePoints          float              null,
+	rankingPoints          float              null,
+	bestTimeOverall        int(5)             null,
+	averageTimeOverall     int(5)             null,
+	bestFirstRound         int(5)             null,
+	averageFirstRound      int(5)             null,
+	bestSecondRound        int(5)             null,
+	averageSecondRound     int(5)             null,
+	bestThirdRound         int(5)             null,
+	averageThirdRound      int(5)             null,
+	ranking                int(3)             null,
+	akRanking              int(3)             null
+)
+	COLLATE = 'utf8_general_ci'
+	ENGINE = MyISAM;
+
 
 INSERT INTO `heidelaufserie`.`competitiontype` (`competitionTypeId`, `competitionName`, `distance`, `rounds`, `standardSet`) VALUES ('1', '5km Laufen', '5000', '1', '1');
 INSERT INTO `heidelaufserie`.`competitiontype` (`competitionTypeId`, `competitionName`, `distance`, `rounds`, `standardSet`) VALUES ('2', '10km Laufen', '10000', '2', '1');

@@ -12,6 +12,8 @@ function refreshSpeakerData() {
                 $('.new-runner').remove();
                 $(response.view).prependTo('.js-speaker-runner-container').hide().slideDown();
                 refreshRankingData();
+
+                console.log(response.ranking);
             }
         },
         complete: function () {
@@ -61,7 +63,7 @@ function generateTimeMeasureData() {
 }
 
 $(document).ready(function () {
-    window.setTimeout(hideNotifications, 5000); // 5 seconds
+    // window.setTimeout(hideNotifications, 5000); // 5 seconds
 
     if ($('.js-speaker-page').length > 0) {
         refreshSpeakerData();

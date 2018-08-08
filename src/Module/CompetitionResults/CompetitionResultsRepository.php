@@ -1,7 +1,6 @@
 <?php
 declare (strict_types=1);
 
-
 namespace Project\Module\CompetitionResults;
 
 use Project\Module\DefaultRepository;
@@ -39,7 +38,7 @@ class CompetitionResultsRepository extends DefaultRepository
      */
     public function saveCompetitionResults(CompetitionResults $competitionResults): bool
     {
-        if (empty($this->getCompetitionResultByCompetitionResultsId($competitionResults->getCompetitionResultsId())) === false) {
+        if (empty($this->getCompetitionResultsByCompetitionDataId($competitionResults->getCompetitionDataId())) === false) {
             return false;
         }
 
@@ -47,7 +46,7 @@ class CompetitionResultsRepository extends DefaultRepository
         $query->insert('competitionResultsId', $competitionResults->getCompetitionResultsId()->toString());
         $query->insert('competitionDataId', $competitionResults->getCompetitionDataId()->toString());
         $query->insert('runnerId', $competitionResults->getRunnerId()->toString());
-        
+
         if ($competitionResults->getTimeOverall() !== null) {
             $query->insert('timeOverall', $competitionResults->getTimeOverall()->getTimeOverall());
         }
@@ -57,15 +56,15 @@ class CompetitionResultsRepository extends DefaultRepository
         }
 
         if ($competitionResults->getFirstRound() !== null) {
-            $query->insert('firstRound', $competitionResults->getFirstRound()->getRound());
+            $query->insert('firstRound', $competitionResults->getFirstRound()->getRoundTime());
         }
 
         if ($competitionResults->getSecondRound() !== null) {
-            $query->insert('secondRound', $competitionResults->getSecondRound()->getRound());
+            $query->insert('secondRound', $competitionResults->getSecondRound()->getRoundTime());
         }
 
         if ($competitionResults->getThirdRound() !== null) {
-            $query->insert('thirdRound', $competitionResults->getThirdRound()->getRound());
+            $query->insert('thirdRound', $competitionResults->getThirdRound()->getRoundTime());
         }
 
         return $this->database->execute($query);

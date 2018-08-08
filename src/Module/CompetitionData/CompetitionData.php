@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Project\Module\CompetitionData;
 
 use Project\Module\Competition\Competition;
+use Project\Module\CompetitionStatistic\CompetitionStatistic;
 use Project\Module\DefaultModel;
 use Project\Module\GenericValueObject\Date;
 use Project\Module\GenericValueObject\Datetime;
@@ -46,6 +47,9 @@ class CompetitionData extends DefaultModel
 
     /** @var array $timeMeasureList */
     protected $timeMeasureList = [];
+
+    /** @var null|CompetitionStatistic $competitionStatistic */
+    protected $competitionStatistic;
 
     /**
      * CompetitionData constructor.
@@ -289,5 +293,21 @@ class CompetitionData extends DefaultModel
         }
 
         return ($timeMeasure1->getTimestamp()->toString() < $timeMeasure2->getTimestamp()->toString()) ? -1 : 1;
+    }
+
+    /**
+     * @return null|CompetitionStatistic
+     */
+    public function getCompetitionStatistic(): ?CompetitionStatistic
+    {
+        return $this->competitionStatistic;
+    }
+
+    /**
+     * @param null|CompetitionStatistic $competitionStatistic
+     */
+    public function setCompetitionStatistic(?CompetitionStatistic $competitionStatistic): void
+    {
+        $this->competitionStatistic = $competitionStatistic;
     }
 }

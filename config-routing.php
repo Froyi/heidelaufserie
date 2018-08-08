@@ -53,5 +53,9 @@ return [
             'controller' => 'AdminController',
             'action' => 'uploadCompetitionResultsFileAction',
         ],
+        'generateStatisticsByYear' => [
+            'controller' => 'AdminController',
+            'action' => 'generateStatisticsByYearAction',
+        ],
     ],
 ];

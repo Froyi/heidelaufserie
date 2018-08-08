@@ -6,6 +6,7 @@ use Project\Configuration;
 use Project\Module\Competition\CompetitionService;
 use Project\Module\CompetitionData\CompetitionData;
 use Project\Module\CompetitionData\CompetitionDataService;
+use Project\Module\CompetitionStatistic\CompetitionStatisticService;
 use Project\Module\GenericValueObject\Date;
 use Project\Module\GenericValueObject\Id;
 use Project\Module\Runner\RunnerDuplicateService;
@@ -78,29 +79,36 @@ class JsonController extends DefaultController
     {
         Timer::start();
         /** @var Date $date */
-        $date = Date::fromValue('2018-07-27');
+        $date = Date::fromValue('2018-07-28');
 
         $timeMeasureService = new TimeMeasureService($this->database);
         $runnerService = new RunnerService($this->database, $this->configuration);
         $competitionService = new CompetitionService($this->database);
+        $competitionStatisticService = new CompetitionStatisticService($this->database);
 
         $competitionDataService = new CompetitionDataService($this->database);
-        $competitionDatas = $competitionDataService->getSpeakerCompetitionData($date, $timeMeasureService, $runnerService, $competitionService);
+        $competitionDatas = $competitionDataService->getSpeakerCompetitionData($date, $timeMeasureService, $runnerService, $competitionService, $competitionStatisticService);
 
 
         if (empty($competitionDatas) === true) {
             $this->jsonModel->send('noRefresh');
         }
 
+        $rankings = [];
         /** @var CompetitionData $competitionData */
         foreach ($competitionDatas as $competitionData) {
             $timeMeasureService->markTimeMeasureListAsShown($competitionData->getTimeMeasureList());
+
+            if ($competitionData->getCompetitionStatistic() !== null && $competitionData->getCompetitionStatistic()->getRanking() !== null) {
+                $rankings[] = $competitionData->getCompetitionStatistic()->getRanking()->getRanking();
+            }
         }
 
         $this->viewRenderer->addViewConfig('competitionDatas', $competitionDatas);
         $this->jsonModel->addJsonConfig('view', $this->viewRenderer->renderJsonView('module/runnerSpeakerUpdate.twig'));
         $time = Timer::stop();
         $this->jsonModel->addJsonConfig('time', $time);
+        $this->jsonModel->addJsonConfig('ranking', $rankings);
 
         $this->jsonModel->send();
     }
@@ -108,7 +116,7 @@ class JsonController extends DefaultController
     public function refreshFinishedRunnerAction(): void
     {
         /** @var Date $date */
-        $date = Date::fromValue('2018-07-27');
+        $date = Date::fromValue('2018-07-28');
 
         $timeMeasureService = new TimeMeasureService($this->database);
         $runnerService = new RunnerService($this->database, $this->configuration);
@@ -140,7 +148,7 @@ class JsonController extends DefaultController
     public function refreshRankingDataAction(): void
     {
         /** @var Date $date */
-        $date = Date::fromValue('2018-07-27');
+        $date = Date::fromValue('2018-07-28');
         $genderConfig = $this->configuration->getEntryByName('ranking');
 
         $timeMeasureService = new TimeMeasureService($this->database);
@@ -166,7 +174,7 @@ class JsonController extends DefaultController
     public function generateTimeMeasureDataAction(): void
     {
         /** @var Date $date */
-        $date = Date::fromValue('2018-07-27');
+        $date = Date::fromValue('2018-07-28');
 
         if (Tools::shallWeRefresh(20) === true) {
             $competitionDataService = new CompetitionDataService($this->database);

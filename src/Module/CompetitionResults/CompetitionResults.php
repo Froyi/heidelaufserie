@@ -23,13 +23,13 @@ class CompetitionResults extends DefaultModel
     /** @var  Points $points */
     protected $points;
 
-    /** @var  Round $firstRound */
+    /** @var  RoundTime $firstRound */
     protected $firstRound;
 
-    /** @var  Round $secondRound */
+    /** @var  RoundTime $secondRound */
     protected $secondRound;
 
-    /** @var  Round $thirdRound */
+    /** @var  RoundTime $thirdRound */
     protected $thirdRound;
 
     /**
@@ -45,46 +45,6 @@ class CompetitionResults extends DefaultModel
         $this->competitionResultsId = $competitionResultsId;
         $this->competitionDataId = $competitionDataId;
         $this->runnerId = $runnerId;
-    }
-
-    /**
-     * @param TimeOverall $timeOverall
-     */
-    public function setTimeOverall(TimeOverall $timeOverall): void
-    {
-        $this->timeOverall = $timeOverall;
-    }
-
-    /**
-     * @param Points $points
-     */
-    public function setPoints(Points $points): void
-    {
-        $this->points = $points;
-    }
-
-    /**
-     * @param Round $firstRound
-     */
-    public function setFirstRound(Round $firstRound): void
-    {
-        $this->firstRound = $firstRound;
-    }
-
-    /**
-     * @param Round $secondRound
-     */
-    public function setSecondRound(Round $secondRound): void
-    {
-        $this->secondRound = $secondRound;
-    }
-
-    /**
-     * @param Round $thirdRound
-     */
-    public function setThirdRound(Round $thirdRound): void
-    {
-        $this->thirdRound = $thirdRound;
     }
 
     /**
@@ -120,6 +80,14 @@ class CompetitionResults extends DefaultModel
     }
 
     /**
+     * @param TimeOverall $timeOverall
+     */
+    public function setTimeOverall(TimeOverall $timeOverall): void
+    {
+        $this->timeOverall = $timeOverall;
+    }
+
+    /**
      * @return null|Points
      */
     public function getPoints(): ?Points
@@ -128,28 +96,78 @@ class CompetitionResults extends DefaultModel
     }
 
     /**
-     * @return null|Round
+     * @param Points $points
      */
-    public function getFirstRound(): ?Round
+    public function setPoints(Points $points): void
+    {
+        $this->points = $points;
+    }
+
+    /**
+     * @return null|RoundTime
+     */
+    public function getFirstRound(): ?RoundTime
     {
         return $this->firstRound;
     }
 
     /**
-     * @return null|Round
+     * @param RoundTime $firstRound
      */
-    public function getSecondRound(): ?Round
+    public function setFirstRound(RoundTime $firstRound): void
+    {
+        $this->firstRound = $firstRound;
+    }
+
+    /**
+     * @return null|RoundTime
+     */
+    public function getSecondRound(): ?RoundTime
     {
         return $this->secondRound;
     }
 
     /**
-     * @return null|Round
+     * @param RoundTime $secondRound
      */
-    public function getThirdRound(): ?Round
+    public function setSecondRound(RoundTime $secondRound): void
+    {
+        $this->secondRound = $secondRound;
+    }
+
+    /**
+     * @return null|RoundTime
+     */
+    public function getThirdRound(): ?RoundTime
     {
         return $this->thirdRound;
     }
 
+    /**
+     * @param RoundTime $thirdRound
+     */
+    public function setThirdRound(RoundTime $thirdRound): void
+    {
+        $this->thirdRound = $thirdRound;
+    }
 
+    /**
+     * @return int
+     */
+    public function getRoundsRun(): ?Round
+    {
+        if ($this->getThirdRound() !== null) {
+            return Round::fromValue(3);
+        }
+
+        if ($this->getSecondRound() !== null) {
+            return Round::fromValue(2);
+        }
+
+        if ($this->getFirstRound() !== null) {
+            return Round::fromValue(1);
+        }
+
+        return null;
+    }
 }

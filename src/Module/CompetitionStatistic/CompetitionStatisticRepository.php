@@ -73,6 +73,19 @@ class CompetitionStatisticRepository extends DefaultRepository
     }
 
     /**
+     * @param Year $year
+     *
+     * @return bool
+     */
+    public function deleteOldStatisticsByYear(Year $year): bool
+    {
+        $query = $this->database->getNewDeleteQuery(self::TABLE);
+        $query->where('year', '=', $year->getYear());
+
+        return $this->database->execute($query);
+    }
+
+    /**
      * @param CompetitionStatistic $competitionStatistic
      *
      * @return bool

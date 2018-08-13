@@ -155,6 +155,16 @@ class CompetitionStatisticService
     }
 
     /**
+     * @param Year $year
+     *
+     * @return bool
+     */
+    public function deleteOldStatisticsByYear(Year $year): bool
+    {
+        return $this->competitionStatisticRepository->deleteOldStatisticsByYear($year);
+    }
+
+    /**
      * @param CompetitionStatistic $competitionStatistic1
      * @param CompetitionStatistic $competitionStatistic2
      *

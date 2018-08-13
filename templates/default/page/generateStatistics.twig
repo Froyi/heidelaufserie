@@ -1,0 +1,13 @@
+{% include ('module/partial/notification.twig') %}
+
+<div class="generate-statistics-page js-generate-statistics-page">
+    {% if statistics %}
+        <h1>{{ statistics|length }} Statistiken wurden geschrieben</h1>
+        {% for statistic in statistics %}
+            <h3>{{ statistic.getRunner.getFirstname }} {{ statistic.getRunner.getSurname }}</h3>
+            <p>{{ statistic.getYear }}</p>
+        {% endfor %}
+    {% else %}
+        <p>Es wurden keine Statistiken erstellt oder überschrieben.</p>
+    {% endif %}
+</div>

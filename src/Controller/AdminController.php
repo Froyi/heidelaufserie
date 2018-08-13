@@ -75,9 +75,7 @@ class AdminController extends DefaultController
     /**
      * Generate the statistic table [competitionStatistic] by given year.
      * This year is a $_GET parameter from the query.
-     * @todo If there are old data, these has to be deleted first.
      * @todo Give them an output (maybe statistics) or an header to an other site.
-     * @todo Save statistics with transactions.
      * @todo [There could be a function for generating all possible / multiple years.]
      */
     public function generateStatisticsByYearAction(): void
@@ -94,11 +92,15 @@ class AdminController extends DefaultController
         $competitionStatisticService = new CompetitionStatisticService($this->database);
         $statistics = $competitionStatisticService->generateStatisticsByYear($year, $runnerService);
 
+        // first remove old entries
+        $competitionStatisticService->deleteOldStatisticsByYear($year);
+
+        // then save new ones
         $competitionStatisticService->saveAllCompetitionStatistic($statistics);
 
-       /* foreach ($statistics as $statistic) {
-            $competitionStatisticService->saveCompetitionStatistic($statistic);
-        }*/
+        $this->viewRenderer->addViewConfig('statistics', $statistics);
+        $this->viewRenderer->addViewConfig('page', 'generateStatistics');
+        $this->viewRenderer->renderTemplate();
     }
 
     /**

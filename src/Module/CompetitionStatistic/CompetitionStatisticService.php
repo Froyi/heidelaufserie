@@ -117,6 +117,12 @@ class CompetitionStatisticService
         return $statistics;
     }
 
+    /**
+     * @param Id $runnerId
+     * @param Year $year
+     *
+     * @return null|CompetitionStatistic
+     */
     public function getCompetitionStatisticByRunnerIdAndYear(Id $runnerId, Year $year): ?CompetitionStatistic
     {
         $competitionStatisticData = $this->competitionStatisticRepository->getCompetitionStatisticByYearAndRunnerId($year, $runnerId);
@@ -136,6 +142,16 @@ class CompetitionStatisticService
     public function saveCompetitionStatistic(CompetitionStatistic $competitionStatistic): bool
     {
         return $this->competitionStatisticRepository->saveCompetitionStatistic($competitionStatistic);
+    }
+
+    /**
+     * @param array $competitionStatistics
+     *
+     * @return bool
+     */
+    public function saveAllCompetitionStatistic(array $competitionStatistics): bool
+    {
+        return $this->competitionStatisticRepository->saveAllCompetitionStatistics($competitionStatistics);
     }
 
     /**

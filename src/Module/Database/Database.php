@@ -166,4 +166,28 @@ class Database
 
         return $sql->execute();
     }
+
+    /**
+     * @return bool
+     */
+    public function beginTransaction(): bool
+    {
+        return $this->connection->beginTransaction();
+    }
+
+    /**
+     * @return bool
+     */
+    public function commit(): bool
+    {
+        return $this->connection->commit();
+    }
+
+    /**
+     * @return bool
+     */
+    public function rollBack(): bool
+    {
+        return $this->connection->rollBack();
+    }
 }

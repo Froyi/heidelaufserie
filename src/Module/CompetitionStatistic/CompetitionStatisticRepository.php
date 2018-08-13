@@ -49,6 +49,30 @@ class CompetitionStatisticRepository extends DefaultRepository
     }
 
     /**
+     * @param array $competitionStatistics
+     *
+     * @return bool
+     */
+    public function saveAllCompetitionStatistics(array $competitionStatistics): bool
+    {
+        $this->database->beginTransaction();
+
+        try {
+            foreach ($competitionStatistics as $competitionStatistic) {
+                $this->saveCompetitionStatistic($competitionStatistic);
+            }
+
+            $this->database->commit();
+        } catch (\Exception $exception) {
+            $this->database->rollback();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * @param CompetitionStatistic $competitionStatistic
      *
      * @return bool

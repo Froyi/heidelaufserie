@@ -15,7 +15,6 @@ use Project\Module\Runner\RunnerService;
 use Project\TimeMeasure\TimeMeasureService;
 use Project\Utilities\Tools;
 use Project\View\JsonModel;
-use SebastianBergmann\Timer\Timer;
 
 /**
  * Class JsonController
@@ -72,13 +71,14 @@ class JsonController extends DefaultController
     }
 
     /**
+     * @todo Mark time measures with transaction.
+     * @todo Take the actual date, not a random one.
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
     public function refreshSpeakerDataAction(): void
     {
-        Timer::start();
         /** @var Date $date */
         $date = Date::fromValue('2018-07-28');
 
@@ -101,14 +101,17 @@ class JsonController extends DefaultController
         }
 
         $this->viewRenderer->addViewConfig('competitionDatas', $competitionDatas);
-        $this->viewRenderer->addViewConfig('year', Year::fromValue(date("Y",strtotime("-1 year")))->getYearShort());
+        $this->viewRenderer->addViewConfig('year', Year::fromValue(date('Y', strtotime('-1 year')))->getYearShort());
+
         $this->jsonModel->addJsonConfig('view', $this->viewRenderer->renderJsonView('module/runnerSpeakerUpdate.twig'));
-        $time = Timer::stop();
-        $this->jsonModel->addJsonConfig('time', $time);
 
         $this->jsonModel->send();
     }
 
+    /**
+     * Counts the runner which are finished.
+     * @todo Take the actual date, not a random one.
+     */
     public function refreshFinishedRunnerAction(): void
     {
         /** @var Date $date */
@@ -137,6 +140,7 @@ class JsonController extends DefaultController
     }
 
     /**
+     * @todo Take the actual date, not a random one.
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
@@ -159,12 +163,15 @@ class JsonController extends DefaultController
         $this->viewRenderer->addViewConfig('womanCompetitionData', $womanCompetitionData);
         $this->viewRenderer->addViewConfig('manCompetitionData', $manCompetitionData);
 
-
         $this->jsonModel->addJsonConfig('view', $this->viewRenderer->renderJsonView('module/rankingUpdate.twig'));
+
         $this->jsonModel->send();
     }
 
     /**
+     * This action is only for testing. In production this one is not used!!!
+     * @todo Take the actual date, not a random one.
+     * @todo Look why this generating process is too slow.
      * @throws \Exception
      */
     public function generateTimeMeasureDataAction(): void

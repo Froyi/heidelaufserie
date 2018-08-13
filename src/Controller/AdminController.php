@@ -55,34 +55,6 @@ class AdminController extends DefaultController
     }
 
     /**
-     *
-     */
-    public function createCompetitionAction(): void
-    {
-        $competitionService = new CompetitionService($this->database);
-
-        $competitions = $competitionService->getCompetitionsByParameter($_POST);
-
-        if (empty($competitions) === true) {
-            $this->notificationService->setError('Die Wettbewerbe konnten nicht erstellt werden. Nötige Daten fehlen.');
-            header('Location: ' . Tools::getRouteUrl('admin'));
-            exit;
-        }
-
-        foreach ($competitions as $competition) {
-            if ($competitionService->saveCompetition($competition) === false) {
-                $this->notificationService->setError('Die Wettbewerbe konnten nicht komplett gespeichert werden.');
-                header('Location: ' . Tools::getRouteUrl('admin'));
-                exit;
-            }
-        }
-
-        $this->notificationService->setSuccess('Die Wettbewerbe wurden erfolgreich erstellt.');
-        header('Location: ' . Tools::getRouteUrl('admin'));
-        exit;
-    }
-
-    /**
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
@@ -101,70 +73,37 @@ class AdminController extends DefaultController
     }
 
     /**
-     * 1. Import runner data and create an array of Runner
-     * 2. save all runner in repository
-     * 3. save runner startnumber and other data in competition_runner to register them for the run
-     * @throws \InvalidArgumentException
+     * Generate the statistic table [competitionStatistic] by given year.
+     * This year is a $_GET parameter from the query.
+     * @todo If there are old data, these has to be deleted first.
+     * @todo Give them an output (maybe statistics) or an header to an other site.
+     * @todo Save statistics with transactions.
+     * @todo [There could be a function for generating all possible / multiple years.]
      */
-    public function uploadRunnerFileAction(): void
+    public function generateStatisticsByYearAction(): void
     {
-        $errorRunner = [];
-        $competitionDataAfterUpload = null;
-
-        $readerService = new ReaderService();
         $runnerService = new RunnerService($this->database, $this->configuration);
-        $competitionService = new CompetitionService($this->database);
-        $competitionDataService = new CompetitionDataService($this->database);
-
-        $runnerData = $readerService->readRunnerFile($_FILES['runnerFile']['tmp_name']);
-        $allRunner = $runnerService->getAllRunnerByParameter($runnerData);
-
-        if (\count($allRunner) === 0) {
-            $this->notificationService->setError('Die Teilnehmer konnten nicht importiert werden. Entweder ist es die falsche Kodierung, oder die Formatierung stimmt nicht überein, oder die Datei ist leer.');
+        try {
+            $year = Year::fromValue(Tools::getValue('year'));
+        } catch (\InvalidArgumentException $exception) {
+            $this->notificationService->setError('Die Statistik wurde nicht erfolgreich erstellt. Das Jahr passt leider nicht.');
             header('Location: ' . Tools::getRouteUrl('admin'));
             exit;
         }
 
-        /** @var Runner $singleRunner */
-        foreach ($allRunner as $singleRunner) {
-            $runner = $runnerService->runnerExists($singleRunner);
+        $competitionStatisticService = new CompetitionStatisticService($this->database);
+        $statistics = $competitionStatisticService->generateStatisticsByYear($year, $runnerService);
 
-            if ($runner !== null) {
-                $runnerData[$singleRunner->getRunnerId()->toString()]['runnerId'] = $runner->getRunnerId()->toString();
-                $runnerData[$runner->getRunnerId()->toString()] = $runnerData[$singleRunner->getRunnerId()->toString()];
+        $competitionStatisticService->saveAllCompetitionStatistic($statistics);
 
-                unset($runnerData[$singleRunner->getRunnerId()->toString()]);
-            } else if ($runnerService->saveRunner($singleRunner) === false) {
-                $errorRunner[] = $singleRunner;
-            }
-        }
-
-        $date = null;
-        if (Tools::getValue('date') !== false) {
-            /** @var Date $date */
-            $date = Date::fromValue(Tools::getValue('date'));
-
-            $transponderData = $readerService->readTransponderFile();
-
-            $competitions = $competitionService->getCompetitionsByDate($date);
-            if (empty($competitions) === false) {
-                $competitionDataAfterUpload = $competitionDataService->getCompetitionDataAfterRunnerUpload($runnerData, $competitions, $transponderData);
-            }
-
-            if ($competitionDataAfterUpload !== null) {
-                foreach ($competitionDataAfterUpload as $competitionData) {
-                    $competitionDataService->saveCompetitionData($competitionData);
-                }
-            }
-        }
-
-        $this->notificationService->setSuccess('Die Teilnehmer konnten erfolgreich importiert werden.');
-        header('Location: ' . Tools::getRouteUrl('admin'));
-        exit;
+       /* foreach ($statistics as $statistic) {
+            $competitionStatisticService->saveCompetitionStatistic($statistic);
+        }*/
     }
 
     /**
-     *
+     * Old competition results can be uploaded by this action.
+     * @todo Optimize the error output. Do not only show how much. Show what exactly.
      */
     public function uploadCompetitionResultsFileAction(): void
     {
@@ -219,22 +158,97 @@ class AdminController extends DefaultController
         exit;
     }
 
-    public function generateStatisticsByYearAction(): void
+    /**
+     * 1. Import runner data and create an array of Runner
+     * 2. save all runner in repository
+     * 3. save runner startnumber and other data in competitionData to register them for the run
+     * @todo Use errorRunner array to output the runner which could not be saved.
+     * @todo Save competitionData with transactions.
+     * @throws \InvalidArgumentException
+     */
+    public function uploadRunnerFileAction(): void
     {
+        $errorRunner = [];
+        $competitionDataAfterUpload = null;
+
+        $readerService = new ReaderService();
         $runnerService = new RunnerService($this->database, $this->configuration);
-        try {
-            $year = Year::fromValue(Tools::getValue('year'));
-        } catch (\InvalidArgumentException $exception) {
-            $this->notificationService->setError('Die Statistik wurde nicht erfolgreich erstellt. Das Jahr passt leider nicht.');
+        $competitionService = new CompetitionService($this->database);
+        $competitionDataService = new CompetitionDataService($this->database);
+
+        $runnerData = $readerService->readRunnerFile($_FILES['runnerFile']['tmp_name']);
+        $allRunner = $runnerService->getAllRunnerByParameter($runnerData);
+
+        if (\count($allRunner) === 0) {
+            $this->notificationService->setError('Die Teilnehmer konnten nicht importiert werden. Entweder ist es die falsche Kodierung, oder die Formatierung stimmt nicht überein, oder die Datei ist leer.');
             header('Location: ' . Tools::getRouteUrl('admin'));
             exit;
         }
 
-        $competitionStatisticService = new CompetitionStatisticService($this->database);
-        $statistics = $competitionStatisticService->generateStatisticsByYear($year, $runnerService);
+        /** @var Runner $singleRunner */
+        foreach ($allRunner as $singleRunner) {
+            $runner = $runnerService->runnerExists($singleRunner);
 
-        foreach ($statistics as $statistic) {
-            $competitionStatisticService->saveCompetitionStatistic($statistic);
+            if ($runner !== null) {
+                $runnerData[$singleRunner->getRunnerId()->toString()]['runnerId'] = $runner->getRunnerId()->toString();
+                $runnerData[$runner->getRunnerId()->toString()] = $runnerData[$singleRunner->getRunnerId()->toString()];
+
+                unset($runnerData[$singleRunner->getRunnerId()->toString()]);
+            } else if ($runnerService->saveRunner($singleRunner) === false) {
+                $errorRunner[] = $singleRunner;
+            }
         }
+
+        $date = null;
+        if (Tools::getValue('date') !== false) {
+            /** @var Date $date */
+            $date = Date::fromValue(Tools::getValue('date'));
+
+            $transponderData = $readerService->readTransponderFile();
+
+            $competitions = $competitionService->getCompetitionsByDate($date);
+            if (empty($competitions) === false) {
+                $competitionDataAfterUpload = $competitionDataService->getCompetitionDataAfterRunnerUpload($runnerData, $competitions, $transponderData);
+            }
+
+            if (empty($competitionDataAfterUpload) === false) {
+                foreach ($competitionDataAfterUpload as $competitionData) {
+                    $competitionDataService->saveCompetitionData($competitionData);
+                }
+            }
+        }
+
+        $this->notificationService->setSuccess('Die Teilnehmer konnten erfolgreich importiert werden.');
+        header('Location: ' . Tools::getRouteUrl('admin'));
+        exit;
+    }
+
+    /**
+     * The user want to add a new competition.
+     * This action creates a new one by fully entered formular data.
+     */
+    public function createCompetitionAction(): void
+    {
+        $competitionService = new CompetitionService($this->database);
+
+        $competitions = $competitionService->getCompetitionsByParameter($_POST);
+
+        if (empty($competitions) === true) {
+            $this->notificationService->setError('Die Wettbewerbe konnten nicht erstellt werden. Nötige Daten fehlen.');
+            header('Location: ' . Tools::getRouteUrl('admin'));
+            exit;
+        }
+
+        foreach ($competitions as $competition) {
+            if ($competitionService->saveCompetition($competition) === false) {
+                $this->notificationService->setError('Die Wettbewerbe konnten nicht komplett gespeichert werden.');
+                header('Location: ' . Tools::getRouteUrl('admin'));
+                exit;
+            }
+        }
+
+        $this->notificationService->setSuccess('Die Wettbewerbe wurden erfolgreich erstellt.');
+        header('Location: ' . Tools::getRouteUrl('admin'));
+        exit;
     }
 }

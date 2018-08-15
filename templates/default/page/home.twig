@@ -1,12 +1,5 @@
 <div class="home-page js-home-page">
     <h1>Dies ist die Startseite</h1>
-    {% if allRunner %}
-        <div class="runner-container">
-            {% for runner in allRunner %}
-            <div class="runner-data">
-                {{ runner.getFirstname }} {{ runner.getSurname }}
-            </div>
-        {% endfor %}
-        </div>
-    {% endif %}
+    {{ gender }}
+    {{ accuracy }}
 </div>

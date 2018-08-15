@@ -42,6 +42,29 @@ class CompetitionDataRepository extends DefaultRepository
     }
 
     /**
+     * @param array $allCompetitionData
+     * @return bool
+     */
+    public function saveAllCompetitionData(array $allCompetitionData): bool
+    {
+        $this->database->beginTransaction();
+
+        try {
+            foreach ($allCompetitionData as $competitionData) {
+                $this->saveCompetitionData($competitionData);
+            }
+
+            $this->database->commit();
+        } catch (\Exception $exception) {
+            $this->database->rollback();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * @param Id $competitionDataId
      *
      * @return mixed

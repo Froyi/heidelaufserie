@@ -75,6 +75,18 @@ class TimeMeasureService
     }
 
     /**
+     * @param array $allCompetitionData
+     * @return bool
+     */
+    public function markAllTimeMeasureListsAsShown(array $allCompetitionData): bool
+    {
+        return $this->timeMeasureRepository->markAllTimeMeasureListsAsShown($allCompetitionData);
+    }
+
+
+
+
+    /**
      * @param CompetitionData $competitionData
      *
      * @return null|TimeMeasure

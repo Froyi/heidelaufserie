@@ -217,12 +217,15 @@ class CompetitionStatisticService
                     return -1;
                 }
 
+                if ($competitionStatistic1->getRankingPoints()->getPoints() === $competitionStatistic2->getRankingPoints()->getPoints()) {
+                    return 0;
+                }
+
                 return ($competitionStatistic1->getRankingPoints()->getPoints() < $competitionStatistic2->getRankingPoints()->getPoints()) ? 1 : -1;
             }
 
             return $wk;
         }
-
         return $gender;
     }
 }

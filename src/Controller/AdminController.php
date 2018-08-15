@@ -188,7 +188,6 @@ class AdminController extends DefaultController
      * 2. save all runner in repository
      * 3. save runner startnumber and other data in competitionData to register them for the run
      * @todo Use errorRunner array to output the runner which could not be saved.
-     * @todo Save competitionData with transactions.
      * @throws \InvalidArgumentException
      */
     public function uploadRunnerFileAction(): void
@@ -235,12 +234,7 @@ class AdminController extends DefaultController
             if (empty($competitions) === false) {
                 $competitionDataAfterUpload = $competitionDataService->getCompetitionDataAfterRunnerUpload($runnerData, $competitions, $transponderData);
             }
-
-            if (empty($competitionDataAfterUpload) === false) {
-                foreach ($competitionDataAfterUpload as $competitionData) {
-                    $competitionDataService->saveCompetitionData($competitionData);
-                }
-            }
+            $competitionDataService->saveAllCompetitionData($competitionDataAfterUpload);
         }
 
         $this->notificationService->setSuccess('Die Teilnehmer konnten erfolgreich importiert werden.');

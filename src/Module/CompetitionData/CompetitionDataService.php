@@ -109,6 +109,15 @@ class CompetitionDataService
     }
 
     /**
+     * @param array $allCompetitionData
+     * @return bool
+     */
+    public function saveAllCompetitionData(array $allCompetitionData): bool
+    {
+        return $this->competitionDataRepository->saveAllCompetitionData($allCompetitionData);
+    }
+
+    /**
      * @param Id $runnerId
      *
      * @return array
@@ -120,6 +129,13 @@ class CompetitionDataService
         return $this->createCompetitionData($competitionDataData);
     }
 
+    /**
+     * @param Id $competitionDataId
+     * @param TimeMeasureService $timeMeasureService
+     * @param RunnerService $runnerService
+     * @param CompetitionService $competitionService
+     * @return null|CompetitionData
+     */
     public function getCompetitionDataByCompetitionDataId(Id $competitionDataId, TimeMeasureService $timeMeasureService, RunnerService $runnerService, CompetitionService $competitionService): ?CompetitionData
     {
         $competitionDataData = $this->competitionDataRepository->getCompetitionDataByCompetitionDataId($competitionDataId);

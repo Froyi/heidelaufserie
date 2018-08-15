@@ -1,3 +1,31 @@
 <header>
-    <h1>Webseite Boilerplate (header)</h1>
+    <div class="header-content">
+        <div class="logo">
+            <img src="{{ templateDir }}/img/logo.png" alt="Admin Logo">
+            <div class="heading">
+                <h1>Heidelaufserie</h1>
+                <h3>Heidelaufverein Halle/Saale e.V.</h3>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <div>
+                <a href="{{ route('admin') }}" class="{% if page is same as('admin') %}active{% endif %}">Startseite</a>
+            </div>
+            <div>
+                <a href="{{ route('competitions') }}" class="{% if page is same as('competitions') %}active{% endif %}">Wettkämpfe</a>
+            </div>
+            <div>
+                <a href="{{ route('competitionDay') }}" class="{% if page is same as('competitionDay') %}active{% endif %}">Wettkampftag</a>
+            </div>
+            <div>
+                <a href="{{ route('findDuplicateNames') }}" class="{% if page is same as('findDuplicateNames') %}active{% endif %}">Duplikatencheck</a>
+            </div>
+            <div class="logout">
+                <a href="{{ route('logout') }}">
+                    <img src="{{ templateDir }}/img/logout.png" alt="">
+                </a>
+            </div>
+        </div>
+    </div>
 </header>

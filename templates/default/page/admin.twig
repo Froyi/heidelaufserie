@@ -1,43 +1,5 @@
 {% include ('module/partial/notification.twig') %}
 
 <div class="admin-page js-admin-page">
-    <div class="create-competition-day">
-        <h1>1. Erstelle einen Wettkampftag</h1>
-
-        <form action="{{ route('createCompetition') }}" method="post">
-            <p><label for="date">Datum: <input type="date" name="date"></label></p>
-            <p><label for="title">Titel: <input type="text" name="title"></label></p>
-            <p><label for="createStandardCompetitions">Standardwettkänpfe? <input type="checkbox" name="createStandardCompetitions"></label></p>
-            {% if allCompetitionTypes %}
-                <select multiple name="competitionTypes[]">
-                    {% for competitionType in allCompetitionTypes %}
-                    <option value="{{ competitionType.getCompetitionTypeId }}">{{ competitionType.getCompetitionName }}</option>
-                    {% endfor %}
-                </select>
-            {% endif %}
-            <p><label for="startTime">Startzeit: <input type="time" name="startTime"></label></p>
-            <p><input type="submit" name="submit" value="Speichern"></p>
-        </form>
-    </div>
-
-    <div class="upload-runner-file">
-        <h1>2. Upload Läuferdatei</h1>
-
-        <form action="{{ route('uploadRunnerFile') }}" method="post" enctype="multipart/form-data">
-            <p><label for="runnerFile">Datei: <input type="file" name="runnerFile"></label></p>
-            <p><label for="date">Datum des Wettbewerbes: <input type="date" name="date"></label></p>
-            <p><input type="submit" name="submit" value="Speichern"></p>
-        </form>
-    </div>
-
-    <div class="upload-competition-results-file">
-        <h1>3. Upload Competition-Datei</h1>
-
-        <form action="{{ route('uploadCompetitionResultsFile') }}" method="post" enctype="multipart/form-data">
-            <p><label for="resultsFile">Datei: <input type="file" name="resultsFile"></label></p>
-            <p><input type="submit" name="submit" value="Speichern"></p>
-        </form>
-    </div>
-
-    {% include ('module/duplicates.twig') %}
+    <h2>Dies ist die Startseite</h2>
 </div>

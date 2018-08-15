@@ -57,5 +57,13 @@ return [
             'controller' => 'AdminController',
             'action' => 'generateStatisticsByYearAction',
         ],
+        'competitionDay' => [
+            'controller' => 'AdminController',
+            'action' => 'competitionDayAction',
+        ],
+        'competitions' => [
+            'controller' => 'AdminController',
+            'action' => 'competitionsAction',
+        ],
     ],
 ];

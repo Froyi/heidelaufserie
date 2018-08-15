@@ -34,10 +34,10 @@ class CompetitionRepository extends DefaultRepository
     /**
      * @return array
      */
-    public function getAllCompetitions(): array
+    public function getAllCompetitions($sort = Query::ASC): array
     {
         $query = $this->database->getNewSelectQuery(self::TABLE);
-        $query->orderBy('date', Query::ASC);
+        $query->orderBy('date', $sort);
 
         return $this->database->fetchAll($query);
     }

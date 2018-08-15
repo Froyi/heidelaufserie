@@ -3,6 +3,7 @@
 namespace Project\Module\Competition;
 
 use Project\Module\Database\Database;
+use Project\Module\Database\Query;
 use Project\Module\GenericValueObject\Date;
 use Project\Module\GenericValueObject\Id;
 
@@ -51,6 +52,32 @@ class CompetitionService
         }
 
         return $allCompetitionsArray;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllCompetitions(): array
+    {
+        $competitionArray = [];
+
+        $competitionData = $this->competitionRepository->getAllCompetitions(Query::DESC);
+
+        if (empty($competitionData) === true) {
+            return $competitionArray;
+        }
+
+        $allCompetitionTypes = $this->getAllCompetitionTypes();
+
+        foreach ($competitionData as $singleCompetitionData) {
+            $competition = $this->competitionFactory->getCompetitionByObject($singleCompetitionData, $allCompetitionTypes[$singleCompetitionData->competitionTypeId]);
+
+            if ($competition !== null) {
+                $competitionArray[$competition->getCompetitionId()->toString()] = $competition;
+            }
+        }
+
+        return $competitionArray;
     }
 
     /**

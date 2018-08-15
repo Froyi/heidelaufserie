@@ -397,6 +397,14 @@ template {
   font-family: 'nirmalaBold';
   src: url('../font/NirmalaB.ttf');
 }
+@font-face {
+  font-family: 'Montserrat Regular';
+  src: url('../font/Montserrat-Regular.ttf');
+}
+@font-face {
+  font-family: 'Varela Round';
+  src: url('../font/VarelaRound-Regular.ttf');
+}
 * {
   margin: 0;
   padding: 0;
@@ -406,6 +414,128 @@ template {
 }
 a {
   text-decoration: none;
+}
+h2 {
+  font-size: 1.5em;
+  font-family: 'Montserrat Regular', sans-serif;
+  font-weight: normal;
+}
+input {
+  border: 0.06em solid #3F4340;
+  height: 2em;
+  padding: 0 0.63em;
+}
+input[type="submit"] {
+  cursor: pointer;
+}
+.admin {
+  background: url('../img/background.jpg') top left no-repeat;
+  background-attachment: fixed;
+}
+.admin header {
+  width: 100%;
+  height: 6.25em;
+  background-color: #3F4340;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+.admin header .header-content {
+  max-width: 82.25em;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+}
+.admin header .logo {
+  max-width: 21.88em;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.admin header .logo .heading {
+  margin-left: 0.81em;
+}
+.admin header .logo h1,
+.admin header .logo h3 {
+  margin: 0;
+  color: #ffffff;
+  font-family: 'Montserrat Regular', sans-serif;
+  font-weight: normal;
+}
+.admin header .logo h1 {
+  font-size: 2.31em;
+}
+.admin header .logo h3 {
+  font-size: 0.88em;
+  text-align: right;
+}
+.admin header .navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 6.25em;
+}
+.admin header .navigation > div {
+  margin: 0 0.88em;
+}
+.admin header .navigation > div a {
+  font-family: 'Montserrat Regular', sans-serif;
+  font-size: 1.06em;
+  color: #ffffff;
+  cursor: pointer;
+}
+.admin header .navigation > div a.active,
+.admin header .navigation > div a:hover {
+  border-bottom: 0.06em solid #EDDF39;
+}
+.admin header .navigation > div.logout a:hover {
+  border: none;
+}
+.admin .main-content {
+  max-width: 82.25em;
+  margin: 0 auto;
+  margin-top: 6.25em;
+}
+.admin .content-container {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 1em;
+  -webkit-box-shadow: 0 0.06em 0.19em 0 rgba(0, 0, 0, 0.11);
+  -moz-box-shadow: 0 0.06em 0.19em 0 rgba(0, 0, 0, 0.11);
+  box-shadow: 0 0.06em 0.19em 0 rgba(0, 0, 0, 0.11);
+}
+.admin form p {
+  font-family: 'Varela Round', sans-serif;
+  font-size: 1.13em;
+  color: #3F4340;
+  margin-bottom: 1em;
+}
+.admin form p:last-of-type {
+  margin-bottom: 0;
+}
+.admin form p.checkbox label {
+  display: flex;
+  justify-content: flex-start;
+  line-height: 1.8em;
+}
+.admin form p.checkbox label input {
+  width: 1.3em;
+  margin-right: 0.63em;
+}
+.admin form input {
+  width: 90%;
+}
+.admin form input::placeholder {
+  color: rgba(63, 67, 64, 0.2);
+}
+.admin form input[type="submit"] {
+  width: 96%;
+  background-color: #EDDF39;
+}
+.admin form select {
+  width: 96%;
+  padding: 0 0.63em;
+  min-height: 6.2em;
+  margin-bottom: 1em;
 }
 .content-main-wrapper {
   width: 1024px;
@@ -461,7 +591,8 @@ a {
   position: absolute;
   width: 100%;
   cursor: pointer;
-  top: 0;
+  top: 6.25em;
+  left: 0;
 }
 .notification-container .notification {
   padding: 20px;
@@ -609,5 +740,32 @@ a {
   z-index: 3;
   bottom: 0;
   left: 50px;
+}
+.competition-day-page {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-top: 4.38em;
+}
+.competition-day-page h2 {
+  margin-bottom: 20px;
+  color: #3F4340;
+}
+.competitions-page {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-top: 4.38em;
+}
+.competitions-page .create-competition {
+  max-width: 27.13em;
+  margin-right: 2.5em;
+}
+.competitions-page .all-competitions {
+  flex-grow: 1;
+}
+.competitions-page h2 {
+  margin-bottom: 20px;
+  color: #3F4340;
 }
 /*# sourceMappingURL=main.css.map */

@@ -1,0 +1,24 @@
+{% include ('module/partial/notification.twig') %}
+
+<div class="competition-day-page js-competition-day-page">
+    <div class="content-container upload-runner-file">
+        <h2>Upload Läuferdatei</h2>
+
+        <form action="{{ route('uploadRunnerFile') }}" method="post" enctype="multipart/form-data">
+            <p><label for="runnerFile">Datei: <input type="file" name="runnerFile"></label></p>
+            <p><label for="date">Datum des Wettbewerbes: <input type="date" name="date"></label></p>
+            <p><input type="submit" name="submit" value="Speichern"></p>
+        </form>
+    </div>
+
+    <div class="upload-competition-results-file">
+        <h1>3. Upload Competition-Datei</h1>
+
+        <form action="{{ route('uploadCompetitionResultsFile') }}" method="post" enctype="multipart/form-data">
+            <p><label for="resultsFile">Datei: <input type="file" name="resultsFile"></label></p>
+            <p><input type="submit" name="submit" value="Speichern"></p>
+        </form>
+    </div>
+
+    {% include ('module/duplicates.twig') %}
+</div>

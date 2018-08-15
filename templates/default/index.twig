@@ -3,7 +3,11 @@
 <head>
     {% include ('basic/head.twig') %}
 </head>
-<body>
+<body class="{% if isAdmin %}admin{% endif %}">
+{% if isAdmin %}
+    {% include ('basic/header.twig') %}
+{% endif %}
+
     <div class="main-content js-main-content">
         {% include ('page/' ~ page ~ '.twig') %}
     </div>

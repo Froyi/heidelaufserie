@@ -5,6 +5,8 @@ namespace Project;
 use Project\Controller\IndexController;
 use Project\Utilities\Tools;
 
+ini_set("memory_limit", "-1");
+
 \define('ROOT_PATH', getcwd());
 date_default_timezone_set('Europe/Berlin');
 

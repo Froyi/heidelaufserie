@@ -63,7 +63,7 @@ function generateTimeMeasureData() {
 }
 
 $(document).ready(function () {
-    // window.setTimeout(hideNotifications, 5000); // 5 seconds
+    window.setTimeout(hideNotifications, 5000); // 5 seconds
 
     if ($('.js-speaker-page').length > 0) {
         refreshSpeakerData();
@@ -75,6 +75,12 @@ $(document).ready(function () {
     if ($('.js-timemeasure-page').length > 0) {
         window.setInterval(generateTimeMeasureData, 1000);
     }
+
+    var socket = io.connect('localhost:3000');
+console.log(document.location.host);
+    socket.on('newData', function(message) {
+        console.log(message);
+    });
 });
 
 $(document).on('click', '.js-notification', function () {

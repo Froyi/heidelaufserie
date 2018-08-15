@@ -5,6 +5,7 @@ namespace Project\Controller;
 
 use Project\Configuration;
 use Project\Module\Database\Database;
+use Project\Module\GenericValueObject\Date;
 use Project\Module\Notification\NotificationService;
 use Project\Service\JsPluginService;
 use Project\View\ViewRenderer;
@@ -58,6 +59,12 @@ class DefaultController
         $notifications = $this->notificationService->getNotifications(false);
 
         $this->viewRenderer->addViewConfig('notifications', $notifications);
+        
+        /**
+         * today
+         */
+        $date = Date::fromValue('today');
+        $this->viewRenderer->addViewConfig('today', $date->toString());
     }
 
     /**

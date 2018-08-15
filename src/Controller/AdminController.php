@@ -34,6 +34,8 @@ class AdminController extends DefaultController
         session_start();
 
         parent::__construct($configuration, $routeName);
+
+        $this->viewRenderer->addViewConfig('isAdmin', 'true');
     }
 
     /**
@@ -44,12 +46,33 @@ class AdminController extends DefaultController
      */
     public function adminAction(): void
     {
+        $this->viewRenderer->addViewConfig('page', 'admin');
+
+        $this->viewRenderer->renderTemplate();
+    }
+
+    public function competitionDayAction(): void
+    {
         $competitionService = new CompetitionService($this->database);
 
         $allCompetitionTypes = $competitionService->getAllCompetitionTypes();
 
         $this->viewRenderer->addViewConfig('allCompetitionTypes', $allCompetitionTypes);
-        $this->viewRenderer->addViewConfig('page', 'admin');
+        $this->viewRenderer->addViewConfig('page', 'competitionDay');
+
+        $this->viewRenderer->renderTemplate();
+    }
+
+    public function competitionsAction(): void
+    {
+        $competitionService = new CompetitionService($this->database);
+
+        $competitions = $competitionService->getAllCompetitions();
+        $allCompetitionTypes = $competitionService->getAllCompetitionTypes();
+
+        $this->viewRenderer->addViewConfig('allCompetitionTypes', $allCompetitionTypes);
+        $this->viewRenderer->addViewConfig('competitions', $competitions);
+        $this->viewRenderer->addViewConfig('page', 'competitions');
 
         $this->viewRenderer->renderTemplate();
     }
@@ -237,20 +260,20 @@ class AdminController extends DefaultController
 
         if (empty($competitions) === true) {
             $this->notificationService->setError('Die Wettbewerbe konnten nicht erstellt werden. Nötige Daten fehlen.');
-            header('Location: ' . Tools::getRouteUrl('admin'));
+            header('Location: ' . Tools::getRouteUrl('competitions'));
             exit;
         }
 
         foreach ($competitions as $competition) {
             if ($competitionService->saveCompetition($competition) === false) {
                 $this->notificationService->setError('Die Wettbewerbe konnten nicht komplett gespeichert werden.');
-                header('Location: ' . Tools::getRouteUrl('admin'));
+                header('Location: ' . Tools::getRouteUrl('competitions'));
                 exit;
             }
         }
 
         $this->notificationService->setSuccess('Die Wettbewerbe wurden erfolgreich erstellt.');
-        header('Location: ' . Tools::getRouteUrl('admin'));
+        header('Location: ' . Tools::getRouteUrl('competitions'));
         exit;
     }
 }

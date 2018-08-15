@@ -1,0 +1,49 @@
+{% include ('module/partial/notification.twig') %}
+
+<div class="competitions-page js-competition-page">
+    <div class="content-container create-competition">
+        <h2>Erstelle einen Wettkampftag</h2>
+
+        <form action="{{ route('createCompetition') }}" method="post">
+            <p><label for="date">Datum<br/>
+                    <input type="date" name="date" {% if today %}value="{{ today }}"{% endif %}></label>
+            </p>
+
+            <p><label for="title">Titel<br/>
+                    <input type="text" name="title" value="235. Heidelauf" placeholder="240. Heidelauf"></label>
+            </p>
+
+            <p class="checkbox"><label for="createStandardCompetitions"><input type="checkbox" checked
+                                                                               name="createStandardCompetitions">
+                    Standardwettkämpfe</label>
+            </p>
+
+            {% if allCompetitionTypes %}
+                <select multiple name="competitionTypes[]">
+                    {% for competitionType in allCompetitionTypes %}
+                        <option value="{{ competitionType.getCompetitionTypeId }}">{{ competitionType.getCompetitionName }}</option>
+                    {% endfor %}
+                </select>
+            {% endif %}
+
+            <p><label for="startTime">Startzeit<br/>
+                    <input type="time" name="startTime" value="10:00"></label>
+            </p>
+
+            <p><input type="submit" name="submit" value="Speichern">
+            </p>
+        </form>
+    </div>
+
+    <div class="content-container all-competitions">
+        <h2>Liste aller Wettkämpfe</h2>
+
+        {% if competitions %}
+            {% for competition in competitions %}
+                <p>{{ competition.getDate }} | {{ competition.getTitle }} | {{ competition.getCompetitionType.getCompetitionName }}</p>
+            {% endfor %}
+        {% else %}
+            <p>Es gibt noch keine Wettbewerbe</p>
+        {% endif %}
+    </div>
+</div>

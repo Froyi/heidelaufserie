@@ -25,13 +25,15 @@ COLLATE='utf8_general_ci'
 ENGINE=MyISAM
 ;
 
-CREATE TABLE `heidelaufserie`.`competitionType` (
-	`competitionTypeId` INT(2) NOT NULL,
-	`competitionName` VARCHAR(200) NOT NULL,
-	`distance` INT(6) NOT NULL,
-	`rounds` INT(3) NOT NULL,
-	`standardSet` TINYINT(1) NOT NULL DEFAULT 0,
-	PRIMARY KEY (`competitionTypeId`)
+create table competitiontype
+(
+	competitionTypeId int(2)                 not null
+		primary key,
+	competitionName   varchar(200)           not null,
+	distance          int(6)                 not null,
+	rounds            int(3)                 not null,
+	standardSet       tinyint(1) default '0' not null,
+	startTimeGroup    int default '0'        not null
 )
 COLLATE='utf8_general_ci'
 ENGINE=MyISAM

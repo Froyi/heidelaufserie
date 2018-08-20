@@ -19,15 +19,15 @@ class Tools
     {
         $value = false;
 
-        if (isset($_GET[$name]) && empty($_GET[$name]) === false) {
+        if (isset($_GET[$name])) {
             $value = $_GET[$name];
         }
 
-        if (isset($_POST[$name]) && empty($_POST[$name]) === false) {
+        if (isset($_POST[$name])) {
             $value = $_POST[$name];
         }
 
-        if (isset($_SESSION[$name]) && empty($_SESSION[$name]) === false) {
+        if (isset($_SESSION[$name])) {
             $value = $_SESSION[$name];
         }
 

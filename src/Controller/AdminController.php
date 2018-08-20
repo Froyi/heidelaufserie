@@ -4,12 +4,15 @@ declare (strict_types=1);
 namespace Project\Controller;
 
 use Project\Configuration;
+use Project\Module\Competition\Competition;
 use Project\Module\Competition\CompetitionService;
+use Project\Module\Competition\StartTimeGroup;
 use Project\Module\CompetitionData\CompetitionDataService;
 use Project\Module\CompetitionData\StartNumber;
 use Project\Module\CompetitionResults\CompetitionResultsService;
 use Project\Module\CompetitionStatistic\CompetitionStatisticService;
 use Project\Module\GenericValueObject\Date;
+use Project\Module\GenericValueObject\Datetime;
 use Project\Module\GenericValueObject\Year;
 use Project\Module\Reader\ReaderService;
 use Project\Module\Runner\Runner;
@@ -46,9 +49,47 @@ class AdminController extends DefaultController
      */
     public function adminAction(): void
     {
+        $competitionService = new CompetitionService($this->database);
+        $startTimeGroups = $competitionService->getAllStartTimeGroups();
+
+        $this->viewRenderer->addViewConfig('startTimeGroups', $startTimeGroups);
         $this->viewRenderer->addViewConfig('page', 'admin');
 
         $this->viewRenderer->renderTemplate();
+    }
+    
+    public function setStartTimeAction(): void
+    {
+        if (Tools::getValue('startTimeGroup') === false) {
+            $this->notificationService->setError('Die Startzeit konnte nicht gespeichert werden, da keine Gruppe angegeben wurde.');
+            header('Location: ' . Tools::getRouteUrl('admin'));
+            exit;
+        }
+
+        $startTimeGroup = StartTimeGroup::fromValue(Tools::getValue('startTimeGroup'));
+        /** @var Date $date */
+        $date = Date::fromValue('today');
+
+        $competitionService = new CompetitionService($this->database);
+        $competitions = $competitionService->getCompetitionsByDateAndStartTimeGroup($date, $startTimeGroup);
+
+        /** @var Datetime $startTime */
+        $startTime = Datetime::fromValue('now');
+
+        /** @var Competition $competition */
+        foreach ($competitions as $competition) {
+            $competition->setStartTime($startTime);
+        }
+
+        if ($competitionService->updateAllCompetitions($competitions) === true) {
+            $this->notificationService->setSuccess('Die Startzeit konnte erfolgreich für alle Wettbewerbe gestartet werden.');
+            header('Location: ' . Tools::getRouteUrl('admin'));
+            exit;
+        }
+
+        $this->notificationService->setError('Die Startzeit konnte nicht gespeichert werden, es gab ein Datenbankfehler.');
+        header('Location: ' . Tools::getRouteUrl('admin'));
+        exit;
     }
 
     public function competitionDayAction(): void

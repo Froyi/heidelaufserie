@@ -9,4 +9,4 @@
     {% for jsPlugin in jsRoutePlugins %}
     <script src="{{ templateDir }}{{ jsPlugin }}"></script>
 {% endfor %}
-<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+<script src="http://localhost:3000/socket.io/socket.io.js" defer="defer"></script>

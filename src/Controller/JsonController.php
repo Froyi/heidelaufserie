@@ -72,7 +72,6 @@ class JsonController extends DefaultController
 
     /**
      * @todo Mark time measures with transaction.
-     * @todo Take the actual date, not a random one.
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
@@ -80,7 +79,7 @@ class JsonController extends DefaultController
     public function refreshSpeakerDataAction(): void
     {
         /** @var Date $date */
-        $date = Date::fromValue('2018-07-28');
+        $date = Date::fromValue('today');
 
         $timeMeasureService = new TimeMeasureService($this->database);
         $runnerService = new RunnerService($this->database, $this->configuration);

@@ -64,6 +64,49 @@ class CompetitionRepository extends DefaultRepository
     }
 
     /**
+     * @param array $competitions
+     *
+     * @return bool
+     */
+    public function updateAllCompetitions(array $competitions): bool
+    {
+        $this->database->beginTransaction();
+
+        try {
+            foreach ($competitions as $competition) {
+                $this->updateCompetition($competition);
+            }
+
+            $this->database->commit();
+        } catch (\Exception $exception) {
+            $this->database->rollback();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param Competition $competition
+     *
+     * @return bool
+     */
+    public function updateCompetition(Competition $competition): bool
+    {
+        $query = $this->database->getNewUpdateQuery(self::TABLE);
+
+        $query->set('competitionTypeId', $competition->getCompetitionType()->getCompetitionTypeId());
+        $query->set('title', $competition->getTitle()->getTitle());
+        $query->set('date', $competition->getDate()->toString());
+        $query->set('startTime', $competition->getStartTime()->toString());
+
+        $query->where('competitionId', '=', $competition->getCompetitionId()->toString());
+
+        return $this->database->execute($query);
+    }
+
+    /**
      * @param Id $competitionId
      *
      * @return mixed

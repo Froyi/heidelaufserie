@@ -2,4 +2,17 @@
 
 <div class="admin-page js-admin-page">
     <h2>Dies ist die Startseite</h2>
+
+    <div class="content-container">
+        <h2>Startzeiten definieren</h2>
+
+        {% if startTimeGroups %}
+            {% for key, startTimeGroup in startTimeGroups %}
+                <div>
+                    <a href="{{ route('setStartTime', {startTimeGroup: key}) }}">Gruppe {{ key + 1 }} startet
+                        [{% for type in startTimeGroup %}{{ type.getCompetitionName }}{% endfor %}] </a>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
 </div>

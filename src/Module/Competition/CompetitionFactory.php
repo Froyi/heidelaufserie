@@ -25,8 +25,9 @@ class CompetitionFactory
             $distance = Distance::fromValue($object->distance);
             $rounds = Round::fromValue($object->rounds);
             $standardSet = (bool)$object->standardSet;
+            $startTimeGroup = StartTimeGroup::fromValue($object->startTimeGroup);
 
-            return new CompetitionType($competitionTypeId, $competitionName, $distance, $rounds, $standardSet);
+            return new CompetitionType($competitionTypeId, $competitionName, $distance, $rounds, $standardSet, $startTimeGroup);
 
         } catch (\InvalidArgumentException $exception) {
             return null;

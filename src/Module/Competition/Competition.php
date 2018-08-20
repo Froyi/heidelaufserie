@@ -89,4 +89,12 @@ class Competition extends DefaultModel
     {
         return $this->startTime;
     }
+
+    /**
+     * @param Datetime $startTime
+     */
+    public function setStartTime(Datetime $startTime): void
+    {
+        $this->startTime = $startTime;
+    }
 }

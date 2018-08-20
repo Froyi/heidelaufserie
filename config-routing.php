@@ -65,5 +65,9 @@ return [
             'controller' => 'AdminController',
             'action' => 'competitionsAction',
         ],
+        'setStartTime' => [
+            'controller' => 'AdminController',
+            'action' => 'setStartTimeAction',
+        ],
     ],
 ];

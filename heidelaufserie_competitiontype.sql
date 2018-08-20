@@ -1,0 +1,5 @@
+INSERT INTO heidelaufserie.competitiontype (competitionTypeId, competitionName, distance, rounds, standardSet, startTimeGroup) VALUES (1, '5km Laufen', 5000, 1, 1, 0);
+INSERT INTO heidelaufserie.competitiontype (competitionTypeId, competitionName, distance, rounds, standardSet, startTimeGroup) VALUES (2, '10km Laufen', 10000, 2, 1, 0);
+INSERT INTO heidelaufserie.competitiontype (competitionTypeId, competitionName, distance, rounds, standardSet, startTimeGroup) VALUES (3, '15km Laufen', 15000, 3, 1, 0);
+INSERT INTO heidelaufserie.competitiontype (competitionTypeId, competitionName, distance, rounds, standardSet, startTimeGroup) VALUES (4, '5km Nordic Walking', 5000, 1, 1, 1);
+INSERT INTO heidelaufserie.competitiontype (competitionTypeId, competitionName, distance, rounds, standardSet, startTimeGroup) VALUES (5, '10km Nordic Walking', 10000, 2, 1, 1);

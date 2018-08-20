@@ -28,6 +28,9 @@ class CompetitionType
     /** @var bool $standardSet */
     protected $standardSet;
 
+    /** @var StartTimeGroup $startTimeGroup */
+    protected $startTimeGroup;
+
     /**
      * CompetitionType constructor.
      *
@@ -36,14 +39,16 @@ class CompetitionType
      * @param Distance $distance
      * @param Round $rounds
      * @param bool $standardSet
+     * @param StartTimeGroup $startTimeGroup
      */
-    public function __construct(int $competitionTypeId, Name $competitionName, Distance $distance, Round $rounds, bool $standardSet)
+    public function __construct(int $competitionTypeId, Name $competitionName, Distance $distance, Round $rounds, bool $standardSet, StartTimeGroup $startTimeGroup)
     {
         $this->competitionTypeId = $competitionTypeId;
         $this->competitionName = $competitionName;
         $this->distance = $distance;
         $this->rounds = $rounds;
         $this->standardSet = $standardSet;
+        $this->startTimeGroup = $startTimeGroup;
     }
 
     /**
@@ -84,5 +89,13 @@ class CompetitionType
     public function isStandardSet(): bool
     {
         return $this->standardSet;
+    }
+
+    /**
+     * @return StartTimeGroup
+     */
+    public function getStartTimeGroup(): StartTimeGroup
+    {
+        return $this->startTimeGroup;
     }
 }

@@ -81,6 +81,23 @@ class CompetitionService
     }
 
     /**
+     * @return array
+     */
+    public function getAllStartTimeGroups(): array
+    {
+        $startTimeGroups = [];
+
+        $competitionTypes = $this->getAllCompetitionTypes();
+
+        /** @var CompetitionType $competitionType */
+        foreach ($competitionTypes as $competitionType) {
+            $startTimeGroups[$competitionType->getStartTimeGroup()->getStartTimeGroup()][] = $competitionType;
+        }
+
+        return $startTimeGroups;
+    }
+
+    /**
      * @param int $competitionTypeId
      *
      * @return null|CompetitionType
@@ -178,6 +195,11 @@ class CompetitionService
         return $this->competitionRepository->saveCompetition($competition);
     }
 
+    public function updateAllCompetitions(array $competitions): bool
+    {
+        return $this->competitionRepository->updateAllCompetitions($competitions);
+    }
+
     /**
      * @param Date $date
      *
@@ -204,6 +226,27 @@ class CompetitionService
         }
 
         return $competitionArray;
+    }
+
+    /**
+     * @param Date $date
+     * @param StartTimeGroup $startTimeGroup
+     *
+     * @return array
+     */
+    public function getCompetitionsByDateAndStartTimeGroup(Date $date, StartTimeGroup $startTimeGroup): array
+    {
+        $competitions = [];
+        $competitionArray = $this->getCompetitionsByDate($date);
+
+        /** @var Competition $competition */
+        foreach ($competitionArray as $competition) {
+            if ($competition->getCompetitionType()->getStartTimeGroup()->getStartTimeGroup() === $startTimeGroup->getStartTimeGroup()) {
+                $competitions[] = $competition;
+            }
+        }
+
+        return $competitions;
     }
 
     /**

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Project\TimeMeasure;
 
+use Project\Module\CompetitionData\CompetitionData;
 use Project\Module\CompetitionData\TransponderNumber;
 use Project\Module\Database\Query;
 use Project\Module\DefaultRepository;
@@ -55,6 +56,33 @@ class TimeMeasureRepository extends DefaultRepository
         $query->insert('shown', $timeMeasure->isShown());
 
         return $this->database->execute($query);
+    }
+
+    /**
+     * @param array $allCompetitionData
+     * @return bool
+     */
+    public function markAllTimeMeasureListsAsShown(array $allCompetitionData): bool
+    {
+        $this->database->beginTransaction();
+        try {
+            /** @var CompetitionData $competitionData */
+            foreach ($allCompetitionData as $competitionData) {
+                $timeMeasureList = $competitionData->getTimeMeasureList();
+                /** @var TimeMeasure $timeMeasure */
+                foreach ($timeMeasureList as $timeMeasure) {
+                    $timeMeasure->setShown(true);
+                    $this->updateTimeMeasure($timeMeasure);
+                }
+            }
+            $this->database->commit();
+        } catch (\Exception $exception) {
+            $this->database->rollback();
+
+            return false;
+        }
+
+        return true;
     }
 
     /**

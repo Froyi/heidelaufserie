@@ -88,19 +88,17 @@ class JsonController extends DefaultController
         $competitionStatisticService = new CompetitionStatisticService($this->database);
 
         $competitionDataService = new CompetitionDataService($this->database);
-        $competitionDatas = $competitionDataService->getSpeakerCompetitionData($date, $timeMeasureService, $runnerService, $competitionService, $competitionStatisticService);
+        $allCompetitionData = $competitionDataService->getSpeakerCompetitionData($date, $timeMeasureService, $runnerService, $competitionService, $competitionStatisticService);
 
 
-        if (empty($competitionDatas) === true) {
+        if (empty($allCompetitionData) === true) {
             $this->jsonModel->send('noRefresh');
         }
 
-        /** @var CompetitionData $competitionData */
-        foreach ($competitionDatas as $competitionData) {
-            $timeMeasureService->markTimeMeasureListAsShown($competitionData->getTimeMeasureList());
-        }
+        $timeMeasureService->markAllTimeMeasureListsAsShown($allCompetitionData);
 
-        $this->viewRenderer->addViewConfig('competitionDatas', $competitionDatas);
+
+        $this->viewRenderer->addViewConfig('allCompetitionData', $allCompetitionData);
         $this->viewRenderer->addViewConfig('year', Year::fromValue(date('Y', strtotime('-1 year')))->getYearShort());
 
         $this->jsonModel->addJsonConfig('view', $this->viewRenderer->renderJsonView('module/runnerSpeakerUpdate.twig'));

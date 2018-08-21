@@ -1,5 +1,5 @@
-{% if competitionDatas %}
-    {% for competitionData in competitionDatas %}
+{% if allCompetitionData %}
+    {% for competitionData in allCompetitionData %}
         <div class="runner-speaker js-runner-speaker {% if competitionData.hasMoreRounds is same as(true) %}more-rounds{% elseif competitionData.isLastRound is same as(true) %}last-round{% endif %} {% if competitionData.getRunner.getAgeGroup.getGender.getGender is same as ('w') %}female-runner{% endif %}">
             <div class="new-runner "></div>
 

@@ -76,11 +76,11 @@ $(document).ready(function () {
         window.setInterval(generateTimeMeasureData, 1000);
     }
 
-    var socket = io.connect('http://localhost:3000', {transports: ['websocket']});
+    /*var socket = io.connect('http://localhost:3000', {transports: ['websocket']});
 console.log(document.location.host);
     socket.on('newData', function(message) {
         console.log(message);
-    });
+    });*/
 });
 
 $(document).on('click', '.js-notification', function () {

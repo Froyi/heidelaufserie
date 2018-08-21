@@ -652,7 +652,8 @@ input[type="submit"] {
 }
 .speaker-page .rounds {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
+  min-width: 440px;
 }
 .speaker-page .rounds .round-container {
   display: flex;
@@ -660,6 +661,9 @@ input[type="submit"] {
   align-items: flex-start;
   width: 110px;
   margin-right: 20px;
+}
+.speaker-page .rounds .round-container > div > div {
+  height: 23px;
 }
 .speaker-page .ranking-last-year {
   margin-left: 20px;
@@ -740,6 +744,24 @@ input[type="submit"] {
   z-index: 3;
   bottom: 0;
   left: 50px;
+}
+.speaker-page.landscape .speaker-runner-container {
+  width: 55em;
+  border-right: 1px solid #707070;
+}
+.speaker-page.landscape .speaker-competition-status {
+  width: 30em;
+  right: 0;
+  top: 0;
+  left: unset;
+  bottom: unset;
+  border: none;
+}
+.speaker-page.landscape .speaker-competition-status .gender-container {
+  display: block;
+}
+.speaker-page.landscape .speaker-competition-status .gender-container .gender-competition:first-of-type {
+  margin-bottom: 3em;
 }
 .competition-day-page {
   display: flex;

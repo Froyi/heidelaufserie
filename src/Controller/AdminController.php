@@ -96,7 +96,7 @@ class AdminController extends DefaultController
     {
         $competitionService = new CompetitionService($this->database);
 
-        $allCompetitionTypes = $competitionService->getAllCompetitionTypes();
+        $allCompetitionTypes = $competitionService->getCompetitionTypes();
 
         $this->viewRenderer->addViewConfig('allCompetitionTypes', $allCompetitionTypes);
         $this->viewRenderer->addViewConfig('page', 'competitionDay');
@@ -109,7 +109,7 @@ class AdminController extends DefaultController
         $competitionService = new CompetitionService($this->database);
 
         $competitions = $competitionService->getAllCompetitions();
-        $allCompetitionTypes = $competitionService->getAllCompetitionTypes();
+        $allCompetitionTypes = $competitionService->getCompetitionTypes();
 
         $this->viewRenderer->addViewConfig('allCompetitionTypes', $allCompetitionTypes);
         $this->viewRenderer->addViewConfig('competitions', $competitions);

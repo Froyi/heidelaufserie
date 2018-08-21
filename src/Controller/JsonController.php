@@ -79,7 +79,8 @@ class JsonController extends DefaultController
     public function refreshSpeakerDataAction(): void
     {
         /** @var Date $date */
-        $date = Date::fromValue('today');
+        //$date = Date::fromValue('today');
+        $date = Date::fromValue('2018-07-28');
 
         $timeMeasureService = new TimeMeasureService($this->database);
         $runnerService = new RunnerService($this->database, $this->configuration);

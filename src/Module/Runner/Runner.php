@@ -43,6 +43,7 @@ class Runner extends DefaultModel
      * @param Name $surname
      * @param Name $firstname
      * @param AgeGroup $ageGroup
+     * @param bool $proved
      */
     public function __construct(Id $runnerId, Name $surname, Name $firstname, AgeGroup $ageGroup, bool $proved)
     {
@@ -103,11 +104,19 @@ class Runner extends DefaultModel
         $this->competitionDataList = $competitionDataList;
     }
 
-    public function getActualClub(): Club
+    public function getActualClub(): ?Club
     {
         $competitionDataList = $this->competitionDataList;
+
+        if (empty($competitionDataList) === true) {
+            return null;
+        }
+
         usort($competitionDataList, [$this, 'sortByDate']);
+
+        /** @var CompetitionData $competitionData */
         $competitionData = reset($competitionDataList);
+
         return $competitionData->getClub();
     }
 
@@ -127,7 +136,13 @@ class Runner extends DefaultModel
         $this->proved = $proved;
     }
 
-    public function sortByDate(CompetitionData $competitionData1, CompetitionData $competitionData2)
+    /**
+     * @param CompetitionData $competitionData1
+     * @param CompetitionData $competitionData2
+     *
+     * @return int
+     */
+    public function sortByDate(CompetitionData $competitionData1, CompetitionData $competitionData2): int
     {
         if ($competitionData1->getDate()->toString() === $competitionData2->getDate()->toString()) {
             return 0;

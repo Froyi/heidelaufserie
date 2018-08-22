@@ -20,7 +20,7 @@ class CompetitionFactory
     public function getCompetitionTypeByObject($object): ?CompetitionType
     {
         try {
-            $competitionTypeId = (int)$object->competitionTypeId;
+            $competitionTypeId = CompetitionTypeId::fromValue($object->competitionTypeId);
             $competitionName = Name::fromString($object->competitionName);
             $distance = Distance::fromValue($object->distance);
             $rounds = Round::fromValue($object->rounds);

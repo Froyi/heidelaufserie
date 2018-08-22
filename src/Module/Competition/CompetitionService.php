@@ -199,7 +199,7 @@ class CompetitionService
             $allCompetitionType = $this->competitionFactory->getCompetitionTypeByObject($allCompetitionTypeData);
 
             if ($allCompetitionType !== null) {
-                $allCompetitionsArray[$allCompetitionType->getCompetitionTypeId()] = $allCompetitionType;
+                $allCompetitionsArray[$allCompetitionType->getCompetitionTypeId()->getCompetitionTypeId()] = $allCompetitionType;
             }
         }
 
@@ -246,7 +246,7 @@ class CompetitionService
         /** @var CompetitionType $competitionType */
         foreach ($this->competitionTypes as $competitionType) {
             if ($competitionType->isStandardSet() === true) {
-                $standardCompetitiontypes[$competitionType->getCompetitionTypeId()] = $competitionType;
+                $standardCompetitiontypes[$competitionType->getCompetitionTypeId()->getCompetitionTypeId()] = $competitionType;
             }
         }
 

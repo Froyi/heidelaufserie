@@ -73,6 +73,7 @@ class CompetitionResultsService
 
     /**
      * @param CompetitionResults $competitionResults
+     * @param Competition $competition
      *
      * @return bool
      */

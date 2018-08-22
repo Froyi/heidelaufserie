@@ -32,6 +32,7 @@ class Configuration
         $this->configuration = [];
 
         foreach(self::CONFIG_LIST as $config) {
+            /** @noinspection SlowArrayOperationsInLoopInspection */
             $this->configuration = array_merge($this->configuration, include $config);
         }
     }

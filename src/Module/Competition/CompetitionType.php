@@ -13,7 +13,7 @@ use Project\Module\GenericValueObject\Name;
  */
 class CompetitionType
 {
-    /** @var int $competitionTypeId */
+    /** @var CompetitionTypeId $competitionTypeId */
     protected $competitionTypeId;
 
     /** @var Name $competitionName */
@@ -34,14 +34,14 @@ class CompetitionType
     /**
      * CompetitionType constructor.
      *
-     * @param int $competitionTypeId
+     * @param CompetitionTypeId $competitionTypeId
      * @param Name $competitionName
      * @param Distance $distance
      * @param Round $rounds
      * @param bool $standardSet
      * @param StartTimeGroup $startTimeGroup
      */
-    public function __construct(int $competitionTypeId, Name $competitionName, Distance $distance, Round $rounds, bool $standardSet, StartTimeGroup $startTimeGroup)
+    public function __construct(CompetitionTypeId $competitionTypeId, Name $competitionName, Distance $distance, Round $rounds, bool $standardSet, StartTimeGroup $startTimeGroup)
     {
         $this->competitionTypeId = $competitionTypeId;
         $this->competitionName = $competitionName;
@@ -52,9 +52,9 @@ class CompetitionType
     }
 
     /**
-     * @return int
+     * @return CompetitionTypeId
      */
-    public function getCompetitionTypeId(): int
+    public function getCompetitionTypeId(): CompetitionTypeId
     {
         return $this->competitionTypeId;
     }

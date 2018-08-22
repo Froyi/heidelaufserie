@@ -22,7 +22,7 @@ class CompetitionStatisticFactory
             $competitionStatisticId = Id::generateId();
             $runnerId = Id::fromString($data->runnerId);
             $year = Year::fromValue($data->year);
-            $competitionCount = CompetitionCount::fromValue(count($data->points));
+            $competitionCount = CompetitionCount::fromValue(\count($data->points));
 
             $competitionStatistic = new CompetitionStatistic($competitionStatisticId, $runnerId, $year, $competitionCount);
 
@@ -34,7 +34,7 @@ class CompetitionStatisticFactory
                 }
 
                 try {
-                    $competitionStatistic->setAveragePoints(Points::fromValue(array_sum($data->points) / count($data->points)));
+                    $competitionStatistic->setAveragePoints(Points::fromValue(array_sum($data->points) / \count($data->points)));
                 } catch (\InvalidArgumentException $exception) {
                     // do nothing
                 }
@@ -54,7 +54,7 @@ class CompetitionStatisticFactory
                 }
 
                 try {
-                    $competitionStatistic->setAverageTimeOverall(TimeOverall::fromValue(floor(array_sum($data->timeOverall) / count($data->timeOverall))));
+                    $competitionStatistic->setAverageTimeOverall(TimeOverall::fromValue(floor(array_sum($data->timeOverall) / \count($data->timeOverall))));
                 } catch (\InvalidArgumentException $exception) {
                     // do nothing
                 }
@@ -68,7 +68,7 @@ class CompetitionStatisticFactory
                 }
 
                 try {
-                    $competitionStatistic->setAverageFirstRound(RoundTime::fromValue(floor(array_sum($data->firstRound) / count($data->firstRound))));
+                    $competitionStatistic->setAverageFirstRound(RoundTime::fromValue(floor(array_sum($data->firstRound) / \count($data->firstRound))));
                 } catch (\InvalidArgumentException $exception) {
                     // do nothing
                 }
@@ -82,7 +82,7 @@ class CompetitionStatisticFactory
                 }
 
                 try {
-                    $competitionStatistic->setAverageSecondRound(RoundTime::fromValue(floor(array_sum($data->secondRound) / count($data->secondRound))));
+                    $competitionStatistic->setAverageSecondRound(RoundTime::fromValue(floor(array_sum($data->secondRound) / \count($data->secondRound))));
                 } catch (\InvalidArgumentException $exception) {
                     // do nothing
                 }
@@ -96,7 +96,7 @@ class CompetitionStatisticFactory
                 }
 
                 try {
-                    $competitionStatistic->setAverageThirdRound(RoundTime::fromValue(floor(array_sum($data->thirdRound) / count($data->thirdRound))));
+                    $competitionStatistic->setAverageThirdRound(RoundTime::fromValue(floor(array_sum($data->thirdRound) / \count($data->thirdRound))));
                 } catch (\InvalidArgumentException $exception) {
                     // do nothing
                 }

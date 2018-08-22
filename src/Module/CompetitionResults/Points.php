@@ -5,6 +5,7 @@ declare (strict_types=1);
 namespace Project\Module\CompetitionResults;
 
 use Project\Configuration;
+use Project\Module\Competition\CompetitionTypeId;
 use Project\Module\GenericValueObject\DefaultGenericValueObject;
 
 class Points extends DefaultGenericValueObject
@@ -84,17 +85,18 @@ class Points extends DefaultGenericValueObject
     /**
      * @param TimeOverall $timeOverall
      * @param Round $rounds
+     * @param CompetitionTypeId $competitionTypeId
      *
      * @return null|Points
      */
-    public static function fromTimeAndRounds(TimeOverall $timeOverall, Round $rounds, int $competitionTypeId): ?self
+    public static function fromTimeAndRounds(TimeOverall $timeOverall, Round $rounds, CompetitionTypeId $competitionTypeId): ?self
     {
         if ($rounds->getRound() === 0 || $timeOverall->getTimeOverall() === null) {
             return null;
         }
         $competitionTime = self::getConfiguration()->getEntryByName('competitionTime');
 
-        $defaultTime = $competitionTime[$competitionTypeId];
+        $defaultTime = $competitionTime[$competitionTypeId->getCompetitionTypeId()];
 
         if ($rounds->getRound() !== $defaultTime['rounds']) {
             return null;

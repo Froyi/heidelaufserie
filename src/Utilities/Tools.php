@@ -93,6 +93,8 @@ class Tools
      * @param int $percentage
      *
      * @return bool
+     * @throws \Exception
+     * @throws \Exception
      */
     public static function shallWeRefresh(int $percentage = 10): bool
     {

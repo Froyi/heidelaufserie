@@ -5,6 +5,7 @@ namespace Project\Module\CompetitionData;
 
 use Project\Module\Competition\Competition;
 use Project\Module\Competition\CompetitionService;
+use Project\Module\Competition\CompetitionTypeId;
 use Project\Module\CompetitionStatistic\CompetitionStatisticService;
 use Project\Module\Database\Database;
 use Project\Module\GenericValueObject\Date;
@@ -49,7 +50,9 @@ class CompetitionDataService
         $competitionDataArray = [];
 
         foreach ($uploadData as $competitionDataData) {
-            $competition = $this->getCompetitionByCompetitionTypeId($competitions, (int)$competitionDataData['competitionTypeId']);
+            $competitionTypeId = CompetitionTypeId::fromValue($competitionDataData['competitionTypeId']);
+
+            $competition = $this->getCompetitionByCompetitionTypeId($competitions, $competitionTypeId);
 
             if ($competition !== null) {
                 $competitionData = $this->competitionDataFactory->getCompetitionDataByObject($competitionDataData, $competition, $transponderData);
@@ -148,6 +151,7 @@ class CompetitionDataService
      * @param TimeMeasureService $timeMeasureService
      * @param RunnerService $runnerService
      * @param CompetitionService $competitionService
+     * @param CompetitionStatisticService $competitionStatisticService
      *
      * @return array
      */
@@ -169,7 +173,7 @@ class CompetitionDataService
     public function getSpeakerRankingUpdateByGender(array $genderConfig, Date $date, TimeMeasureService $timeMeasureService, RunnerService $runnerService, CompetitionService $competitionService): array
     {
         $gender = Gender::fromString($genderConfig['gender']);
-        $competitionTypeId = $genderConfig['competitionTypeId'];
+        $competitionTypeId = CompetitionTypeId::fromValue($genderConfig['competitionTypeId']);
         $competitionDataIds = $this->competitionDataRepository->getSpeakerRankingUpdateData($date, $gender, $competitionTypeId);
 
         $genderCompetitionData = [];
@@ -218,15 +222,15 @@ class CompetitionDataService
 
     /**
      * @param array $competitions
-     * @param int $competitionTypeId
+     * @param CompetitionTypeId $competitionTypeId
      *
      * @return null|Competition
      */
-    protected function getCompetitionByCompetitionTypeId(array $competitions, int $competitionTypeId): ?Competition
+    protected function getCompetitionByCompetitionTypeId(array $competitions, CompetitionTypeId $competitionTypeId): ?Competition
     {
         /** @var Competition $competition */
         foreach ($competitions as $competition) {
-            if ($competition->getCompetitionType()->getCompetitionTypeId() === $competitionTypeId) {
+            if ($competition->getCompetitionType()->getCompetitionTypeId()->getCompetitionTypeId() === $competitionTypeId->getCompetitionTypeId()) {
                 return $competition;
             }
         }
@@ -239,6 +243,7 @@ class CompetitionDataService
      * @param TimeMeasureService|null $timeMeasureService
      * @param RunnerService|null $runnerService
      * @param CompetitionService|null $competitionService
+     * @param CompetitionStatisticService|null $competitionStatisticService
      *
      * @return array
      */
@@ -262,6 +267,7 @@ class CompetitionDataService
      * @param TimeMeasureService|null $timeMeasureService
      * @param RunnerService|null $runnerService
      * @param CompetitionService|null $competitionService
+     * @param CompetitionStatisticService|null $competitionStatisticService
      *
      * @return null|CompetitionData
      */
@@ -294,7 +300,7 @@ class CompetitionDataService
             }
             
             if ($competitionStatisticService !== null) {
-                $competitionStatistic = $competitionStatisticService->getCompetitionStatisticByRunnerIdAndYear($competitionData->getRunnerId(), Year::fromValue(date("Y",strtotime("-1 year"))));
+                $competitionStatistic = $competitionStatisticService->getCompetitionStatisticByRunnerIdAndYear($competitionData->getRunnerId(), Year::fromValue(date('Y',strtotime('-1 year'))));
 
                 if ($competitionStatistic !== null) {
                     $competitionData->setCompetitionStatistic($competitionStatistic);

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Project\Module\CompetitionData;
 
+use Project\Module\Competition\CompetitionTypeId;
 use Project\Module\DefaultRepository;
 use Project\Module\GenericValueObject\Date;
 use Project\Module\GenericValueObject\Gender;
@@ -56,7 +57,7 @@ class CompetitionDataRepository extends DefaultRepository
 
             $this->database->commit();
         } catch (\Exception $exception) {
-            $this->database->rollback();
+            $this->database->rollBack();
 
             return false;
         }
@@ -134,11 +135,11 @@ class CompetitionDataRepository extends DefaultRepository
     /**
      * @param Date $date
      * @param Gender $gender
-     * @param int $competitionTypeId
+     * @param CompetitionTypeId $competitionTypeId
      *
      * @return array
      */
-    public function getSpeakerRankingUpdateData(Date $date, Gender $gender, int $competitionTypeId): array
+    public function getSpeakerRankingUpdateData(Date $date, Gender $gender, CompetitionTypeId $competitionTypeId): array
     {
         $query = /** @lang text */
             'SELECT DISTINCT (competitionDataId)
@@ -150,7 +151,7 @@ class CompetitionDataRepository extends DefaultRepository
               AND CD.competitionId = C.competitionId
               AND CD.runnerId = R.runnerId
               AND CD.date = "' . $date->toString() . '"
-              AND C.competitionTypeId = ' . $competitionTypeId . '
+              AND C.competitionTypeId = ' . $competitionTypeId->getCompetitionTypeId() . '
               AND R.gender = "' . $gender->getGender() . '"';
 
         return $this->database->fetchAllQueryString($query);

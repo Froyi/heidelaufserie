@@ -106,6 +106,7 @@ class NotificationService
             return false;
         }
 
+        /** @noinspection UnsupportedStringOffsetOperationsInspection */
         $_SESSION[Notification::SESSION_NOTIFICATION_NAME][] = serialize($notification->toSession());
 
         return true;

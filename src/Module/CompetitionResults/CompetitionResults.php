@@ -152,7 +152,7 @@ class CompetitionResults extends DefaultModel
     }
 
     /**
-     * @return int
+     * @return null|Round
      */
     public function getRoundsRun(): ?Round
     {

@@ -32,6 +32,8 @@ class CompetitionRepository extends DefaultRepository
     }
 
     /**
+     * @param string $sort
+     *
      * @return array
      */
     public function getAllCompetitions($sort = Query::ASC): array
@@ -52,7 +54,7 @@ class CompetitionRepository extends DefaultRepository
         if ($this->getCompetitionByCompetitionId($competition->getCompetitionId()) === false) {
             $query = $this->database->getNewInsertQuery(self::TABLE);
             $query->insert('competitionId', $competition->getCompetitionId()->toString());
-            $query->insert('competitionTypeId', $competition->getCompetitionType()->getCompetitionTypeId());
+            $query->insert('competitionTypeId', $competition->getCompetitionType()->getCompetitionTypeId()->getCompetitionTypeId());
             $query->insert('title', $competition->getTitle()->getTitle());
             $query->insert('date', $competition->getDate()->toString());
             $query->insert('startTime', $competition->getStartTime()->toString());
@@ -79,7 +81,7 @@ class CompetitionRepository extends DefaultRepository
 
             $this->database->commit();
         } catch (\Exception $exception) {
-            $this->database->rollback();
+            $this->database->rollBack();
 
             return false;
         }
@@ -96,7 +98,7 @@ class CompetitionRepository extends DefaultRepository
     {
         $query = $this->database->getNewUpdateQuery(self::TABLE);
 
-        $query->set('competitionTypeId', $competition->getCompetitionType()->getCompetitionTypeId());
+        $query->set('competitionTypeId', $competition->getCompetitionType()->getCompetitionTypeId()->getCompetitionTypeId());
         $query->set('title', $competition->getTitle()->getTitle());
         $query->set('date', $competition->getDate()->toString());
         $query->set('startTime', $competition->getStartTime()->toString());
@@ -120,14 +122,14 @@ class CompetitionRepository extends DefaultRepository
     }
 
     /**
-     * @param int $competitionTypeId
+     * @param CompetitionTypeId $competitionTypeId
      *
      * @return mixed
      */
-    public function getCompetitionTypeByCompetitionTypeId(int $competitionTypeId)
+    public function getCompetitionTypeByCompetitionTypeId(CompetitionTypeId $competitionTypeId)
     {
         $query = $this->database->getNewSelectQuery(self::TABLE_COMPETITION_TYPE);
-        $query->where('competitionTypeId', '=', $competitionTypeId);
+        $query->where('competitionTypeId', '=', $competitionTypeId->getCompetitionTypeId());
 
         return $this->database->fetch($query);
     }

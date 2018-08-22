@@ -77,7 +77,7 @@ class TimeMeasureRepository extends DefaultRepository
             }
             $this->database->commit();
         } catch (\Exception $exception) {
-            $this->database->rollback();
+            $this->database->rollBack();
 
             return false;
         }

@@ -21,6 +21,8 @@ class TimeMeasureService
 
     /**
      * TimeMeasureService constructor.
+     *
+     * @param Database $database
      */
     public function __construct(Database $database)
     {

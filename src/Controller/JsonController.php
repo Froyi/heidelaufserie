@@ -6,6 +6,7 @@ use Project\Configuration;
 use Project\Module\Competition\CompetitionService;
 use Project\Module\CompetitionData\CompetitionData;
 use Project\Module\CompetitionData\CompetitionDataService;
+use Project\Module\CompetitionResults\CompetitionResults;
 use Project\Module\CompetitionResults\CompetitionResultsService;
 use Project\Module\CompetitionStatistic\CompetitionStatisticService;
 use Project\Module\GenericValueObject\Date;
@@ -73,10 +74,8 @@ class JsonController extends DefaultController
 
     public function duplicateAction(): void
     {
-        //$runnerDuplicateService = new RunnerDuplicateService($this->database, $this->configuration);
         $runnerService = new RunnerService($this->database, $this->configuration);
         $competitionDataService = new CompetitionDataService($this->database);
-        $competitionStatisticService = new CompetitionStatisticService($this->database);
         $competitionResultsService = new CompetitionResultsService($this->database);
 
         try {
@@ -84,36 +83,22 @@ class JsonController extends DefaultController
             $duplicateRunnerId = Id::fromString(Tools::getValue('duplicateRunnerId'));
 
             $duplicateRunnerCompetitionData = $competitionDataService->getCompetitionDataByRunnerId($duplicateRunnerId);
-            $duplicateRunnerCompetitionStatistic = $competitionStatisticService->getCompetitionStatisticByRunnerId($duplicateRunnerId);
             $duplicateRunnerCompetitionResults = $competitionResultsService->getCompetitionResultsByRunnerId($duplicateRunnerId);
 
             $runner = $runnerService->getRunnerByRunnerId($runnerId);
-            //$duplicateRunner = $runnerService->getRunnerByRunnerId($duplicateRunnerId);
 
-            if ($runnerId !== null && $duplicateRunnerId !== null && $duplicateRunnerCompetitionData !== null) {
-
-                foreach ($duplicateRunnerCompetitionData as $oneDuplicateRunnerCompetitionData) {
-                    $oneDuplicateRunnerCompetitionData->setRunner($runner);
-                    $oneDuplicateRunnerCompetitionData->setRunnerId($runnerId);
-                }
-            } else {
-                $this->jsonModel->send('error');
+            /** @var CompetitionData $oneDuplicateRunnerCompetitionData */
+            foreach ($duplicateRunnerCompetitionData as $oneDuplicateRunnerCompetitionData) {
+                $oneDuplicateRunnerCompetitionData->setRunner($runner);
+                $oneDuplicateRunnerCompetitionData->setRunnerId($runnerId);
             }
+            $competitionDataService->saveAllCompetitionData($duplicateRunnerCompetitionData);
 
-            if ($runnerId !== null && $duplicateRunnerId !== null && $duplicateRunnerCompetitionStatistic !== null) {
-
-                $duplicateRunnerCompetitionStatistic->setRunnerId($runnerId);
-            } else {
-                $this->jsonModel->send('error');
+            /** @var CompetitionResults $oneDuplicateRunnerCompetitionResult */
+            foreach ($duplicateRunnerCompetitionResults as $oneDuplicateRunnerCompetitionResult) {
+                $oneDuplicateRunnerCompetitionResult->setRunnerId($runnerId);
+                $competitionResultsService->saveCompetitionResults($oneDuplicateRunnerCompetitionResult);
             }
-
-            if ($runnerId !== null && $duplicateRunnerId !== null && $duplicateRunnerCompetitionResults !== null) {
-
-                $duplicateRunnerCompetitionResults->setRunnerId($runnerId);
-            } else {
-                $this->jsonModel->send('error');
-            }
-
 
         } catch (\InvalidArgumentException $exception) {
             $this->jsonModel->send('error');

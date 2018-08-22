@@ -70,12 +70,16 @@ class CompetitionResultsRepository extends DefaultRepository
         return $this->database->execute($query);
     }
 
-    public function getCompetitionResultsByRunnerId(Id $runnerId)
+    /**
+     * @param Id $runnerId
+     * @return mixed
+     */
+    public function getCompetitionResultsByRunnerId(Id $runnerId): array
     {
         $query = $this->database->getNewSelectQuery(self::TABLE);
         $query->where('runnerId', '=', $runnerId->toString());
 
-        return $this->database->fetch($query);
+        return $this->database->fetchAll($query);
     }
 
 

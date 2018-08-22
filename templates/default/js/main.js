@@ -105,3 +105,25 @@ $(document).on('click', '.js-no-duplicat', function() {
         }
     })
 });
+
+$(document).on('click', '.js-duplicat', function() {
+    var $this = $(this),
+        runnerId = $this.data('originalRunnerId'),
+        duplicateRunnerId = $this.data('duplicateRunnerId'),
+        $runnerContainer = $this.closest('.js-runner-duplicate-container');
+
+    $.ajax({
+        type: 'Post',
+        url: 'index.php?route=duplicate',
+        dataType: 'json',
+        data: {
+            runnerId: runnerId,
+            duplicateRunnerId: duplicateRunnerId
+        },
+        success: function (response) {
+            if (response.status === 'success'){
+                $runnerContainer.remove();
+            }
+        }
+    })
+});

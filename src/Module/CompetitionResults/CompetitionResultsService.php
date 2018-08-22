@@ -107,14 +107,19 @@ class CompetitionResultsService
         return Points::fromTimeAndRounds($competitionResults->getTimeOverall(), $competitionResults->getRoundsRun(), $competition->getCompetitionType()->getCompetitionTypeId());
     }
 
-    public function getCompetitionResultsByRunnerId(Id $runnerId): ?CompetitionResults
+    /**
+     * @param Id $runnerId
+     * @return array
+     */
+    public function getCompetitionResultsByRunnerId(Id $runnerId): array
     {
+        $competitionResults = [];
         $competitionResultsData = $this->competitionResultsRepository->getCompetitionResultsByRunnerId($runnerId);
 
-        if (empty($competitionResultsData) === true) {
-            return null;
+        foreach ($competitionResultsData as $oneCompetitionResultsData){
+            $competitionResults[] = $this->competitionResultsFactory->getCompetitionResultsByObject($oneCompetitionResultsData);
         }
 
-        return $this->competitionResultsFactory->getCompetitionResultsByObject($competitionResultsData);
+        return $competitionResults;
     }
 }

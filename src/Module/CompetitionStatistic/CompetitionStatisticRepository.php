@@ -53,7 +53,7 @@ class CompetitionStatisticRepository extends DefaultRepository
      *
      * @return mixed
      */
-    public function getCompetitionStatisticByYearAndRunnerId(Id $runnerId)
+    public function getCompetitionStatisticByRunnerId(Id $runnerId)
     {
         $query = $this->database->getNewSelectQuery(self::TABLE);
         $query->where('runnerId', '=', $runnerId->toString());

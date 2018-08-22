@@ -1,25 +1,24 @@
-
-    {% if duplicates %}
-        <div class="runner-containercontent-container">
-            {% for runnerDuplicate in duplicates %}
-                <div class="runner-duplicate-container js-runner-duplicate-container">
-                    <div class="runner-data">
-                        {{ runnerDuplicate.runner.getFirstname }} {{ runnerDuplicate.runner.getSurname }} {{ runnerDuplicate.runner.getAgeGroup.getBirthYear }} {{ runnerDuplicate.runner.getActualClub }}
-                    </div>
-                    
-                    {% for runner in runnerDuplicate.duplicates %}
-                        <div>
-                            {{ runner.getFirstname }} {{ runner.getSurname }} {{ runner.getAgeGroup.getBirthYear }} {{ runner.getActualClub }}
-                        </div>
-                        <button class="js-duplicat" data-original-runner-id="{{ runner.getRunnerId }}"
-                            data-duplicate-runner-id={{ runnerDuplicate.runner.getRunnerID }}>
-                            Duplikat
-                        </button>
-                    
-                    <button class="js-no-duplicat" data-original-runner-id="{{ runnerDuplicate.runner.getRunnerId }}">
-                        Keine Duplikate
-                    </button>{% endfor %}
+{% if duplicates %}
+    <div class="runner-container content-container">
+        {% for runnerDuplicate in duplicates %}
+            <div class="runner-duplicate-container js-runner-duplicate-container">
+                <div class="runner-data">
+                    {{ runnerDuplicate.runner.getFirstname }} {{ runnerDuplicate.runner.getSurname }} {{ runnerDuplicate.runner.getAgeGroup.getBirthYear }} {{ runnerDuplicate.runner.getActualClub }}
                 </div>
-            {% endfor %}
-        </div>
-    {% endif %}
+
+                {% for runner in runnerDuplicate.duplicates %}
+                    <div>
+                        {{ runner.getFirstname }} {{ runner.getSurname }} {{ runner.getAgeGroup.getBirthYear }} {{ runner.getActualClub }}
+                    </div>
+                    <button class="js-duplicat" data-duplicate-runner-id="{{ runner.getRunnerId }}"
+                            data-original-runner-id="{{ runnerDuplicate.runner.getRunnerId }}">
+                        Duplikat
+                    </button>
+                {% endfor %}
+                <button class="js-no-duplicat" data-original-runner-id="{{ runnerDuplicate.runner.getRunnerId }}">
+                    Keine Duplikate
+                </button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}

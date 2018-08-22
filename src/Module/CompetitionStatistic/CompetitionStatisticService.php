@@ -134,6 +134,17 @@ class CompetitionStatisticService
         return $this->competitionStatisticFactory->getCompetitionStatisticByObject($competitionStatisticData);
     }
 
+    public function getCompetitionStatisticByRunnerId(Id $runnerId): ?CompetitionStatistic
+    {
+        $competitionStatisticData = $this->competitionStatisticRepository->getCompetitionStatisticByRunnerId($runnerId);
+
+        if (empty($competitionStatisticData) === true) {
+            return null;
+        }
+
+        return $this->competitionStatisticFactory->getCompetitionStatisticByObject($competitionStatisticData);
+    }
+
     /**
      * @param CompetitionStatistic $competitionStatistic
      *

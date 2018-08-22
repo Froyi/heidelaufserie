@@ -170,4 +170,12 @@ class CompetitionResults extends DefaultModel
 
         return null;
     }
+
+    /**
+     * @param Id $runnerId
+     */
+    public function setRunnerId(Id $runnerId)
+    {
+        $this->runnerId = $runnerId;
+    }
 }

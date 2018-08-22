@@ -346,5 +346,13 @@ class CompetitionStatistic
         $this->akRanking = $akRanking;
     }
 
+    /**
+     * @param Id $runnerId
+     */
+    public function setRunnerId(Id $runnerId)
+    {
+        $this->runnerId = $runnerId;
+    }
+
 
 }

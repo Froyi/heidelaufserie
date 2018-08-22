@@ -29,6 +29,10 @@ return [
             'controller' => 'JsonController',
             'action' => 'noDuplicateAction',
         ],
+        'duplicate' => [
+            'controller' => 'JsonController',
+            'action' => 'duplicateAction',
+        ],
         'refreshSpeakerData' => [
             'controller' => 'JsonController',
             'action' => 'refreshSpeakerDataAction',

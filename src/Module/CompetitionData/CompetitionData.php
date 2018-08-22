@@ -310,4 +310,12 @@ class CompetitionData extends DefaultModel
     {
         $this->competitionStatistic = $competitionStatistic;
     }
+
+    /**
+     * @param Id $runnerId
+     */
+    public function setRunnerId(Id $runnerId)
+    {
+        $this->runnerId = $runnerId;
+    }
 }

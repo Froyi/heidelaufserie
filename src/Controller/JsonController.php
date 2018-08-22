@@ -6,6 +6,7 @@ use Project\Configuration;
 use Project\Module\Competition\CompetitionService;
 use Project\Module\CompetitionData\CompetitionData;
 use Project\Module\CompetitionData\CompetitionDataService;
+use Project\Module\CompetitionResults\CompetitionResultsService;
 use Project\Module\CompetitionStatistic\CompetitionStatisticService;
 use Project\Module\GenericValueObject\Date;
 use Project\Module\GenericValueObject\Id;
@@ -70,13 +71,65 @@ class JsonController extends DefaultController
         $this->jsonModel->send();
     }
 
+    public function duplicateAction(): void
+    {
+        //$runnerDuplicateService = new RunnerDuplicateService($this->database, $this->configuration);
+        $runnerService = new RunnerService($this->database, $this->configuration);
+        $competitionDataService = new CompetitionDataService($this->database);
+        $competitionStatisticService = new CompetitionStatisticService($this->database);
+        $competitionResultsService = new CompetitionResultsService($this->database);
+
+        try {
+            $runnerId = Id::fromString(Tools::getValue('runnerId'));
+            $duplicateRunnerId = Id::fromString(Tools::getValue('duplicateRunnerId'));
+
+            $duplicateRunnerCompetitionData = $competitionDataService->getCompetitionDataByRunnerId($duplicateRunnerId);
+            $duplicateRunnerCompetitionStatistic = $competitionStatisticService->getCompetitionStatisticByRunnerId($duplicateRunnerId);
+            $duplicateRunnerCompetitionResults = $competitionResultsService->getCompetitionResultsByRunnerId($duplicateRunnerId);
+
+            $runner = $runnerService->getRunnerByRunnerId($runnerId);
+            //$duplicateRunner = $runnerService->getRunnerByRunnerId($duplicateRunnerId);
+
+            if ($runnerId !== null && $duplicateRunnerId !== null && $duplicateRunnerCompetitionData !== null) {
+
+                foreach ($duplicateRunnerCompetitionData as $oneDuplicateRunnerCompetitionData) {
+                    $oneDuplicateRunnerCompetitionData->setRunner($runner);
+                    $oneDuplicateRunnerCompetitionData->setRunnerId($runnerId);
+                }
+            } else {
+                $this->jsonModel->send('error');
+            }
+
+            if ($runnerId !== null && $duplicateRunnerId !== null && $duplicateRunnerCompetitionStatistic !== null) {
+
+                $duplicateRunnerCompetitionStatistic->setRunnerId($runnerId);
+            } else {
+                $this->jsonModel->send('error');
+            }
+
+            if ($runnerId !== null && $duplicateRunnerId !== null && $duplicateRunnerCompetitionResults !== null) {
+
+                $duplicateRunnerCompetitionResults->setRunnerId($runnerId);
+            } else {
+                $this->jsonModel->send('error');
+            }
+
+
+        } catch (\InvalidArgumentException $exception) {
+            $this->jsonModel->send('error');
+        }
+
+        $this->jsonModel->send();
+    }
+
     /**
      * @todo Mark time measures with transaction.
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    public function refreshSpeakerDataAction(): void
+    public
+    function refreshSpeakerDataAction(): void
     {
         /** @var Date $date */
         //$date = Date::fromValue('today');
@@ -110,7 +163,8 @@ class JsonController extends DefaultController
      * Counts the runner which are finished.
      * @todo Take the actual date, not a random one.
      */
-    public function refreshFinishedRunnerAction(): void
+    public
+    function refreshFinishedRunnerAction(): void
     {
         /** @var Date $date */
         $date = Date::fromValue('2018-07-28');
@@ -143,7 +197,8 @@ class JsonController extends DefaultController
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    public function refreshRankingDataAction(): void
+    public
+    function refreshRankingDataAction(): void
     {
         /** @var Date $date */
         $date = Date::fromValue('2018-07-28');
@@ -172,7 +227,8 @@ class JsonController extends DefaultController
      * @todo Look why this generating process is too slow.
      * @throws \Exception
      */
-    public function generateTimeMeasureDataAction(): void
+    public
+    function generateTimeMeasureDataAction(): void
     {
         /** @var Date $date */
         $date = Date::fromValue('2018-07-28');

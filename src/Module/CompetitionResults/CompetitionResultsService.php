@@ -106,4 +106,15 @@ class CompetitionResultsService
 
         return Points::fromTimeAndRounds($competitionResults->getTimeOverall(), $competitionResults->getRoundsRun(), $competition->getCompetitionType()->getCompetitionTypeId());
     }
+
+    public function getCompetitionResultsByRunnerId(Id $runnerId): ?CompetitionResults
+    {
+        $competitionResultsData = $this->competitionResultsRepository->getCompetitionResultsByRunnerId($runnerId);
+
+        if (empty($competitionResultsData) === true) {
+            return null;
+        }
+
+        return $this->competitionResultsFactory->getCompetitionResultsByObject($competitionResultsData);
+    }
 }

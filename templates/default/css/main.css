@@ -494,7 +494,7 @@ input[type="submit"] {
 .admin .main-content {
   max-width: 82.25em;
   margin: 0 auto;
-  margin-top: 6.25em;
+  margin-top: 12em;
 }
 .admin .content-container {
   background: rgba(255, 255, 255, 0.9);
@@ -763,11 +763,39 @@ input[type="submit"] {
 .speaker-page.landscape .speaker-competition-status .gender-container .gender-competition:first-of-type {
   margin-bottom: 3em;
 }
+.admin-page .start-time-set {
+  max-width: 40em;
+}
+.admin-page .start-time-set .start-time-set-container {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 1.5em;
+}
+.admin-page .start-time-set .start-time-set-container > div {
+  width: 300px;
+  padding: 1.2em;
+  margin-right: 2.5em;
+  background-color: #5DE96B;
+}
+.admin-page .start-time-set .start-time-set-container > div a {
+  color: #3F4340;
+}
+.admin-page .start-time-set .start-time-set-container > div h3 {
+  text-align: center;
+  line-height: 1.5em;
+  margin-bottom: 0.88em;
+}
+.admin-page .start-time-set .start-time-set-container > div p {
+  font-size: 0.7em;
+  text-align: center;
+}
 .competition-day-page {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: flex-start;
-  padding-top: 4.38em;
+}
+.competition-day-page > div {
+  margin-right: 2.5em;
 }
 .competition-day-page h2 {
   margin-bottom: 20px;
@@ -777,7 +805,6 @@ input[type="submit"] {
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
-  padding-top: 4.38em;
 }
 .competitions-page .create-competition {
   max-width: 27.13em;

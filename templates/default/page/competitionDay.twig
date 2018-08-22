@@ -6,13 +6,13 @@
 
         <form action="{{ route('uploadRunnerFile') }}" method="post" enctype="multipart/form-data">
             <p><label for="runnerFile">Datei: <input type="file" name="runnerFile"></label></p>
-            <p><label for="date">Datum des Wettbewerbes: <input type="date" name="date"></label></p>
+            <p><label for="date">Datum des Wettbewerbes: <input type="date" name="date" {% if today %}value="{{ today }}"{% endif %}></label></p>
             <p><input type="submit" name="submit" value="Speichern"></p>
         </form>
     </div>
 
-    <div class="upload-competition-results-file">
-        <h1>3. Upload Competition-Datei</h1>
+    <div class="content-container upload-competition-results-file">
+        <h2>Upload Competition-Datei</h2>
 
         <form action="{{ route('uploadCompetitionResultsFile') }}" method="post" enctype="multipart/form-data">
             <p><label for="resultsFile">Datei: <input type="file" name="resultsFile"></label></p>

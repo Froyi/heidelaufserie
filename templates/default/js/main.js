@@ -12,8 +12,6 @@ function refreshSpeakerData() {
                 $('.new-runner').remove();
                 $(response.view).prependTo('.js-speaker-runner-container').hide().slideDown();
                 refreshRankingData();
-
-                console.log(response.ranking);
             }
         },
         complete: function () {

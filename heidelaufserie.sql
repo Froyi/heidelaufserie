@@ -92,10 +92,16 @@ create table timemeasure
 	transponderNumber varchar(200) not null,
 	timestamp datetime not null,
 	shown tinyint(1) default '0' not null
+);
+
+create table finishmeasure
+(
+	finishMeasureId   varchar(200) not null
+		primary key,
+	transponderNumber varchar(200) not null,
+	timestamp         datetime     not null
 )
 ;
-
-
 
 
 INSERT INTO `heidelaufserie`.`competitiontype` (`competitionTypeId`, `competitionName`, `distance`, `rounds`, `standardSet`) VALUES ('1', '5km Laufen', '5000', '1', '1');

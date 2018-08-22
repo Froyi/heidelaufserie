@@ -1,18 +1,20 @@
 {% include ('module/partial/notification.twig') %}
 
 <div class="admin-page js-admin-page">
-    <h2>Dies ist die Startseite</h2>
-
-    <div class="content-container">
+    <div class="content-container start-time-set">
         <h2>Startzeiten definieren</h2>
 
         {% if startTimeGroups %}
-            {% for key, startTimeGroup in startTimeGroups %}
-                <div>
-                    <a href="{{ route('setStartTime', {startTimeGroup: key}) }}">Gruppe {{ key + 1 }} startet
-                        [{% for type in startTimeGroup %}{{ type.getCompetitionName }}{% endfor %}] </a>
-                </div>
-            {% endfor %}
+            <div class="start-time-set-container">
+                {% for key, startTimeGroup in startTimeGroups %}
+                    <div>
+                        <a href="{{ route('setStartTime', {startTimeGroup: key}) }}">
+                            <h3>Gruppe {{ key + 1 }} startet</h3>
+                            <p>[{% for type in startTimeGroup %}{{ type.getCompetitionName }}{% endfor %}]</p>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
         {% endif %}
     </div>
 </div>

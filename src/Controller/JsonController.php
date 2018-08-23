@@ -88,18 +88,23 @@ class JsonController extends DefaultController
             $runner = $runnerService->getRunnerByRunnerId($runnerId);
 
             /** @var CompetitionData $oneDuplicateRunnerCompetitionData */
-            foreach ($duplicateRunnerCompetitionData as $oneDuplicateRunnerCompetitionData) {
+            foreach ($duplicateRunnerCompetitionData as $competitionDataId =>$oneDuplicateRunnerCompetitionData) {
                 $oneDuplicateRunnerCompetitionData->setRunner($runner);
                 $oneDuplicateRunnerCompetitionData->setRunnerId($runnerId);
             }
-            $competitionDataService->saveAllCompetitionData($duplicateRunnerCompetitionData);
 
-            /** @var CompetitionResults $oneDuplicateRunnerCompetitionResult */
-            foreach ($duplicateRunnerCompetitionResults as $oneDuplicateRunnerCompetitionResult) {
-                $oneDuplicateRunnerCompetitionResult->setRunnerId($runnerId);
-                $competitionResultsService->saveCompetitionResults($oneDuplicateRunnerCompetitionResult);
+            if ($competitionDataService->updateAllCompetitionData($duplicateRunnerCompetitionData) === true) {
+                /** @var CompetitionResults $oneDuplicateRunnerCompetitionResult */
+                foreach ($duplicateRunnerCompetitionResults as $oneDuplicateRunnerCompetitionResult) {
+                    $oneDuplicateRunnerCompetitionResult->setRunnerId($runnerId);
+                }
+
+                if ($competitionResultsService->updateAllCompetitionResults($duplicateRunnerCompetitionResults) === false) {
+                    $this->jsonModel->send('error');
+                }
+            } else {
+                $this->jsonModel->send('error');
             }
-
         } catch (\InvalidArgumentException $exception) {
             $this->jsonModel->send('error');
         }

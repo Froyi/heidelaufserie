@@ -71,6 +71,52 @@ class CompetitionResultsRepository extends DefaultRepository
     }
 
     /**
+     * @param CompetitionResults $competitionResults
+     *
+     * @return bool
+     */
+    public function updateCompetitionResults(CompetitionResults $competitionResults): bool
+    {
+        $query = $this->database->getNewUpdateQuery(self::TABLE);
+        $query->set('competitionDataId', $competitionResults->getCompetitionDataId()->toString());
+        $query->set('runnerId', $competitionResults->getRunnerId()->toString());
+
+        if ($competitionResults->getTimeOverall() !== null) {
+            $query->set('timeOverall', $competitionResults->getTimeOverall()->getTimeOverall());
+        } else {
+            $query->set('timeOverall', null);
+        }
+
+        if ($competitionResults->getPoints() !== null) {
+            $query->set('points', $competitionResults->getPoints()->getPoints());
+        } else {
+            $query->set('points', null);
+        }
+
+        if ($competitionResults->getFirstRound() !== null) {
+            $query->set('firstRound', $competitionResults->getFirstRound()->getRoundTime());
+        } else {
+            $query->set('firstRound', null);
+        }
+
+        if ($competitionResults->getSecondRound() !== null) {
+            $query->set('secondRound', $competitionResults->getSecondRound()->getRoundTime());
+        } else {
+            $query->set('secondRound', null);
+        }
+
+        if ($competitionResults->getThirdRound() !== null) {
+            $query->set('thirdRound', $competitionResults->getThirdRound()->getRoundTime());
+        } else {
+            $query->set('thirdRound', null);
+        }
+
+        $query->where('competitionResultsId', '=', $competitionResults->getCompetitionResultsId()->toString());
+
+        return $this->database->execute($query);
+    }
+
+    /**
      * @param Id $runnerId
      * @return mixed
      */
@@ -82,5 +128,29 @@ class CompetitionResultsRepository extends DefaultRepository
         return $this->database->fetchAll($query);
     }
 
+    /**
+     * @param array $competitionResultsArray
+     *
+     * @return bool
+     */
+    public function updateAllCompetitionResults(array $competitionResultsArray): bool
+    {
+        $this->database->beginTransaction();
 
+        try {
+            foreach ($competitionResultsArray as $competitionResults) {
+                if ($this->updateCompetitionResults($competitionResults) === false) {
+                    throw new \Exception('This update failed. Revert all!');
+                }
+            }
+
+            $this->database->commit();
+        } catch (\Exception $exception) {
+            $this->database->rollBack();
+
+            return false;
+        }
+
+        return true;
+    }
 }

@@ -121,6 +121,16 @@ class CompetitionDataService
     }
 
     /**
+     * @param array $allCompetitionData
+     *
+     * @return bool
+     */
+    public function updateAllCompetitionData(array $allCompetitionData): bool
+    {
+        return $this->competitionDataRepository->updateAllCompetitionData($allCompetitionData);
+    }
+
+    /**
      * @param Id $runnerId
      *
      * @return array

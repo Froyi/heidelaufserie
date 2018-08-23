@@ -72,6 +72,16 @@ class CompetitionResultsService
     }
 
     /**
+     * @param array $competitionResultsArray
+     *
+     * @return bool
+     */
+    public function updateAllCompetitionResults(array $competitionResultsArray): bool
+    {
+        return $this->competitionResultsRepository->updateAllCompetitionResults($competitionResultsArray);
+    }
+
+    /**
      * @param CompetitionResults $competitionResults
      * @param Competition $competition
      *

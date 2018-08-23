@@ -66,6 +66,57 @@ class CompetitionDataRepository extends DefaultRepository
     }
 
     /**
+     * @param array $allCompetitionData
+     *
+     * @return bool
+     */
+    public function updateAllCompetitionData(array $allCompetitionData): bool
+    {
+        $this->database->beginTransaction();
+
+        try {
+            foreach ($allCompetitionData as $competitionData) {
+                if ($this->updateCompetitionData($competitionData) === false) {
+                    throw new \Exception('This update failed. Revert all!');
+                }
+            }
+
+            $this->database->commit();
+        } catch (\Exception $exception) {
+            $this->database->rollBack();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param CompetitionData $competitionData
+     *
+     * @return bool
+     */
+    public function updateCompetitionData(CompetitionData $competitionData): bool
+    {
+        $query = $this->database->getNewUpdateQuery(self::TABLE);
+        $query->set('competitionId', $competitionData->getCompetitionId()->toString());
+        $query->set('runnerId', $competitionData->getRunnerId()->toString());
+        $query->set('startNumber', $competitionData->getStartNumber()->getStartNumber());
+        $query->set('date', $competitionData->getDate()->toString());
+        $query->set('transponderNumber', $competitionData->getTransponderNumber()->getTransponderNumber());
+
+        if ($competitionData->getClub() !== null) {
+            $query->set('club', $competitionData->getClub()->getClub());
+        } else {
+            $query->set('club', null);
+        }
+
+        $query->where('competitionDataId', '=', $competitionData->getCompetitionDataId()->toString());
+
+        return $this->database->execute($query);
+    }
+
+    /**
      * @param Id $competitionDataId
      *
      * @return mixed

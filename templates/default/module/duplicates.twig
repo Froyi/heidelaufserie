@@ -3,12 +3,12 @@
         {% for runnerDuplicate in duplicates %}
             <div class="runner-duplicate-container js-runner-duplicate-container">
                 <div class="runner-data">
-                    {{ runnerDuplicate.runner.getFirstname }} {{ runnerDuplicate.runner.getSurname }} {{ runnerDuplicate.runner.getAgeGroup.getBirthYear }} {{ runnerDuplicate.runner.getActualClub }}
+                    {{ runnerDuplicate.runner.getFirstname }} {{ runnerDuplicate.runner.getSurname }} {{ runnerDuplicate.runner.getAgeGroup.getBirthYear }} {{ runnerDuplicate.runner.getActualClub.getClubName }}
                 </div>
 
                 {% for runner in runnerDuplicate.duplicates %}
                     <div>
-                        {{ runner.getFirstname }} {{ runner.getSurname }} {{ runner.getAgeGroup.getBirthYear }} {{ runner.getActualClub }}
+                        {{ runner.getFirstname }} {{ runner.getSurname }} {{ runner.getAgeGroup.getBirthYear }} {{ runner.getActualClub.getClubName }}
                     </div>
                     <button class="js-duplicat" data-duplicate-runner-id="{{ runner.getRunnerId }}"
                             data-original-runner-id="{{ runnerDuplicate.runner.getRunnerId }}">

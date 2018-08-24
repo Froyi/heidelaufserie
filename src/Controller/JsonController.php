@@ -3,6 +3,7 @@
 namespace Project\Controller;
 
 use Project\Configuration;
+use Project\Module\Club\ClubService;
 use Project\Module\Competition\CompetitionService;
 use Project\Module\CompetitionData\CompetitionData;
 use Project\Module\CompetitionData\CompetitionDataService;
@@ -74,8 +75,9 @@ class JsonController extends DefaultController
 
     public function duplicateAction(): void
     {
+        $clubService = new ClubService($this->database);
         $runnerService = new RunnerService($this->database, $this->configuration);
-        $competitionDataService = new CompetitionDataService($this->database);
+        $competitionDataService = new CompetitionDataService($this->database, $clubService);
         $competitionResultsService = new CompetitionResultsService($this->database);
 
         try {
@@ -126,11 +128,12 @@ class JsonController extends DefaultController
         $date = Date::fromValue('2018-07-28');
 
         $timeMeasureService = new TimeMeasureService($this->database);
+        $clubService = new ClubService($this->database);
         $runnerService = new RunnerService($this->database, $this->configuration);
         $competitionService = new CompetitionService($this->database);
         $competitionStatisticService = new CompetitionStatisticService($this->database);
 
-        $competitionDataService = new CompetitionDataService($this->database);
+        $competitionDataService = new CompetitionDataService($this->database, $clubService);
         $allCompetitionData = $competitionDataService->getSpeakerCompetitionData($date, $timeMeasureService, $runnerService, $competitionService, $competitionStatisticService);
 
 
@@ -159,11 +162,12 @@ class JsonController extends DefaultController
         /** @var Date $date */
         $date = Date::fromValue('2018-07-28');
 
+        $clubService = new ClubService($this->database);
         $timeMeasureService = new TimeMeasureService($this->database);
         $runnerService = new RunnerService($this->database, $this->configuration);
         $competitionService = new CompetitionService($this->database);
 
-        $competitionDataService = new CompetitionDataService($this->database);
+        $competitionDataService = new CompetitionDataService($this->database, $clubService);
         $allCompetitionDatas = $competitionDataService->getCompetitionDataByDate($date, $timeMeasureService, $runnerService, $competitionService);
         $completeRunnerCount = 0;
         $allRunnerCount = \count($allCompetitionDatas);
@@ -194,10 +198,11 @@ class JsonController extends DefaultController
         $date = Date::fromValue('2018-07-28');
         $genderConfig = $this->configuration->getEntryByName('ranking');
 
+        $clubService = new ClubService($this->database);
         $timeMeasureService = new TimeMeasureService($this->database);
         $runnerService = new RunnerService($this->database, $this->configuration);
         $competitionService = new CompetitionService($this->database);
-        $competitionDataService = new CompetitionDataService($this->database);
+        $competitionDataService = new CompetitionDataService($this->database, $clubService);
 
         $womanCompetitionData = $competitionDataService->getSpeakerRankingUpdateByGender($genderConfig['woman'], $date, $timeMeasureService, $runnerService, $competitionService);
 
@@ -224,7 +229,8 @@ class JsonController extends DefaultController
         $date = Date::fromValue('2018-07-28');
 
         if (Tools::shallWeRefresh(20) === true) {
-            $competitionDataService = new CompetitionDataService($this->database);
+            $clubService = new ClubService($this->database);
+            $competitionDataService = new CompetitionDataService($this->database, $clubService);
             $timeMeasureService = new TimeMeasureService($this->database);
             $runnerService = new RunnerService($this->database, $this->configuration);
             $competitionService = new CompetitionService($this->database);

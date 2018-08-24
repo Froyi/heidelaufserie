@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Project\Module\CompetitionData;
 
+use Project\Module\Club\Club;
 use Project\Module\Competition\Competition;
 use Project\Module\CompetitionStatistic\CompetitionStatistic;
 use Project\Module\DefaultModel;

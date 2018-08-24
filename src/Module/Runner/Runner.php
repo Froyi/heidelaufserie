@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Project\Module\Runner;
 
-use Project\Module\CompetitionData\Club;
+use Project\Module\Club\Club;
 use Project\Module\CompetitionData\CompetitionData;
 use Project\Module\DefaultModel;
 use Project\Module\GenericValueObject\Id;

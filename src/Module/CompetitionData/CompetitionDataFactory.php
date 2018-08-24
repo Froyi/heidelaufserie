@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Project\Module\CompetitionData;
 
+use Project\Module\Club\Club;
 use Project\Module\Competition\Competition;
 use Project\Module\GenericValueObject\Date;
 use Project\Module\GenericValueObject\Id;
@@ -17,10 +18,11 @@ class CompetitionDataFactory
      * @param $competitionDataData
      * @param Competition $competition
      * @param array $transponderData
+     * @param Club|null $club
      *
      * @return null|CompetitionData
      */
-    public function getCompetitionDataByObject($competitionDataData, Competition $competition, array $transponderData): ?CompetitionData
+    public function getCompetitionDataByObject($competitionDataData, Competition $competition, array $transponderData, Club $club = null): ?CompetitionData
     {
         if (\is_array($competitionDataData) === true) {
             $competitionDataData = (object)$competitionDataData;
@@ -46,8 +48,7 @@ class CompetitionDataFactory
 
             $competitionData = new CompetitionData($competitionDataId, $competitionId, $runnerId, $date, $startNumber, $transponderNumber);
 
-            if (empty($competitionDataData->club) === false) {
-                $club = Club::fromString($competitionDataData->club);
+            if ($club !== null) {
                 $competitionData->setClub($club);
             }
 
@@ -59,6 +60,7 @@ class CompetitionDataFactory
 
     /**
      * @param $object
+     * @param Club|null $club
      *
      * @return null|CompetitionData
      */
@@ -73,14 +75,7 @@ class CompetitionDataFactory
             $startNumber = StartNumber::fromValue($object->startNumber);
             $transponderNumber = TransponderNumber::fromValue($object->transponderNumber);
 
-            $competitionData = new CompetitionData($competitionDataId, $competitionId, $runnerId, $date, $startNumber, $transponderNumber);
-
-            if (empty($object->club) === false) {
-                $club = Club::fromString($object->club);
-                $competitionData->setClub($club);
-            }
-
-            return $competitionData;
+            return new CompetitionData($competitionDataId, $competitionId, $runnerId, $date, $startNumber, $transponderNumber);
         } catch (\InvalidArgumentException $exception) {
             return null;
         }

@@ -44,4 +44,16 @@ class clubFactory
 
         return $club;
     }
+
+    /**
+     * @param ClubName $clubName
+     *
+     * @return Club
+     */
+    public function createClubByClubName(ClubName $clubName): Club
+    {
+        $clubId = Id::generateId();
+
+        return new Club($clubId, $clubName);
+    }
 }

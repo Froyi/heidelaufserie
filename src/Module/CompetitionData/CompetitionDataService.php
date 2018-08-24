@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Project\Module\CompetitionData;
 
+use Project\Module\Club\ClubName;
+use Project\Module\Club\ClubService;
 use Project\Module\Competition\Competition;
 use Project\Module\Competition\CompetitionService;
 use Project\Module\Competition\CompetitionTypeId;
@@ -27,15 +29,20 @@ class CompetitionDataService
     /** @var CompetitionDataFactory $competitionDataFactory */
     protected $competitionDataFactory;
 
+    /** @var ClubService $clubService */
+    protected $clubService;
+
     /**
      * CompetitionDataService constructor.
      *
      * @param Database $database
      */
-    public function __construct(Database $database)
+    public function __construct(Database $database, ClubService $clubService)
     {
         $this->competitionDataRepository = new CompetitionDataRepository($database);
         $this->competitionDataFactory = new CompetitionDataFactory();
+
+        $this->clubService = $clubService;
     }
 
     /**
@@ -49,13 +56,23 @@ class CompetitionDataService
     {
         $competitionDataArray = [];
 
+        /** @var array $competitionDataData */
         foreach ($uploadData as $competitionDataData) {
+            $club = null;
             $competitionTypeId = CompetitionTypeId::fromValue($competitionDataData['competitionTypeId']);
 
             $competition = $this->getCompetitionByCompetitionTypeId($competitions, $competitionTypeId);
 
+            if (isset($competitionDataData['club'])) {
+                try {
+                    $clubName = ClubName::fromString($competitionDataData['club']);
+
+                    $club = $this->clubService->getOrCreateClubByClubName($clubName);
+                } catch (\InvalidArgumentException $exception) {}
+            }
+
             if ($competition !== null) {
-                $competitionData = $this->competitionDataFactory->getCompetitionDataByObject($competitionDataData, $competition, $transponderData);
+                $competitionData = $this->competitionDataFactory->getCompetitionDataByObject($competitionDataData, $competition, $transponderData, $club);
 
                 if ($competitionData !== null) {
                     $competitionDataArray[$competitionData->getCompetitionDataId()->toString()] = $competitionData;
@@ -287,6 +304,15 @@ class CompetitionDataService
         $competitionData = $this->competitionDataFactory->getCompetitionData($singleCompetitionData);
 
         if ($competitionData !== null) {
+            if (isset($singleCompetitionData->club)) {
+                try {
+                    $clubName = ClubName::fromString($singleCompetitionData->club);
+
+                    $club = $this->clubService->getOrCreateClubByClubName($clubName);
+                    $competitionData->setClub($club);
+                } catch (\InvalidArgumentException $exception) {}
+            }
+
             if ($timeMeasureService !== null) {
                 $timeMeasureList = $timeMeasureService->getAllTimeMeasuresByTransponderNumber($competitionData->getTransponderNumber());
 

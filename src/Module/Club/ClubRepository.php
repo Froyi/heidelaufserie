@@ -53,4 +53,17 @@ class ClubRepository extends DefaultRepository
         
         return false;
     }
+
+    /**
+     * @param ClubName $clubName
+     *
+     * @return mixed
+     */
+    public function getClubByClubName(ClubName $clubName)
+    {
+        $query = $this->database->getNewSelectQuery(self::TABLE);
+        $query->where('clubName', '=', $clubName->getClubName());
+
+        return $this->database->fetch($query);
+    }
 }

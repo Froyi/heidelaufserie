@@ -23,11 +23,15 @@
     "tinify/tinify": "1.*",
     "swiftmailer/swiftmailer": "6.*",
     "phpunit/php-timer": "2.*",
+    "phpunit/phpunit": "7.3.*",
     "gender-api/client": "1.*"
   },
   "autoload": {
     "psr-4": {
       "Project\\": "src/"
-    }
+    },
+    "classmap": [
+      "src/"
+    ]
   }
 }

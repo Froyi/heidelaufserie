@@ -8,11 +8,59 @@ use PHPUnit\Framework\TestCase;
  */
 class NameTest extends TestCase
 {
-    public function testFirst()
+    /**
+     * @dataProvider testNamesValidProvider
+     */
+    public function testNameIsValid($name)
     {
-        $a = 1;
-        $b = 1;
+        $this->assertSame($name, \Project\Module\GenericValueObject\Name::fromString($name)->getName());
+    }
 
-        $this->assertSame($a, $b);
+    /**
+     * @dataProvider testNamesTypeErrorProvider
+     *
+     * @expectedException TypeError
+     */
+    public function testNamesTypeError($name)
+    {
+        \Project\Module\GenericValueObject\Name::fromString($name);
+    }
+
+    /**
+     * @dataProvider testNamesInvalidProvider
+     *
+     * @expectedException InvalidArgumentException
+     */
+    public function testNamesInvlidArgument($name)
+    {
+        \Project\Module\GenericValueObject\Name::fromString($name);
+    }
+
+    public function testNamesValidProvider()
+    {
+        return [
+            ['Peter'],
+            ['Al'],
+            ['Hans-Peter'],
+            ['Hans Peter'],
+        ];
+    }
+
+    public function testNamesTypeErrorProvider()
+    {
+        return [
+            [2],
+            [true],
+            [[]],
+            [new stdClass()],
+        ];
+    }
+
+    public function testNamesInvalidProvider()
+    {
+        return [
+            ['a'],
+            ['3948274sadiasdf']
+        ];
     }
 }

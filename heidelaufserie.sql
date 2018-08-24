@@ -103,6 +103,15 @@ create table finishmeasure
 )
 ;
 
+create table club
+(
+	clubId   varchar(200) not null
+		primary key,
+	clubName varchar(250) null,
+	prooved  tinyint(1)   null
+);
+
+
 
 INSERT INTO `heidelaufserie`.`competitiontype` (`competitionTypeId`, `competitionName`, `distance`, `rounds`, `standardSet`) VALUES ('1', '5km Laufen', '5000', '1', '1');
 INSERT INTO `heidelaufserie`.`competitiontype` (`competitionTypeId`, `competitionName`, `distance`, `rounds`, `standardSet`) VALUES ('2', '10km Laufen', '10000', '2', '1');

@@ -52,7 +52,10 @@ class AdminController extends DefaultController
         $competitionService = new CompetitionService($this->database);
         $startTimeGroups = $competitionService->getAllStartTimeGroups();
 
+        $actualStartTimes = $competitionService->getStartTimesByDate($this->getToday());
+
         $this->viewRenderer->addViewConfig('startTimeGroups', $startTimeGroups);
+        $this->viewRenderer->addViewConfig('actualStartTimes', $actualStartTimes);
         $this->viewRenderer->addViewConfig('page', 'admin');
 
         $this->viewRenderer->renderTemplate();

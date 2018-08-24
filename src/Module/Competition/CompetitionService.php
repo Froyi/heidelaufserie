@@ -69,6 +69,27 @@ class CompetitionService
     }
 
     /**
+     * Return an array with startTimes to startTimeGroup as key
+     *
+     * @param Date $date
+     *
+     * @return array
+     */
+    public function getStartTimesByDate(Date $date): array
+    {
+        $startTimes = [];
+
+        $competitions = $this->getCompetitionsByDate($date);
+
+        /** @var Competition $competition */
+        foreach ($competitions as $competition) {
+            $startTimes[$competition->getCompetitionType()->getStartTimeGroup()->getStartTimeGroup()] = $competition->getStartTime();
+        }
+
+        return $startTimes;
+    }
+
+    /**
      * @param Id $competitionId
      *
      * @return null|Competition

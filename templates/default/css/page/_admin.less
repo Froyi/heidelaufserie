@@ -11,22 +11,33 @@
         width: 300px;
         padding: 1.2em;
         margin-right: 2.5em;
-        background-color: @color-6;
-
-        a {
-          color: @color-7;
-        }
+        background-color: fade(@color-6, 50%);
 
         h3 {
           text-align: center;
           line-height: 1.5em;
-          margin-bottom: 0.88em;
+          margin-bottom: 0.5em;
+          color: @color-1;
         }
 
         p {
           font-size: 0.7em;
           text-align: center;
+          color: @color-1;
         }
+      }
+    }
+
+    .actual-start-time {
+      display: flex;
+      justify-content: flex-start;
+      margin-top: 0.5em;
+
+      > div {
+        width: 348px;
+        margin-right: 2.5em;
+        text-align: center;
+        font-size: 0.88em;
       }
     }
   }

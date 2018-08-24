@@ -775,19 +775,29 @@ input[type="submit"] {
   width: 300px;
   padding: 1.2em;
   margin-right: 2.5em;
-  background-color: #5DE96B;
-}
-.admin-page .start-time-set .start-time-set-container > div a {
-  color: #3F4340;
+  background-color: rgba(93, 233, 107, 0.5);
 }
 .admin-page .start-time-set .start-time-set-container > div h3 {
   text-align: center;
   line-height: 1.5em;
-  margin-bottom: 0.88em;
+  margin-bottom: 0.5em;
+  color: #707070;
 }
 .admin-page .start-time-set .start-time-set-container > div p {
   font-size: 0.7em;
   text-align: center;
+  color: #707070;
+}
+.admin-page .start-time-set .actual-start-time {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 0.5em;
+}
+.admin-page .start-time-set .actual-start-time > div {
+  width: 348px;
+  margin-right: 2.5em;
+  text-align: center;
+  font-size: 0.88em;
 }
 .competition-day-page {
   display: flex;
@@ -817,3 +827,15 @@ input[type="submit"] {
   margin-bottom: 20px;
   color: #3F4340;
 }
+.runner-container {
+  max-width: 50%;
+}
+.runner-container .runner-duplicate-container {
+  background-color: rgba(93, 233, 107, 0.4);
+  padding: 1em;
+  margin-bottom: 1.25em;
+}
+.runner-container .runner-duplicate-container .runner-data {
+  width: 100%;
+}
+/*# sourceMappingURL=main.css.map */

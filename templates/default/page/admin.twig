@@ -15,6 +15,16 @@
                     </div>
                 {% endfor %}
             </div>
+
+            {% if actualStartTimes %}
+                <div class="actual-start-time">
+                    {% for key, competitionTypes in startTimeGroups %}
+                        <div>
+                            aktuelle Startzeit: {{ actualStartTimes[key] }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
         {% endif %}
     </div>
 </div>

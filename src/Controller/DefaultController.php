@@ -28,6 +28,9 @@ class DefaultController
     /** @var Database $database */
     protected $database;
 
+    /** @var Date $today */
+    protected $today;
+
     /**
      * DefaultController constructor.
      *
@@ -44,41 +47,6 @@ class DefaultController
         $this->setDefaultViewConfig();
 
         $this->setJsPackages($routeName);
-    }
-
-    /**
-     * Sets default view parameter for sidebar etc.
-     */
-    protected function setDefaultViewConfig(): void
-    {
-        $this->viewRenderer->addViewConfig('page', 'notfound');
-
-        /**
-         * Notifications
-         */
-        $notifications = $this->notificationService->getNotifications(false);
-
-        $this->viewRenderer->addViewConfig('notifications', $notifications);
-        
-        /**
-         * today
-         */
-        $date = Date::fromValue('today');
-        $this->viewRenderer->addViewConfig('today', $date->toString());
-    }
-
-    /**
-     * @param string $routeName
-     */
-    protected function setJsPackages(string $routeName): void
-    {
-        $jsPlugInService = new JsPluginService($this->configuration);
-
-        $jsMainPackage = $jsPlugInService->getMainPackages();
-        $this->viewRenderer->addViewConfig('jsPlugins', $jsMainPackage);
-
-        $jsRoutePackage = $jsPlugInService->getPackagesByRouteName($routeName);
-        $this->viewRenderer->addViewConfig('jsRoutePlugins', $jsRoutePackage);
     }
 
     /**
@@ -108,6 +76,49 @@ class DefaultController
     public function errorPageAction(): void
     {
         $this->showStandardPage('error');
+    }
+
+    /**
+     * @return Date
+     */
+    public function getToday(): Date
+    {
+        return $this->today;
+    }
+
+    /**
+     * Sets default view parameter for sidebar etc.
+     */
+    protected function setDefaultViewConfig(): void
+    {
+        $this->viewRenderer->addViewConfig('page', 'notfound');
+
+        /**
+         * Notifications
+         */
+        $notifications = $this->notificationService->getNotifications(false);
+
+        $this->viewRenderer->addViewConfig('notifications', $notifications);
+
+        /**
+         * today
+         */
+        $this->today = Date::fromValue('today');
+        $this->viewRenderer->addViewConfig('today', $this->today->toString());
+    }
+
+    /**
+     * @param string $routeName
+     */
+    protected function setJsPackages(string $routeName): void
+    {
+        $jsPlugInService = new JsPluginService($this->configuration);
+
+        $jsMainPackage = $jsPlugInService->getMainPackages();
+        $this->viewRenderer->addViewConfig('jsPlugins', $jsMainPackage);
+
+        $jsRoutePackage = $jsPlugInService->getPackagesByRouteName($routeName);
+        $this->viewRenderer->addViewConfig('jsRoutePlugins', $jsRoutePackage);
     }
 
     /**

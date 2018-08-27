@@ -178,7 +178,7 @@ class CompetitionDataRepository extends DefaultRepository
     public function getSpeakerCompetitionDataByCompetitionDate(Date $date): array
     {
         $query = /** @lang text */
-            'SELECT * FROM competitionData, timeMeasure WHERE competitionData.transponderNumber = timeMeasure.transponderNumber AND timeMeasure.shown = 0 AND competitionData.date = "' . $date->toString() . '"';
+            'SELECT * FROM competitionData, timeMeasure WHERE competitionData.transponderNumber = timeMeasure.transponderNumber AND timeMeasure.shown = 0 AND competitionData.date = "' . $date->toString() . '" ORDER BY timeMeasure.timestamp DESC';
 
         return $this->database->fetchAllQueryString($query);
     }

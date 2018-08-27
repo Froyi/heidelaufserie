@@ -45,6 +45,14 @@ return [
             'controller' => 'JsonController',
             'action' => 'generateTimeMeasureDataAction',
         ],
+        'readRunnerFile' => [
+            'controller' => 'JsonController',
+            'action' => 'readRunnerFileAction',
+        ],
+        'refreshRunnerFile' => [
+            'controller' => 'IndexController',
+            'action' => 'refreshRunnerFileAction',
+        ],
         'refreshFinishedRunner' => [
             'controller' => 'JsonController',
             'action' => 'refreshFinishedRunnerAction',

@@ -13,6 +13,7 @@ use Project\Module\CompetitionStatistic\CompetitionStatisticService;
 use Project\Module\GenericValueObject\Date;
 use Project\Module\GenericValueObject\Id;
 use Project\Module\GenericValueObject\Year;
+use Project\Module\Reader\ReaderService;
 use Project\Module\Runner\RunnerDuplicateService;
 use Project\Module\Runner\RunnerService;
 use Project\TimeMeasure\TimeMeasureService;
@@ -125,7 +126,7 @@ class JsonController extends DefaultController
     {
         /** @var Date $date */
         //$date = Date::fromValue('today');
-        $date = Date::fromValue('2018-07-28');
+        $date = Date::fromValue('today');
 
         $timeMeasureService = new TimeMeasureService($this->database);
         $clubService = new ClubService($this->database);
@@ -141,7 +142,7 @@ class JsonController extends DefaultController
             $this->jsonModel->send('noRefresh');
         }
 
-        $timeMeasureService->markAllTimeMeasureListsAsShown($allCompetitionData);
+        //$timeMeasureService->markAllTimeMeasureListsAsShown($allCompetitionData);
 
 
         $this->viewRenderer->addViewConfig('allCompetitionData', $allCompetitionData);
@@ -182,6 +183,14 @@ class JsonController extends DefaultController
         $this->jsonModel->addJsonConfig('allRunnerCount', $allRunnerCount);
         $this->jsonModel->addJsonConfig('completeRunnerCount', $completeRunnerCount);
 
+        $this->jsonModel->send();
+    }
+
+
+    public function readRunnerFileAction(): void
+    {
+        $readerService = new ReaderService();
+        $readerService->readFile();
         $this->jsonModel->send();
     }
 

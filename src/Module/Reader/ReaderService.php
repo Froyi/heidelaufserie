@@ -2,6 +2,9 @@
 
 namespace Project\Module\Reader;
 
+use Project\Configuration;
+use Project\Module\Database\Database;
+use Project\Module\GenericValueObject\Datetime;
 use Project\Module\GenericValueObject\Id;
 
 /**
@@ -167,5 +170,38 @@ class ReaderService
         }
 
         return $competitionResultsArray;
+    }
+
+    public function readFile(): array
+    {
+        $runArray = [];
+        $filesize = filesize('192.168.1.2.txt');
+        if (isset($_SESSION['lastFileSize']) === false || (isset($_SESSION['lastFileSize']) === true && $filesize !== $_SESSION['lastFileSize'])) {
+            $file = file('192.168.1.2.txt');
+
+            $database = new Database(new Configuration());
+
+            $query = $database->getNewTruncatQuery('timemeasure');
+            $database->execute($query);
+
+            $count = \count($file);
+            for ($i = 0; $i < $count; $i++) {
+                $fileData = explode('	', $file[$i]);
+
+                $transponderId = $fileData[0];
+                $time = Datetime::fromValue($fileData[1]);
+
+                $query = $database->getNewInsertQuery('timemeasure');
+                $query->insert('timeMeasureId', Id::generateId()->toString());
+                $query->insert('transponderNumber', $transponderId);
+                $query->insert('timestamp', $time->toString());
+
+                $database->execute($query);
+            }
+
+            $_SESSION['lastFileSize'] = $filesize;
+        }
+
+        return $runArray;
     }
 }

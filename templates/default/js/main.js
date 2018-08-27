@@ -10,12 +10,12 @@ function refreshSpeakerData() {
         success: function (response) {
             if (response.status === 'success') {
                 $('.new-runner').remove();
-                $(response.view).prependTo('.js-speaker-runner-container').hide().slideDown();
-                refreshRankingData();
+                $('.js-speaker-runner-container').html(response.view);
+                //refreshRankingData();
             }
         },
         complete: function () {
-            refreshSpeakerData();
+            //refreshSpeakerData();
         }
     })
 }
@@ -60,6 +60,20 @@ function generateTimeMeasureData() {
     })
 }
 
+function refreshRunnerFile()
+{
+    $.ajax({
+        type: 'POST',
+        url: 'index.php?route=readRunnerFile',
+        dataType: 'json',
+        success: function (response) {
+            if (response.status === 'success') {
+                console.log(response);
+            }
+        }
+    })
+}
+
 $(document).ready(function () {
     window.setTimeout(hideNotifications, 5000); // 5 seconds
 
@@ -67,6 +81,11 @@ $(document).ready(function () {
         refreshSpeakerData();
 
         // window.setInterval(refreshFinishedRunner, 10000);
+        window.setInterval(refreshSpeakerData, 1000);
+    }
+
+    if ($('.js-runner-file-page').length > 0) {
+        window.setInterval(refreshRunnerFile, 1000);
     }
 
 

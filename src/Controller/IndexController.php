@@ -40,4 +40,9 @@ class IndexController extends DefaultController
     {
         $this->showStandardPage('timemeasure');
     }
+
+    public function refreshRunnerFileAction(): void
+    {
+        $this->showStandardPage('refreshrunner');
+    }
 }

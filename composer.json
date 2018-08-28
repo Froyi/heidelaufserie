@@ -13,7 +13,9 @@
     }
   ],
   "require-dev": {
-    "roave/security-advisories": "dev-master"
+    "roave/security-advisories": "dev-master",
+    "phpunit/phpunit": "^7",
+    "sebastianfeldmann/captainhook": "2.1.*"
   },
   "require": {
     "php": "^7.0",

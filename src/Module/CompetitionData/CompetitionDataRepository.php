@@ -207,4 +207,14 @@ class CompetitionDataRepository extends DefaultRepository
 
         return $this->database->fetchAllQueryString($query);
     }
+
+    /**
+     * @return array
+     */
+    public function getAllCompetitionData(): array
+    {
+        $query = $this->database->getNewSelectQuery(self::TABLE);
+
+        return $this->database->fetchAll($query);
+    }
 }

@@ -36,6 +36,7 @@ class CompetitionDataService
      * CompetitionDataService constructor.
      *
      * @param Database $database
+     * @param ClubService $clubService
      */
     public function __construct(Database $database, ClubService $clubService)
     {
@@ -306,10 +307,10 @@ class CompetitionDataService
         if ($competitionData !== null) {
             if (isset($singleCompetitionData->club)) {
                 try {
-                    $clubName = ClubName::fromString($singleCompetitionData->club);
-
-                    $club = $this->clubService->getOrCreateClubByClubName($clubName);
-                    $competitionData->setClub($club);
+                    $club = $this->clubService->getClubByClubId(Id::fromString($singleCompetitionData->club));
+                    if ($club !== null) {
+                        $competitionData->setClub($club);
+                    }
                 } catch (\InvalidArgumentException $exception) {}
             }
 

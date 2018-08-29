@@ -40,8 +40,12 @@ class Name extends DefaultGenericValueObject
      */
     protected static function ensureNameIsValid(string $name): void
     {
-        if (\strlen($name) < 2 || preg_match('/\d/', $name) !== false) {
+        if (\strlen($name) < 2) {
             throw new \InvalidArgumentException('Dieser name ist zu kurz!', 1);
+        }
+
+        if (preg_match('/\d/', $name) === 1) {
+            throw new \InvalidArgumentException('Dieser name ist nicht gültig!', 1);
         }
     }
 

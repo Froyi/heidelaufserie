@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 class NameTest extends TestCase
 {
     /**
-     * @dataProvider testNamesValidProvider
+     * @dataProvider namesValidProvider
      */
     public function testNameIsValid($name)
     {
@@ -17,7 +17,7 @@ class NameTest extends TestCase
     }
 
     /**
-     * @dataProvider testNamesTypeErrorProvider
+     * @dataProvider namesTypeErrorProvider
      *
      * @expectedException TypeError
      */
@@ -27,7 +27,7 @@ class NameTest extends TestCase
     }
 
     /**
-     * @dataProvider testNamesInvalidProvider
+     * @dataProvider namesInvalidProvider
      *
      * @expectedException InvalidArgumentException
      */
@@ -36,7 +36,7 @@ class NameTest extends TestCase
         \Project\Module\GenericValueObject\Name::fromString($name);
     }
 
-    public function testNamesValidProvider()
+    public function namesValidProvider()
     {
         return [
             ['Peter'],
@@ -46,7 +46,7 @@ class NameTest extends TestCase
         ];
     }
 
-    public function testNamesTypeErrorProvider()
+    public function namesTypeErrorProvider()
     {
         return [
             [2],
@@ -56,7 +56,7 @@ class NameTest extends TestCase
         ];
     }
 
-    public function testNamesInvalidProvider()
+    public function namesInvalidProvider()
     {
         return [
             ['a'],

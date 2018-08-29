@@ -3,6 +3,7 @@
 namespace Project\Controller;
 
 use Project\Configuration;
+use Project\Module\Club\ClubService;
 use Project\Module\Competition\CompetitionService;
 use Project\Module\CompetitionData\CompetitionData;
 use Project\Module\CompetitionData\CompetitionDataService;
@@ -74,8 +75,9 @@ class JsonController extends DefaultController
 
     public function duplicateAction(): void
     {
+        $clubService = new ClubService($this->database);
         $runnerService = new RunnerService($this->database, $this->configuration);
-        $competitionDataService = new CompetitionDataService($this->database);
+        $competitionDataService = new CompetitionDataService($this->database, $clubService);
         $competitionResultsService = new CompetitionResultsService($this->database);
 
         try {
@@ -113,7 +115,6 @@ class JsonController extends DefaultController
     }
 
     /**
-     * @todo Mark time measures with transaction.
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
@@ -122,15 +123,15 @@ class JsonController extends DefaultController
     function refreshSpeakerDataAction(): void
     {
         /** @var Date $date */
-        //$date = Date::fromValue('today');
-        $date = Date::fromValue('2018-07-28');
+        $date = Date::fromValue('today');
 
         $timeMeasureService = new TimeMeasureService($this->database);
+        $clubService = new ClubService($this->database);
         $runnerService = new RunnerService($this->database, $this->configuration);
         $competitionService = new CompetitionService($this->database);
         $competitionStatisticService = new CompetitionStatisticService($this->database);
 
-        $competitionDataService = new CompetitionDataService($this->database);
+        $competitionDataService = new CompetitionDataService($this->database, $clubService);
         $allCompetitionData = $competitionDataService->getSpeakerCompetitionData($date, $timeMeasureService, $runnerService, $competitionService, $competitionStatisticService);
 
 
@@ -151,20 +152,20 @@ class JsonController extends DefaultController
 
     /**
      * Counts the runner which are finished.
-     * @todo Take the actual date, not a random one.
      */
-    public
-    function refreshFinishedRunnerAction(): void
+    public function refreshFinishedRunnerAction(): void
     {
         /** @var Date $date */
-        $date = Date::fromValue('2018-07-28');
+        $date = Date::fromValue('today');
 
+        $clubService = new ClubService($this->database);
         $timeMeasureService = new TimeMeasureService($this->database);
         $runnerService = new RunnerService($this->database, $this->configuration);
         $competitionService = new CompetitionService($this->database);
 
-        $competitionDataService = new CompetitionDataService($this->database);
+        $competitionDataService = new CompetitionDataService($this->database, $clubService);
         $allCompetitionDatas = $competitionDataService->getCompetitionDataByDate($date, $timeMeasureService, $runnerService, $competitionService);
+
         $completeRunnerCount = 0;
         $allRunnerCount = \count($allCompetitionDatas);
 
@@ -182,22 +183,21 @@ class JsonController extends DefaultController
     }
 
     /**
-     * @todo Take the actual date, not a random one.
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    public
-    function refreshRankingDataAction(): void
+    public function refreshRankingDataAction(): void
     {
         /** @var Date $date */
-        $date = Date::fromValue('2018-07-28');
+        $date = Date::fromValue('today');
         $genderConfig = $this->configuration->getEntryByName('ranking');
 
+        $clubService = new ClubService($this->database);
         $timeMeasureService = new TimeMeasureService($this->database);
         $runnerService = new RunnerService($this->database, $this->configuration);
         $competitionService = new CompetitionService($this->database);
-        $competitionDataService = new CompetitionDataService($this->database);
+        $competitionDataService = new CompetitionDataService($this->database, $clubService);
 
         $womanCompetitionData = $competitionDataService->getSpeakerRankingUpdateByGender($genderConfig['woman'], $date, $timeMeasureService, $runnerService, $competitionService);
 
@@ -213,18 +213,17 @@ class JsonController extends DefaultController
 
     /**
      * This action is only for testing. In production this one is not used!!!
-     * @todo Take the actual date, not a random one.
      * @todo Look why this generating process is too slow.
      * @throws \Exception
      */
-    public
-    function generateTimeMeasureDataAction(): void
+    public function generateTimeMeasureDataAction(): void
     {
         /** @var Date $date */
-        $date = Date::fromValue('2018-07-28');
+        $date = Date::fromValue('today');
 
         if (Tools::shallWeRefresh(20) === true) {
-            $competitionDataService = new CompetitionDataService($this->database);
+            $clubService = new ClubService($this->database);
+            $competitionDataService = new CompetitionDataService($this->database, $clubService);
             $timeMeasureService = new TimeMeasureService($this->database);
             $runnerService = new RunnerService($this->database, $this->configuration);
             $competitionService = new CompetitionService($this->database);

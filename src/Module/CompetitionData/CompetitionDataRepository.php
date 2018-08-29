@@ -33,7 +33,7 @@ class CompetitionDataRepository extends DefaultRepository
             $query->insert('date', $competitionData->getDate()->toString());
             $query->insert('transponderNumber', $competitionData->getTransponderNumber()->getTransponderNumber());
             if ($competitionData->getClub() !== null) {
-                $query->insert('club', $competitionData->getClub()->getClub());
+                $query->insert('club', $competitionData->getClub()->getClubId()->toString());
             }
 
             return $this->database->execute($query);
@@ -106,7 +106,7 @@ class CompetitionDataRepository extends DefaultRepository
         $query->set('transponderNumber', $competitionData->getTransponderNumber()->getTransponderNumber());
 
         if ($competitionData->getClub() !== null) {
-            $query->set('club', $competitionData->getClub()->getClub());
+            $query->set('club', $competitionData->getClub()->getClubId()->toString());
         } else {
             $query->set('club', null);
         }
@@ -206,5 +206,15 @@ class CompetitionDataRepository extends DefaultRepository
               AND R.gender = "' . $gender->getGender() . '"';
 
         return $this->database->fetchAllQueryString($query);
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllCompetitionData(): array
+    {
+        $query = $this->database->getNewSelectQuery(self::TABLE);
+
+        return $this->database->fetchAll($query);
     }
 }

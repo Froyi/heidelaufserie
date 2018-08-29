@@ -4,6 +4,7 @@ declare (strict_types=1);
 namespace Project\Controller;
 
 use Project\Configuration;
+use Project\Module\Club\ClubService;
 use Project\Module\Competition\Competition;
 use Project\Module\Competition\CompetitionService;
 use Project\Module\Competition\StartTimeGroup;
@@ -128,7 +129,8 @@ class AdminController extends DefaultController
      */
     public function findDuplicateNamesAction(): void
     {
-        $competitionDataService = new CompetitionDataService($this->database);
+        $clubService = new ClubService($this->database);
+        $competitionDataService = new CompetitionDataService($this->database, $clubService);
         $runnerDuplicateService = new RunnerDuplicateService($this->database, $this->configuration, $competitionDataService);
 
         $duplicates = $runnerDuplicateService->findNotProvedDuplicates();
@@ -177,7 +179,8 @@ class AdminController extends DefaultController
     public function uploadCompetitionResultsFileAction(): void
     {
         $readerService = new ReaderService();
-        $competitionDataService = new CompetitionDataService($this->database);
+        $clubService = new ClubService($this->database);
+        $competitionDataService = new CompetitionDataService($this->database, $clubService);
         $competitionService = new CompetitionService($this->database);
         $competitionResultsService = new CompetitionResultsService($this->database);
 
@@ -240,9 +243,10 @@ class AdminController extends DefaultController
         $competitionDataAfterUpload = null;
 
         $readerService = new ReaderService();
+        $clubService = new ClubService($this->database);
         $runnerService = new RunnerService($this->database, $this->configuration);
         $competitionService = new CompetitionService($this->database);
-        $competitionDataService = new CompetitionDataService($this->database);
+        $competitionDataService = new CompetitionDataService($this->database, $clubService);
 
         $runnerData = $readerService->readRunnerFile($_FILES['runnerFile']['tmp_name']);
         $allRunner = $runnerService->getAllRunnerByParameter($runnerData);

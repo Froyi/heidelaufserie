@@ -100,7 +100,7 @@ class Query
         }
 
         if (\is_string($value) === true) {
-            $value = '\'' . $value . '\'';
+            $value = '\'' . addslashes($value) . '\'';
         }
 
         $this->where .= self::WHERE . $entity . ' ' . $operator . ' ' . $value . ' ';

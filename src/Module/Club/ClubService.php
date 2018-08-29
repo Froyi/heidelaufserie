@@ -18,7 +18,7 @@ use Project\Module\GenericValueObject\Id;
  */
 class ClubService
 {
-    /** @var clubFactory $clubFactory */
+    /** @var ClubFactory $clubFactory */
     protected $clubFactory;
 
     /** @var ClubRepository $clubRepository */
@@ -31,7 +31,7 @@ class ClubService
      */
     public function __construct(Database $database)
     {
-        $this->clubFactory = new clubFactory();
+        $this->clubFactory = new ClubFactory();
         $this->clubRepository = new ClubRepository($database);
     }
 
@@ -40,9 +40,9 @@ class ClubService
      *
      * @return bool
      */
-    public function saveClub(Club $club): bool
+    public function saveOrUpdateClub(Club $club): bool
     {
-        return $this->clubRepository->saveClub($club);
+        return $this->clubRepository->saveOrUpdateClub($club);
     }
 
     /**

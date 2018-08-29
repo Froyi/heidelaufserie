@@ -41,17 +41,27 @@ class ClubRepository extends DefaultRepository
      */
     public function saveClub(Club $club): bool
     {
-        if ($this->getClubByClubId($club->getClubId()) === false) {
             $query = $this->database->getNewInsertQuery(self::TABLE);
 
             $query->insert('clubId', $club->getClubId()->toString());
             $query->insert('clubName', $club->getClubName()->getClubName());
-            $query->insert('proved', $club->isProoved());
+            $query->insert('prooved', $club->isProoved());
 
             return $this->database->execute($query);
+    }
+
+    /**
+     * @param Club $club
+     *
+     * @return bool
+     */
+    public function saveOrUpdateClub(Club $club): bool
+    {
+        if (empty($this->getClubByClubId($club->getClubId())) === false) {
+            return $this->updateClub($club);
         }
-        
-        return false;
+
+        return $this->saveClub($club);
     }
 
     /**
@@ -65,5 +75,22 @@ class ClubRepository extends DefaultRepository
         $query->where('clubName', '=', $clubName->getClubName());
 
         return $this->database->fetch($query);
+    }
+
+    /**
+     * @param Club $club
+     *
+     * @return bool
+     */
+    protected function updateClub(Club $club)
+    {
+        $query = $this->database->getNewUpdateQuery(self::TABLE);
+
+        $query->set('clubName', $club->getClubName()->getClubName());
+        $query->set('prooved', $club->isProoved());
+
+        $query->where('clubId', '=', $club->getClubId()->toString());
+
+        return $this->database->execute($query);
     }
 }

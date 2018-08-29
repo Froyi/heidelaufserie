@@ -72,6 +72,6 @@ return [
         'setStartTime' => [
             'controller' => 'AdminController',
             'action' => 'setStartTimeAction',
-        ],
+        ]
     ],
 ];

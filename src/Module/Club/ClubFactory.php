@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 /**
- * clubFactory.php
+ * ClubFactory.php
  * @author      Maik Schößler <ms2002@onlinehome.de>
  * @since       24.08.2018
  */
@@ -12,10 +12,10 @@ namespace Project\Module\Club;
 use Project\Module\GenericValueObject\Id;
 
 /**
- * Class clubFactory
+ * Class ClubFactory
  * @package Project\Module\Club
  */
-class clubFactory
+class ClubFactory
 {
     /**
      * @param $object
@@ -28,7 +28,7 @@ class clubFactory
             if (empty($object->clubId) === true) {
                 $clubId = Id::generateId();
             } else {
-                $clubId = $object->clubId;
+                $clubId = Id::fromString($object->clubId);
             }
 
             $clubName = ClubName::fromString($object->clubName);

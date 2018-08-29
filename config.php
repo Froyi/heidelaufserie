@@ -12,12 +12,6 @@ return [
         'dir' => '/default',
         'main_css_path' => '/css/main.css',
     ],
-    'database' => [
-        'host' => ConfigurationInterface::DEFAULT_SERVER,
-        ConfigurationInterface::USER => 'root',
-        ConfigurationInterface::PASS => '',
-        'database_name' => 'heidelaufserie',
-    ],
     'controller' => [
         'namespace' => 'Controller',
     ],

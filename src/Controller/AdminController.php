@@ -133,7 +133,7 @@ class AdminController extends DefaultController
         $competitionDataService = new CompetitionDataService($this->database, $clubService);
         $runnerDuplicateService = new RunnerDuplicateService($this->database, $this->configuration, $competitionDataService);
 
-        $duplicates = $runnerDuplicateService->findNotProvedDuplicates();
+        $duplicates = $runnerDuplicateService->findNotProvedDuplicates($this->database);
 
         $this->viewRenderer->addViewConfig('duplicates', $duplicates);
         $this->viewRenderer->addViewConfig('page', 'duplicates');

@@ -53,9 +53,9 @@ class RunnerDuplicateService
     /**
      * @return array
      */
-    public function findNotProvedDuplicates(): array
+    public function findNotProvedDuplicates($database): array
     {
-        return $this->findDuplicates();
+        return $this->findDuplicates($database);
     }
 
     /**
@@ -113,7 +113,7 @@ class RunnerDuplicateService
      *
      * @return array
      */
-    protected function findDuplicates(bool $notProved = true): array
+    protected function findDuplicates($database, bool $notProved = true): array
     {
         $duplicates = [];
 
@@ -124,15 +124,30 @@ class RunnerDuplicateService
             $runnerArray = $this->allRunner;
         }
 
+        $competitionDataService = new CompetitionDataService($database);
+
         /** @var Runner $runner */
         foreach ($runnerArray as $runner) {
+            $competitionData = $competitionDataService->getCompetitionDataByRunnerId($runner->getRunnerId());
+            if (empty($competitionData) === false) {
+                $runner->setCompetitionDataList($competitionData);
+            }
+
             $testedRunner['runner'] = $runner;
             $testedRunner['duplicates'] = [];
 
             /** @var Runner $otherRunner */
             foreach ($toCheckRunner as $otherRunner) {
                 if ($this->isDuplicate($runner, $otherRunner) === true) {
+                    $competitionData = $competitionDataService->getCompetitionDataByRunnerId($otherRunner->getRunnerId());
+
+                    if (empty($competitionData) === false) {
+                        $otherRunner->setCompetitionDataList($competitionData);
+                    }
                     $testedRunner['duplicates'][] = $otherRunner;
+                }
+                if (count($testedRunner['duplicates']) >= 3){
+                    break;
                 }
             }
 

@@ -56,13 +56,15 @@ class Distance
      */
     protected static function convertValue($value, bool $isMeter): int
     {
-        $value = (int)$value;
+        $value = floatval($value);
 
         if ($isMeter === false) {
             $value *= 1000;
         }
 
-        return $value;
+        $value = round($value);
+
+        return (int)$value;
     }
 
     /**

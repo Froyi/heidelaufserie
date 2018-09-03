@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Project\TimeMeasure;
 
+use Project\Module\CompetitionData\MeasureInterface;
 use Project\Module\CompetitionData\TransponderNumber;
 use Project\Module\DefaultModel;
 use Project\Module\GenericValueObject\Datetime;
@@ -12,7 +13,7 @@ use Project\Module\GenericValueObject\Id;
  * Class TimeMeasure
  * @package Project\TimeMeasure
  */
-class TimeMeasure extends DefaultModel
+class TimeMeasure extends DefaultModel implements MeasureInterface
 {
     /** @var Id $timeMeasureId */
     protected $timeMeasureId;

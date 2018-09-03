@@ -72,6 +72,14 @@ return [
         'setStartTime' => [
             'controller' => 'AdminController',
             'action' => 'setStartTimeAction',
+        ],
+        'readFinishMeasureFile' => [
+            'controller' => 'AdminController',
+            'action' => 'readFinishMeasureFileAction',
+        ],
+        'generateCompetitionResultsAfterCompetitionEnd' => [
+            'controller' => 'AdminController',
+            'action' => 'generateCompetitionResultsAfterCompetitionEndAction',
         ]
     ],
 ];

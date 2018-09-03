@@ -59,4 +59,34 @@ class FinishMeasureService
 
         return $finishMeasureArray;
     }
+
+    /**
+     * @param array $finishMeasureDataArray
+     *
+     * @return array
+     */
+    public function createFinishMeasureAfterUpload(array $finishMeasureDataArray): array
+    {
+        $finishMeasureArray = [];
+
+        foreach ($finishMeasureDataArray as $finishMeasureData) {
+            $finishMeasure = $this->finishMeasureFactory->getFinishMeasureByObject($finishMeasureData);
+
+            if ($finishMeasure !== null) {
+                $finishMeasureArray[$finishMeasure->getFinishMeasureId()->toString()] = $finishMeasure;
+            }
+        }
+
+        return $finishMeasureArray;
+    }
+
+    /**
+     * @param array $finishMeasureArray
+     *
+     * @return bool
+     */
+    public function saveAllFinishMeasures(array $finishMeasureArray): bool
+    {
+        return $this->finishMeasureRepository->saveAllFinishMeasures($finishMeasureArray);
+    }
 }

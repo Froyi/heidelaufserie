@@ -35,4 +35,47 @@ class FinishMeasureRepository extends DefaultRepository
 
         return $this->database->fetchAll($query);
     }
+
+    /**
+     * @param array $finishMeasureArray
+     *
+     * @return bool
+     */
+    public function saveAllFinishMeasures(array $finishMeasureArray): bool
+    {
+        $this->database->beginTransaction();
+
+        try {
+            /** @var FinishMeasure $finishMeasure */
+            foreach ($finishMeasureArray as $finishMeasure) {
+                if ($this->saveFinishMeasure($finishMeasure) === false) {
+                    $this->database->rollBack();
+                    return false;
+                }
+            }
+
+            $this->database->commit();
+        } catch (\Exception $exception) {
+            $this->database->rollBack();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param FinishMeasure $finishMeasure
+     *
+     * @return bool
+     */
+    protected function saveFinishMeasure(FinishMeasure $finishMeasure): bool
+    {
+        $query = $this->database->getNewInsertQuery(self::TABLE);
+        $query->insert('finishMeasureId', $finishMeasure->getFinishMeasureId()->toString());
+        $query->insert('transponderNumber', $finishMeasure->getTransponderNumber()->getTransponderNumber());
+        $query->insert('timestamp', $finishMeasure->getTimestamp()->toString());
+
+        return $this->database->execute($query);
+    }
 }

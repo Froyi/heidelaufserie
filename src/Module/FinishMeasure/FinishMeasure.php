@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Project\Module\FinishMeasure;
 
+use Project\Module\CompetitionData\MeasureInterface;
 use Project\Module\CompetitionData\TransponderNumber;
 use Project\Module\GenericValueObject\Datetime;
 use Project\Module\GenericValueObject\Id;
@@ -11,7 +12,7 @@ use Project\Module\GenericValueObject\Id;
  * Class FinishMeasure
  * @package Project\Module\FinishMeasure
  */
-class FinishMeasure
+class FinishMeasure implements MeasureInterface
 {
     /** @var Id $finishMeasureId */
     protected $finishMeasureId;

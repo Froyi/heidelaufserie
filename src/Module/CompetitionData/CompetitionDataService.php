@@ -98,7 +98,7 @@ class CompetitionDataService
     {
         $competitionDataData = $this->competitionDataRepository->getCompetitionDataByDate($date);
 
-        return $this->createCompetitionData($competitionDataData, $timeMeasureService, $runnerService, $competitionService, $finishMeasureService);
+        return $this->createCompetitionData($competitionDataData, $timeMeasureService, $runnerService, $competitionService, null, $finishMeasureService);
     }
 
     /**

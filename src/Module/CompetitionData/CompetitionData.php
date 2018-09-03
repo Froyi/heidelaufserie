@@ -264,6 +264,8 @@ class CompetitionData extends DefaultModel
     }
 
     /**
+     * @param bool $isFinishMeasure
+     *
      * @return int|null
      */
     public function getLastTimeOverall($isFinishMeasure = false): ?int
@@ -313,12 +315,12 @@ class CompetitionData extends DefaultModel
     }
 
     /**
-     * @param TimeMeasure $timeMeasure1
-     * @param TimeMeasure $timeMeasure2
+     * @param MeasureInterface $timeMeasure1
+     * @param MeasureInterface $timeMeasure2
      *
      * @return int
      */
-    public function sortByTimestamp(TimeMeasure $timeMeasure1, TimeMeasure $timeMeasure2): int
+    public function sortByTimestamp(MeasureInterface $timeMeasure1, MeasureInterface $timeMeasure2): int
     {
         if ($timeMeasure1->getTimestamp()->toString() === $timeMeasure2->getTimestamp()->toString()) {
             return 0;

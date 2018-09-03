@@ -168,4 +168,30 @@ class ReaderService
 
         return $competitionResultsArray;
     }
+
+    /**
+     * @return array
+     */
+    public function readFinishMeasureFile(): array
+    {
+        $file = file('Log2018-8-26.txt');
+        $count = \count($file);
+        $measureData = [];
+
+        for ($i = 0; $i < $count; $i ++) {
+            $finishMeasureData = explode(' ', $file[$i]);
+
+            if (empty($finishMeasureData[2]) === false || \count($finishMeasureData) <= 2) {
+                continue;
+            }
+
+            $finishMeasureObject = new \stdClass();
+            $finishMeasureObject->timestamp = substr($finishMeasureData[0], 0, -1);
+            $finishMeasureObject->transponderNumber = $finishMeasureData[1];
+
+            $measureData[] = $finishMeasureObject;
+        }
+
+        return $measureData;
+    }
 }

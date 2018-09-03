@@ -71,6 +71,8 @@ class CompetitionResultsService
      * @param FinishMeasureService $finishMeasureService
      * @param CompetitionService $competitionService
      *
+     * @todo add error handling: save them in an extra object and write them in a log
+     *
      * @return bool
      */
     public function generateCompetitionResultsAfterCompetitionEnd(Date $date, CompetitionDataService $competitionDataService, FinishMeasureService $finishMeasureService, CompetitionService $competitionService): bool
@@ -82,7 +84,7 @@ class CompetitionResultsService
         /** @var CompetitionData $singleCompetitionData */
         foreach ($competitionDatas as $singleCompetitionData) {
             if ($singleCompetitionData->getCompetition() === null || $singleCompetitionData->isRunValid() === false) {
-                return false;
+                continue;
             }
 
             $roundTimes = $singleCompetitionData->getRoundTimes(true);
@@ -112,12 +114,15 @@ class CompetitionResultsService
             $timeOverall = TimeOverall::fromValue($competitionResultData->timeOverall);
             $points = Points::fromTimeAndRounds($timeOverall, $rounds, $competitionTypeId);
 
-            $competitionResultData->points = $points;
+            if ($points === null) {
+                continue;
+            }
+            $competitionResultData->points = $points->getPoints();
 
             $competitionResults = $this->competitionResultsFactory->getCompetitionResultsByObject($competitionResultData);
 
             if ($competitionResults !== null) {
-                $competitionResultsArray = $competitionResults;
+                $competitionResultsArray[] = $competitionResults;
             }
         }
 

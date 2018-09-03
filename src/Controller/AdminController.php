@@ -12,6 +12,7 @@ use Project\Module\CompetitionData\CompetitionDataService;
 use Project\Module\CompetitionData\StartNumber;
 use Project\Module\CompetitionResults\CompetitionResultsService;
 use Project\Module\CompetitionStatistic\CompetitionStatisticService;
+use Project\Module\FinishMeasure\FinishMeasureService;
 use Project\Module\GenericValueObject\Date;
 use Project\Module\GenericValueObject\Datetime;
 use Project\Module\GenericValueObject\Year;
@@ -288,6 +289,36 @@ class AdminController extends DefaultController
         $this->notificationService->setSuccess('Die Teilnehmer konnten erfolgreich importiert werden.');
         header('Location: ' . Tools::getRouteUrl('admin'));
         exit;
+    }
+
+    public function readFinishMeasureFileAction(): void
+    {
+        $readerService = new ReaderService();
+        $finishMeasureData = $readerService->readFinishMeasureFile();
+
+        $finishMeasureService = new FinishMeasureService($this->database);
+        $finishMeasureArray = $finishMeasureService->createFinishMeasureAfterUpload($finishMeasureData);
+
+        if (empty($finishMeasureArray) === false) {
+            $finishMeasureService->saveAllFinishMeasures($finishMeasureArray);
+        }
+    }
+
+    /**
+     *
+     */
+    public function generateCompetitionResultsAfterCompetitionEndAction(): void
+    {
+        $clubService = new ClubService($this->database);
+        $competitionDataService = new CompetitionDataService($this->database, $clubService);
+        $finishMeasureService = new FinishMeasureService($this->database);
+        $competitionService = new CompetitionService($this->database);
+        $competitionResultsService = new CompetitionResultsService($this->database);
+
+        /** @var Date $date */
+        $date = Date::fromValue('today');
+
+        $competitionResultsService->generateCompetitionResultsAfterCompetitionEnd($date, $competitionDataService, $finishMeasureService, $competitionService);
     }
 
     /**

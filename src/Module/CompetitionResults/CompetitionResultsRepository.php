@@ -32,6 +32,29 @@ class CompetitionResultsRepository extends DefaultRepository
     }
 
     /**
+     * @param array $competitionResultsArray
+     *
+     * @return bool
+     */
+    public function saveAllCompetitionResults(array $competitionResultsArray): bool
+    {
+        $this->database->beginTransaction();
+
+        try {
+            foreach ($competitionResultsArray as $competitionResults) {
+                $this->saveCompetitionResults($competitionResults);
+            }
+            $this->database->commit();
+        } catch (\Exception $exception) {
+            $this->database->rollBack();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * @param CompetitionResults $competitionResults
      *
      * @return bool

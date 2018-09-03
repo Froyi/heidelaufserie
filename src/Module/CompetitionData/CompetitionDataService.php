@@ -10,6 +10,7 @@ use Project\Module\Competition\CompetitionService;
 use Project\Module\Competition\CompetitionTypeId;
 use Project\Module\CompetitionStatistic\CompetitionStatisticService;
 use Project\Module\Database\Database;
+use Project\Module\FinishMeasure\FinishMeasureService;
 use Project\Module\GenericValueObject\Date;
 use Project\Module\GenericValueObject\Gender;
 use Project\Module\GenericValueObject\Id;
@@ -89,14 +90,15 @@ class CompetitionDataService
      * @param TimeMeasureService|null $timeMeasureService
      * @param RunnerService|null $runnerService
      * @param CompetitionService|null $competitionService
+     * @param FinishMeasureService|null $finishMeasureService
      *
      * @return array
      */
-    public function getCompetitionDataByDate(Date $date, TimeMeasureService $timeMeasureService = null, RunnerService $runnerService = null, CompetitionService $competitionService = null): array
+    public function getCompetitionDataByDate(Date $date, TimeMeasureService $timeMeasureService = null, RunnerService $runnerService = null, CompetitionService $competitionService = null, FinishMeasureService $finishMeasureService = null): array
     {
         $competitionDataData = $this->competitionDataRepository->getCompetitionDataByDate($date);
 
-        return $this->createCompetitionData($competitionDataData, $timeMeasureService, $runnerService, $competitionService);
+        return $this->createCompetitionData($competitionDataData, $timeMeasureService, $runnerService, $competitionService, $finishMeasureService);
     }
 
     /**
@@ -272,15 +274,16 @@ class CompetitionDataService
      * @param RunnerService|null $runnerService
      * @param CompetitionService|null $competitionService
      * @param CompetitionStatisticService|null $competitionStatisticService
+     * @param FinishMeasureService|null $finishMeasureService
      *
      * @return array
      */
-    protected function createCompetitionData(array $competitionDataData, TimeMeasureService $timeMeasureService = null, RunnerService $runnerService = null, CompetitionService $competitionService = null, CompetitionStatisticService $competitionStatisticService = null): array
+    protected function createCompetitionData(array $competitionDataData, TimeMeasureService $timeMeasureService = null, RunnerService $runnerService = null, CompetitionService $competitionService = null, CompetitionStatisticService $competitionStatisticService = null, FinishMeasureService $finishMeasureService = null): array
     {
         $competitionDataArray = [];
 
         foreach ($competitionDataData as $singleCompetitionData) {
-            $competitionData = $this->createSingleCompetitionData($singleCompetitionData, $timeMeasureService, $runnerService, $competitionService, $competitionStatisticService);
+            $competitionData = $this->createSingleCompetitionData($singleCompetitionData, $timeMeasureService, $runnerService, $competitionService, $competitionStatisticService, $finishMeasureService);
 
             if ($competitionData !== null) {
                 $competitionDataArray[$competitionData->getCompetitionDataId()->toString()] = $competitionData;
@@ -296,10 +299,11 @@ class CompetitionDataService
      * @param RunnerService|null $runnerService
      * @param CompetitionService|null $competitionService
      * @param CompetitionStatisticService|null $competitionStatisticService
+     * @param FinishMeasureService|null $finishMeasureService
      *
      * @return null|CompetitionData
      */
-    protected function createSingleCompetitionData($singleCompetitionData, TimeMeasureService $timeMeasureService = null, RunnerService $runnerService = null, CompetitionService $competitionService = null, CompetitionStatisticService $competitionStatisticService = null): ?CompetitionData
+    protected function createSingleCompetitionData($singleCompetitionData, TimeMeasureService $timeMeasureService = null, RunnerService $runnerService = null, CompetitionService $competitionService = null, CompetitionStatisticService $competitionStatisticService = null, FinishMeasureService $finishMeasureService = null): ?CompetitionData
     {
         /** @var CompetitionData $competitionData */
         $competitionData = $this->competitionDataFactory->getCompetitionData($singleCompetitionData);
@@ -318,6 +322,12 @@ class CompetitionDataService
                 $timeMeasureList = $timeMeasureService->getAllTimeMeasuresByTransponderNumber($competitionData->getTransponderNumber());
 
                 $competitionData->setTimeMeasureList($timeMeasureList);
+            }
+
+            if ($finishMeasureService !== null) {
+                $finishMeasureList = $finishMeasureService->getFinishMeasureByTransponderNumber($competitionData->getTransponderNumber());
+
+                $competitionData->setFinishMeasureList($finishMeasureList);
             }
 
             if ($runnerService !== null) {

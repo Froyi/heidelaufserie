@@ -5,8 +5,12 @@ declare (strict_types=1);
 namespace Project\Module\CompetitionResults;
 
 use Project\Module\Competition\Competition;
+use Project\Module\Competition\CompetitionService;
 use Project\Module\CompetitionData\CompetitionData;
+use Project\Module\CompetitionData\CompetitionDataService;
 use Project\Module\Database\Database;
+use Project\Module\FinishMeasure\FinishMeasureService;
+use Project\Module\GenericValueObject\Date;
 use Project\Module\GenericValueObject\Id;
 
 class CompetitionResultsService
@@ -59,6 +63,65 @@ class CompetitionResultsService
         }
 
         return $this->competitionResultsFactory->getCompetitionResultsByObject($competitionResultsData);
+    }
+
+    /**
+     * @param Date $date
+     * @param CompetitionDataService $competitionDataService
+     * @param FinishMeasureService $finishMeasureService
+     * @param CompetitionService $competitionService
+     *
+     * @return bool
+     */
+    public function generateCompetitionResultsAfterCompetitionEnd(Date $date, CompetitionDataService $competitionDataService, FinishMeasureService $finishMeasureService, CompetitionService $competitionService): bool
+    {
+        $competitionResultsArray = [];
+        $competitionResultData = new \stdClass();
+        $competitionDatas = $competitionDataService->getCompetitionDataByDate($date, null, null, $competitionService, $finishMeasureService);
+
+        /** @var CompetitionData $singleCompetitionData */
+        foreach ($competitionDatas as $singleCompetitionData) {
+            if ($singleCompetitionData->getCompetition() === null || $singleCompetitionData->isRunValid() === false) {
+                return false;
+            }
+
+            $roundTimes = $singleCompetitionData->getRoundTimes(true);
+
+            $competitionResultData->competitionDataId = $singleCompetitionData->getCompetitionDataId()->toString();
+            $competitionResultData->runnerId = $singleCompetitionData->getRunnerId()->toString();
+
+            foreach ($roundTimes as $roundNumber => $roundTime) {
+                if ($roundNumber === 1) {
+                    $competitionResultData->firstRound = $roundTime['round'];
+                }
+
+                if ($roundNumber === 2) {
+                    $competitionResultData->secondRound = $roundTime['round'];
+                }
+
+                if ($roundNumber === 3) {
+                    $competitionResultData->thirdRound = $roundTime['round'];
+                }
+            }
+
+            $competitionResultData->timeOverall = $singleCompetitionData->getLastTimeOverall(true);
+
+            $competitionType = $singleCompetitionData->getCompetition()->getCompetitionType();
+            $rounds = $competitionType->getRounds();
+            $competitionTypeId = $competitionType->getCompetitionTypeId();
+            $timeOverall = TimeOverall::fromValue($competitionResultData->timeOverall);
+            $points = Points::fromTimeAndRounds($timeOverall, $rounds, $competitionTypeId);
+
+            $competitionResultData->points = $points;
+
+            $competitionResults = $this->competitionResultsFactory->getCompetitionResultsByObject($competitionResultData);
+
+            if ($competitionResults !== null) {
+                $competitionResultsArray = $competitionResults;
+            }
+        }
+
+        return $this->competitionResultsRepository->saveAllCompetitionResults($competitionResultsArray);
     }
 
     /**

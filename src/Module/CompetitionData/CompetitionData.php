@@ -49,6 +49,9 @@ class CompetitionData extends DefaultModel
     /** @var array $timeMeasureList */
     protected $timeMeasureList = [];
 
+    /** @var array $finishMeasureList */
+    protected $finishMeasureList = [];
+
     /** @var null|CompetitionStatistic $competitionStatistic */
     protected $competitionStatistic;
 
@@ -112,6 +115,14 @@ class CompetitionData extends DefaultModel
     public function getRunnerId(): Id
     {
         return $this->runnerId;
+    }
+
+    /**
+     * @param Id $runnerId
+     */
+    public function setRunnerId(Id $runnerId): void
+    {
+        $this->runnerId = $runnerId;
     }
 
     /**
@@ -187,10 +198,13 @@ class CompetitionData extends DefaultModel
     }
 
     /**
+     * @param bool $isFinishMeasure
+     *
      * @return array
      */
-    public function getRoundTimes(): array
+    public function getRoundTimes($isFinishMeasure = false): array
     {
+        $roundNumber = 1;
         $rounds = [];
         $lastRoundTime = null;
 
@@ -202,10 +216,16 @@ class CompetitionData extends DefaultModel
             $startingTime = Datetime::fromValue($this->configuration->getEntryByName('startingTime'));
         }
 
-        usort($this->timeMeasureList, [$this, 'sortByTimestamp']);
+        // chose which list should be taken
+        $measureList = $this->timeMeasureList;
+        if ($isFinishMeasure === true) {
+            $measureList = $this->finishMeasureList;
+        }
+
+        usort($measureList, [$this, 'sortByTimestamp']);
 
         /** @var TimeMeasure $timeMeasure */
-        foreach ($this->timeMeasureList as $timeMeasure) {
+        foreach ($measureList as $timeMeasure) {
             $roundTime = $timeMeasure->getTimestamp();
             if ($lastRoundTime === null) {
                 $lastRoundTime = $startingTime;
@@ -219,9 +239,10 @@ class CompetitionData extends DefaultModel
                 $roundsTimes['timeOverall'] = $roundTime->getDifference($startingTime);
             }
 
-            $rounds[] = $roundsTimes;
+            $rounds[$roundNumber] = $roundsTimes;
 
             $lastRoundTime = $roundTime;
+            $roundNumber++;
         }
 
         return $rounds;
@@ -245,9 +266,9 @@ class CompetitionData extends DefaultModel
     /**
      * @return int|null
      */
-    public function getLastTimeOverall(): ?int
+    public function getLastTimeOverall($isFinishMeasure = false): ?int
     {
-        $rounds = $this->getRoundTimes();
+        $rounds = $this->getRoundTimes($isFinishMeasure);
         $lastKey = end($rounds);
 
         if ($lastKey === false) {
@@ -282,6 +303,16 @@ class CompetitionData extends DefaultModel
     }
 
     /**
+     * @return bool
+     */
+    public function isRunValid(): bool
+    {
+        $actualFinishedRounds = \count($this->finishMeasureList);
+
+        return $actualFinishedRounds === $this->competition->getCompetitionType()->getRounds()->getRound();
+    }
+
+    /**
      * @param TimeMeasure $timeMeasure1
      * @param TimeMeasure $timeMeasure2
      *
@@ -313,10 +344,18 @@ class CompetitionData extends DefaultModel
     }
 
     /**
-     * @param Id $runnerId
+     * @return array
      */
-    public function setRunnerId(Id $runnerId)
+    public function getFinishMeasureList(): array
     {
-        $this->runnerId = $runnerId;
+        return $this->finishMeasureList;
+    }
+
+    /**
+     * @param array $finishMeasureList
+     */
+    public function setFinishMeasureList(array $finishMeasureList): void
+    {
+        $this->finishMeasureList = $finishMeasureList;
     }
 }

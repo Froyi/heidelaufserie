@@ -12,6 +12,7 @@ use Project\Module\Database\Database;
 use Project\Module\FinishMeasure\FinishMeasureService;
 use Project\Module\GenericValueObject\Date;
 use Project\Module\GenericValueObject\Id;
+use Project\Module\Runner\RunnerService;
 
 class CompetitionResultsService
 {
@@ -20,6 +21,9 @@ class CompetitionResultsService
 
     /** @var  CompetitionResultsRepository $competitionResultsRepository */
     protected $competitionResultsRepository;
+
+    /** @var array $wrongData */
+    protected $wrongData = [];
 
     /**
      * CompetitionResultsService constructor.
@@ -84,6 +88,7 @@ class CompetitionResultsService
         /** @var CompetitionData $singleCompetitionData */
         foreach ($competitionDatas as $singleCompetitionData) {
             if ($singleCompetitionData->getCompetition() === null || $singleCompetitionData->isRunValid() === false) {
+                $this->wrongData[] = $singleCompetitionData;
                 continue;
             }
 
@@ -115,6 +120,7 @@ class CompetitionResultsService
             $points = Points::fromTimeAndRounds($timeOverall, $rounds, $competitionTypeId);
 
             if ($points === null) {
+                $this->wrongData[] = $singleCompetitionData;
                 continue;
             }
             $competitionResultData->points = $points->getPoints();
@@ -191,11 +197,79 @@ class CompetitionResultsService
      */
     public function getCompetitionResultsByRunnerId(Id $runnerId): array
     {
-        $competitionResults = [];
         $competitionResultsData = $this->competitionResultsRepository->getCompetitionResultsByRunnerId($runnerId);
+       
+        return $this->getCompetitionResultsArrayByData($competitionResultsData);
+    }
+
+    /**
+     * @param Date $date
+     * @param CompetitionDataService $competitionDataService
+     * @param RunnerService|null $runnerService
+     * @param CompetitionService|null $competitionService
+     *
+     * @return array
+     */
+    public function getCompetitionResultsByDate(Date $date, CompetitionDataService $competitionDataService, RunnerService $runnerService = null, CompetitionService $competitionService = null): array
+    {
+        $competitionResultsData = [];
+        $competitionDatas = $competitionDataService->getCompetitionDataByDate($date);
+
+        /** @var CompetitionData $competitionData */
+        foreach ($competitionDatas as $competitionData) {
+            $competitionResults = $this->competitionResultsRepository->getCompetitionResultsByCompetitionDataId($competitionData->getCompetitionDataId());
+
+            if (empty($competitionResults) === false) {
+                $competitionResultsData[] = $competitionResults;
+            }
+        }
+
+        return $this->getCompetitionResultsArrayByData($competitionResultsData, $competitionDataService, $runnerService, $competitionService);
+    }
+
+    /**
+     * @return array
+     */
+    public function getWrongData(): array
+    {
+        return $this->wrongData;
+    }
+
+    /**
+     * @param array $competitionResultsData
+     * @param CompetitionDataService|null $competitionDataService
+     * @param RunnerService|null $runnerService
+     *<
+     * @param CompetitionService|null $competitionService
+     *
+     * @return array
+     */
+    protected function getCompetitionResultsArrayByData(array $competitionResultsData, CompetitionDataService $competitionDataService = null, RunnerService $runnerService = null, CompetitionService $competitionService = null): array
+    {
+        $competitionResults = [];
 
         foreach ($competitionResultsData as $oneCompetitionResultsData){
-            $competitionResults[] = $this->competitionResultsFactory->getCompetitionResultsByObject($oneCompetitionResultsData);
+            $singleCompetitionResults = $this->competitionResultsFactory->getCompetitionResultsByObject($oneCompetitionResultsData);
+
+            if ($singleCompetitionResults !== null) {
+                if ($competitionDataService !== null) {
+                    $competitionData = $competitionDataService->getCompetitionDataByCompetitionDataId($singleCompetitionResults->getCompetitionDataId(), null, null, $competitionService);
+
+                    if ($competitionData !== null) {
+                        $singleCompetitionResults->setCompetitionData($competitionData);
+                    }
+                }
+
+                if ($runnerService !== null) {
+                    $runner = $runnerService->getRunnerByRunnerId($singleCompetitionResults->getRunnerId());
+
+                    if ($runner !== null) {
+                        $singleCompetitionResults->setRunner($runner);
+                    }
+                }
+
+                $competitionResults[] = $singleCompetitionResults;
+            }
         }
 
         return $competitionResults;

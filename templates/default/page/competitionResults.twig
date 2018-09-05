@@ -1,0 +1,26 @@
+<div class="competition-results-page js-competition-results-page">
+    {% if competitionResultsSortByAkAndPoints %}
+        {% for allCompetitionResults in competitionResultsSortByAkAndPoints %}
+            <div>
+                <h2>AK</h2>
+
+                <table>
+                    {% for competitionResults in allCompetitionResults %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ competitionResults.getRunner.getSurname }}, {{ competitionResults.getRunner.getFirstname }}</td>
+                            <td>{{ competitionResults.getCompetitionData.getClub.getClubName }}</td>
+                            <td>{{ competitionResults.getRunner.getAgeGroup }}</td>
+                            <td>{{ competitionResults.getTimeOverall }}</td>
+                            <td>{{ competitionResults.getRunner.getAgeGroup.getBirthYear }}</td>
+                            <td>{{ competitionResults.getCompetitionData.getStartNumber }}</td>
+                            <td>{{ competitionResults.getPoints }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Es gibt für heute keine Resultate!</p>
+    {% endif %}
+</div>

@@ -3,8 +3,10 @@ declare (strict_types=1);
 
 namespace Project\Module\CompetitionResults;
 
+use Project\Module\CompetitionData\CompetitionData;
 use Project\Module\DefaultModel;
 use Project\Module\GenericValueObject\Id;
+use Project\Module\Runner\Runner;
 
 class CompetitionResults extends DefaultModel
 {
@@ -14,8 +16,14 @@ class CompetitionResults extends DefaultModel
     /** @var  Id $competitionDataId */
     protected $competitionDataId;
 
+    /** @var null|CompetitionData $competitionData */
+    protected $competitionData;
+
     /** @var  Id $runnerId */
     protected $runnerId;
+
+    /** @var null|Runner $runner */
+    protected $runner;
 
     /** @var  TimeOverall $timeOverall */
     protected $timeOverall;
@@ -69,6 +77,14 @@ class CompetitionResults extends DefaultModel
     public function getRunnerId(): Id
     {
         return $this->runnerId;
+    }
+
+    /**
+     * @param Id $runnerId
+     */
+    public function setRunnerId(Id $runnerId): void
+    {
+        $this->runnerId = $runnerId;
     }
 
     /**
@@ -172,10 +188,34 @@ class CompetitionResults extends DefaultModel
     }
 
     /**
-     * @param Id $runnerId
+     * @return null|CompetitionData
      */
-    public function setRunnerId(Id $runnerId)
+    public function getCompetitionData(): ?CompetitionData
     {
-        $this->runnerId = $runnerId;
+        return $this->competitionData;
+    }
+
+    /**
+     * @param null|CompetitionData $competitionData
+     */
+    public function setCompetitionData(CompetitionData $competitionData): void
+    {
+        $this->competitionData = $competitionData;
+    }
+
+    /**
+     * @return null|Runner
+     */
+    public function getRunner(): ?Runner
+    {
+        return $this->runner;
+    }
+
+    /**
+     * @param null|Runner $runner
+     */
+    public function setRunner(Runner $runner): void
+    {
+        $this->runner = $runner;
     }
 }

@@ -319,6 +319,8 @@ class AdminController extends DefaultController
         $date = Date::fromValue('today');
 
         $competitionResultsService->generateCompetitionResultsAfterCompetitionEnd($date, $competitionDataService, $finishMeasureService, $competitionService);
+
+        //var_dump($competitionResultsService->getWrongData());
     }
 
     /**

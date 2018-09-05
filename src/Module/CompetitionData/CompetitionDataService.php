@@ -169,7 +169,7 @@ class CompetitionDataService
      * @param CompetitionService $competitionService
      * @return null|CompetitionData
      */
-    public function getCompetitionDataByCompetitionDataId(Id $competitionDataId, TimeMeasureService $timeMeasureService, RunnerService $runnerService, CompetitionService $competitionService): ?CompetitionData
+    public function getCompetitionDataByCompetitionDataId(Id $competitionDataId, TimeMeasureService $timeMeasureService = null, RunnerService $runnerService = null, CompetitionService $competitionService = null): ?CompetitionData
     {
         $competitionDataData = $this->competitionDataRepository->getCompetitionDataByCompetitionDataId($competitionDataId);
 

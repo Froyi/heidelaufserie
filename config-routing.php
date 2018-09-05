@@ -9,6 +9,10 @@ return [
             'controller' => 'IndexController',
             'action' => 'speakerAction',
         ],
+        'showResults' => [
+            'controller' => 'IndexController',
+            'action' => 'showResultsAction',
+        ],
         'admin' => [
             'controller' => 'AdminController',
             'action' => 'adminAction',

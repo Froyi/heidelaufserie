@@ -19,7 +19,7 @@ create table competitiondata
 	runnerId varchar(200) not null,
 	startNumber int not null,
 	transponderNumber int not null,
-	club varchar(200) null,
+	clubId varchar(200) null,
 	date date not null
 )
 ;

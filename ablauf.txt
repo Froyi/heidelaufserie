@@ -52,7 +52,7 @@ DB COMPETITIONDATA
     - runnerId
     - startNumber
     - transponderNumber
-    - club
+    - clubId
 
 
 

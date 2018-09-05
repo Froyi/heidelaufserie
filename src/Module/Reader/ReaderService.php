@@ -19,7 +19,7 @@ class ReaderService
         'firstname' => 1,
         'gender' => 2,
         'birthYear' => 3,
-        'club' => 4,
+        'clubName' => 4,
         'startNumber' => 6,
         'competitionTypeId' => 8,
     ];
@@ -90,7 +90,7 @@ class ReaderService
             $runnerSingleData['firstname'] = $runnerData[self::RUNNER_FILE_INDEX['firstname']];
             $runnerSingleData['gender'] = $runnerData[self::RUNNER_FILE_INDEX['gender']];
             $runnerSingleData['birthYear'] = $runnerData[self::RUNNER_FILE_INDEX['birthYear']];
-            $runnerSingleData['club'] = $runnerData[self::RUNNER_FILE_INDEX['club']];
+            $runnerSingleData['clubName'] = $runnerData[self::RUNNER_FILE_INDEX['clubName']];
             $runnerSingleData['startNumber'] = $runnerData[self::RUNNER_FILE_INDEX['startNumber']];
             $runnerSingleData['competitionTypeId'] = $runnerData[self::RUNNER_FILE_INDEX['competitionTypeId']];
 

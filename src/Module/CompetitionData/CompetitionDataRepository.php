@@ -33,7 +33,7 @@ class CompetitionDataRepository extends DefaultRepository
             $query->insert('date', $competitionData->getDate()->toString());
             $query->insert('transponderNumber', $competitionData->getTransponderNumber()->getTransponderNumber());
             if ($competitionData->getClub() !== null) {
-                $query->insert('club', $competitionData->getClub()->getClubId()->toString());
+                $query->insert('clubId', $competitionData->getClub()->getClubId()->toString());
             }
 
             return $this->database->execute($query);
@@ -77,7 +77,7 @@ class CompetitionDataRepository extends DefaultRepository
         try {
             foreach ($allCompetitionData as $competitionData) {
                 if ($this->updateCompetitionData($competitionData) === false) {
-                    throw new \Exception('This update failed. Revert all!');
+                    throw new \RuntimeException('This update failed. Revert all!');
                 }
             }
 
@@ -106,9 +106,9 @@ class CompetitionDataRepository extends DefaultRepository
         $query->set('transponderNumber', $competitionData->getTransponderNumber()->getTransponderNumber());
 
         if ($competitionData->getClub() !== null) {
-            $query->set('club', $competitionData->getClub()->getClubId()->toString());
+            $query->set('clubId', $competitionData->getClub()->getClubId()->toString());
         } else {
-            $query->set('club', null);
+            $query->set('clubId', null);
         }
 
         $query->where('competitionDataId', '=', $competitionData->getCompetitionDataId()->toString());

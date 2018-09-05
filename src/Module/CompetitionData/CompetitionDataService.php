@@ -65,9 +65,9 @@ class CompetitionDataService
 
             $competition = $this->getCompetitionByCompetitionTypeId($competitions, $competitionTypeId);
 
-            if (isset($competitionDataData['club'])) {
+            if (isset($competitionDataData['clubName'])) {
                 try {
-                    $clubName = ClubName::fromString($competitionDataData['club']);
+                    $clubName = ClubName::fromString($competitionDataData['clubName']);
 
                     $club = $this->clubService->getOrCreateClubByClubName($clubName);
                 } catch (\InvalidArgumentException $exception) {}
@@ -309,9 +309,9 @@ class CompetitionDataService
         $competitionData = $this->competitionDataFactory->getCompetitionData($singleCompetitionData);
 
         if ($competitionData !== null) {
-            if (isset($singleCompetitionData->club)) {
+            if (isset($singleCompetitionData->clubId)) {
                 try {
-                    $club = $this->clubService->getClubByClubId(Id::fromString($singleCompetitionData->club));
+                    $club = $this->clubService->getClubByClubId(Id::fromString($singleCompetitionData->clubId));
                     if ($club !== null) {
                         $competitionData->setClub($club);
                     }

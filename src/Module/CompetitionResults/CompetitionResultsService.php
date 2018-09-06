@@ -75,11 +75,9 @@ class CompetitionResultsService
      * @param FinishMeasureService $finishMeasureService
      * @param CompetitionService $competitionService
      *
-     * @todo add error handling: save them in an extra object and write them in a log
-     *
-     * @return bool
+     * @return array
      */
-    public function generateCompetitionResultsAfterCompetitionEnd(Date $date, CompetitionDataService $competitionDataService, FinishMeasureService $finishMeasureService, CompetitionService $competitionService): bool
+    public function generateCompetitionResultsAfterCompetitionEnd(Date $date, CompetitionDataService $competitionDataService, FinishMeasureService $finishMeasureService, CompetitionService $competitionService): array
     {
         $competitionResultsArray = [];
         $competitionResultData = new \stdClass();
@@ -132,6 +130,16 @@ class CompetitionResultsService
             }
         }
 
+        return $competitionResultsArray;
+    }
+
+    /**
+     * @param array $competitionResultsArray
+     *
+     * @return bool
+     */
+    public function saveAllCompetitionResults(array $competitionResultsArray): bool
+    {
         return $this->competitionResultsRepository->saveAllCompetitionResults($competitionResultsArray);
     }
 

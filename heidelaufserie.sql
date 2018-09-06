@@ -108,7 +108,7 @@ create table club
 	clubId   varchar(200) not null
 		primary key,
 	clubName varchar(250) null,
-	prooved  tinyint(1)   null
+	prooved  tinyint(1)   default '0' not null
 );
 
 

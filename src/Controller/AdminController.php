@@ -305,7 +305,7 @@ class AdminController extends DefaultController
     }
 
     /**
-     *
+     * @todo Die Ausgabe muss noch optimiert werden.
      */
     public function generateCompetitionResultsAfterCompetitionEndAction(): void
     {
@@ -318,9 +318,15 @@ class AdminController extends DefaultController
         /** @var Date $date */
         $date = Date::fromValue('today');
 
-        $competitionResultsService->generateCompetitionResultsAfterCompetitionEnd($date, $competitionDataService, $finishMeasureService, $competitionService);
+        $competitionResultsArray = $competitionResultsService->generateCompetitionResultsAfterCompetitionEnd($date, $competitionDataService, $finishMeasureService, $competitionService);
 
-        //var_dump($competitionResultsService->getWrongData());
+        if (empty($competitionResultsArray) === false) {
+            if ($competitionResultsService->saveAllCompetitionResults($competitionResultsArray) === true) {
+                echo 'Alles OK!';
+            } else {
+                echo 'Es wurde nichts gespeichert!';
+            }
+        }
     }
 
     /**

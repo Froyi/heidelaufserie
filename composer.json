@@ -25,7 +25,8 @@
     "tinify/tinify": "1.*",
     "swiftmailer/swiftmailer": "6.*",
     "phpunit/php-timer": "2.*",
-    "gender-api/client": "1.*"
+    "gender-api/client": "1.*",
+    "tracy/tracy": "^2.5"
   },
   "autoload": {
     "psr-4": {

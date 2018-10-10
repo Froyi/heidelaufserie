@@ -4,6 +4,7 @@ namespace Project;
 
 use Project\Controller\IndexController;
 use Project\Utilities\Tools;
+use Tracy\Debugger;
 
 ini_set('memory_limit', '-1');
 
@@ -21,6 +22,10 @@ if (Tools::getValue('route') !== false) {
 }
 
 $configuration = new Configuration();
+
+if ($configuration->getEntryByName('environment') === 'develop') {
+    Debugger::enable();
+}
 
 try {
     $routing = new Routing($configuration);

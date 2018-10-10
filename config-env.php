@@ -9,4 +9,5 @@ return [
         ConfigurationInterface::PASS => '',
         'database_name' => 'heidelaufserie',
     ],
+    'environment' => 'develop'
 ];

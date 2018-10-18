@@ -37,7 +37,13 @@ class RunnerFactory
                 $proved = (bool)$object->proved;
             }
 
-            return new Runner($runnerId, $surname, $firstname, $ageGroup, $proved);
+            $runner = new Runner($runnerId, $surname, $firstname, $ageGroup, $proved);
+
+            if (empty($object->shortcode) === false) {
+                $runner->setShortCode(ShortCode::fromString($object->shortcode));
+            }
+
+            return $runner;
         } catch (\InvalidArgumentException $exception) {
             return null;
         }

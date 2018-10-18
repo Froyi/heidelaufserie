@@ -33,6 +33,9 @@ class Runner extends DefaultModel
     /** @var bool $proved */
     protected $proved;
 
+    /** @var ShortCode $shortCode */
+    protected $shortCode;
+
     /** @var array $competitionDataList */
     protected $competitionDataList = [];
 
@@ -54,6 +57,22 @@ class Runner extends DefaultModel
         $this->firstname = $firstname;
         $this->ageGroup = $ageGroup;
         $this->proved = $proved;
+    }
+
+    /**
+     * @return ShortCode
+     */
+    public function getShortCode(): ShortCode
+    {
+        return $this->shortCode;
+    }
+
+    /**
+     * @param ShortCode $shortCode
+     */
+    public function setShortCode(ShortCode $shortCode): void
+    {
+        $this->shortCode = $shortCode;
     }
 
     /**

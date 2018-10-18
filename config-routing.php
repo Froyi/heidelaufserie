@@ -84,6 +84,10 @@ return [
         'generateCompetitionResultsAfterCompetitionEnd' => [
             'controller' => 'AdminController',
             'action' => 'generateCompetitionResultsAfterCompetitionEndAction',
-        ]
+        ],
+        'migrateShortCode' => [
+            'controller' => 'MigrateController',
+            'action' => 'migrateShortCodeAction',
+        ],
     ],
 ];

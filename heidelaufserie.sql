@@ -81,7 +81,8 @@ create table runner
 	firstname varchar(200) not null,
 	birthYear int(4) not null,
 	gender enum('w', 'm') not null,
-	proved tinyint(1) default '0' not null
+	proved tinyint(1) default '0' not null,
+	shortcode varchar(4) default '0' not null
 )
 ;
 

@@ -128,6 +128,16 @@ class RunnerService
      *
      * @return bool
      */
+    public function updateRunner(Runner $runner): bool
+    {
+        return $this->runnerRepository->updateRunner($runner);
+    }
+
+    /**
+     * @param Runner $runner
+     *
+     * @return bool
+     */
     public function markRunnerAsProved(Runner $runner): bool
     {
         $runner->setProved(true);
@@ -143,6 +153,22 @@ class RunnerService
     public function runnerExists(Runner $runner): ?Runner
     {
         $runnerData = $this->runnerRepository->runnerExists($runner);
+
+        if (empty($runnerData) === true) {
+            return null;
+        }
+
+        return $this->runnerFactory->getRunnerByObject($runnerData, $this->configuration);
+    }
+
+    /**
+     * @param ShortCode $shortCode
+     *
+     * @return null|Runner
+     */
+    public function getRunnerByShortCode(ShortCode $shortCode): ?Runner
+    {
+        $runnerData = $this->runnerRepository->getRunnerByShortCode($shortCode);
 
         if (empty($runnerData) === true) {
             return null;

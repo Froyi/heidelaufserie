@@ -61,10 +61,16 @@ class RunnerRepository extends DefaultRepository
         $query->insert('birthYear', $runner->getAgeGroup()->getBirthYear()->getBirthYear());
         $query->insert('gender', $runner->getAgeGroup()->getGender()->getGender());
         $query->insert('proved', $runner->isProved());
+        $query->insert('shortcode', $runner->getShortCode()->getShortCode());
 
         return $this->database->execute($query);
     }
 
+    /**
+     * @param Runner $runner
+     *
+     * @return bool
+     */
     public function updateRunner(Runner $runner): bool
     {
         $query = $this->database->getNewUpdateQuery(self::TABLE);
@@ -74,6 +80,7 @@ class RunnerRepository extends DefaultRepository
         $query->set('birthYear', $runner->getAgeGroup()->getBirthYear()->getBirthYear());
         $query->set('gender', $runner->getAgeGroup()->getGender()->getGender());
         $query->set('proved', $runner->isProved());
+        $query->set('shortcode', $runner->getShortCode()->getShortCode());
         $query->where('runnerId', '=', $runner->getRunnerId()->toString());
 
         return $this->database->execute($query);
@@ -87,5 +94,18 @@ class RunnerRepository extends DefaultRepository
         $query = $this->database->getNewSelectQuery(self::TABLE);
 
         return $this->database->fetchAll($query);
+    }
+
+    /**
+     * @param ShortCode $shortCode
+     *
+     * @return mixed
+     */
+    public function getRunnerByShortCode(ShortCode $shortCode)
+    {
+        $query = $this->database->getNewSelectQuery(self::TABLE);
+        $query->where('shortcode', '=', $shortCode->getShortCode());
+
+        return $this->database->fetch($query);
     }
 }

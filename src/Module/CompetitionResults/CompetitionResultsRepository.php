@@ -3,7 +3,6 @@ declare (strict_types=1);
 
 namespace Project\Module\CompetitionResults;
 
-use phpDocumentor\Reflection\Types\Self_;
 use Project\Module\DefaultRepository;
 use Project\Module\GenericValueObject\Id;
 

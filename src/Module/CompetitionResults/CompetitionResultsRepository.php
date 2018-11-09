@@ -3,6 +3,7 @@ declare (strict_types=1);
 
 namespace Project\Module\CompetitionResults;
 
+use phpDocumentor\Reflection\Types\Self_;
 use Project\Module\DefaultRepository;
 use Project\Module\GenericValueObject\Id;
 
@@ -175,5 +176,33 @@ class CompetitionResultsRepository extends DefaultRepository
         }
 
         return true;
+    }
+
+    /**
+     * @param Id $competitionDataId
+     *
+     * @return bool
+     */
+    public function deleteCompetitionResultsByCompetitionDataId(Id $competitionDataId): bool
+    {
+        $query = $this->database->getNewDeleteQuery(self::TABLE);
+
+        $query->where('competitionDataId', '=', $competitionDataId->toString());
+
+        return $this->database->execute($query);
+    }
+
+    /**
+     * @param Id $competitionResultsId
+     *
+     * @return bool
+     */
+    public function deleteCompetitionResultsByCompetitionResultsId(Id $competitionResultsId): bool
+    {
+        $query = $this->database->getNewDeleteQuery(self::TABLE);
+
+        $query->where('competitionResultsId', '=', $competitionResultsId->toString());
+
+        return $this->database->execute($query);
     }
 }

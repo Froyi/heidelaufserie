@@ -217,4 +217,18 @@ class CompetitionDataRepository extends DefaultRepository
 
         return $this->database->fetchAll($query);
     }
+
+    /**
+     * @param Date $date
+     *
+     * @return bool
+     */
+    public function deleteCompetitionDataByDate(Date $date): bool
+    {
+        $query = $this->database->getNewDeleteQuery(self::TABLE);
+
+        $query->where('date', '=', $date->toString());
+
+        return $this->database->execute($query);
+    }
 }

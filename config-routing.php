@@ -85,6 +85,10 @@ return [
             'controller' => 'AdminController',
             'action' => 'generateCompetitionResultsAfterCompetitionEndAction',
         ],
+        'deleteCompetitionData' => [
+            'controller' => 'AdminController',
+            'action' => 'deleteCompetitionDataAction',
+        ],
         'migrateShortCode' => [
             'controller' => 'MigrateController',
             'action' => 'migrateShortCodeAction',

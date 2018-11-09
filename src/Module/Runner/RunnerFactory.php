@@ -41,6 +41,8 @@ class RunnerFactory
 
             if (empty($object->shortcode) === false) {
                 $runner->setShortCode(ShortCode::fromString($object->shortcode));
+            } else {
+                $runner->setShortCode(ShortCode::generateShortCode());
             }
 
             return $runner;

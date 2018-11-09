@@ -8,6 +8,7 @@ use Project\Module\Club\ClubService;
 use Project\Module\Competition\Competition;
 use Project\Module\Competition\CompetitionService;
 use Project\Module\Competition\StartTimeGroup;
+use Project\Module\CompetitionData\CompetitionData;
 use Project\Module\CompetitionData\CompetitionDataService;
 use Project\Module\CompetitionData\StartNumber;
 use Project\Module\CompetitionResults\CompetitionResultsService;
@@ -356,5 +357,61 @@ class AdminController extends DefaultController
         $this->notificationService->setSuccess('Die Wettbewerbe wurden erfolgreich erstellt.');
         header('Location: ' . Tools::getRouteUrl('competitions'));
         exit;
+    }
+
+    public function deleteCompetitionDataAction(): void
+    {
+        $error = [];
+
+        try {
+            /** @var Date $date */
+            $date = Date::fromValue(Tools::getValue('date'));
+        } catch (\InvalidArgumentException $exception) {
+            echo 'Es ist ein Fehler geschehen. Ich konnte kein Datum in der URL finden. Bitte versuche es erneut mit korrekter URL.';
+            
+            exit;
+        }
+
+        $withResults = false;
+        if (Tools::getValue('withResults') !== false) {
+            $withResults = (bool)Tools::getValue('withResults');
+        }
+
+        $competitionService = new CompetitionService($this->database);
+        $clubService = new ClubService($this->database);
+        $competitionDataService = new CompetitionDataService($this->database, $clubService);
+        $competitionResultsService = new CompetitionResultsService($this->database);
+
+        // Delete CompetitionResults if they should be deleted
+        if ($withResults === true) {
+            $competitionDatas = $competitionDataService->getCompetitionDataByDate($date);
+
+            /** @var CompetitionData $competitionData */
+            foreach ($competitionDatas as $competitionData) {
+                if ($competitionResultsService->deleteCompetitionResultsByCompetitionDataId($competitionData->getCompetitionDataId()) === false) {
+                    $error[] = 'CompetitionResult konnte nicht gelöscht werden: (CompetitionData) ' . $competitionData->getCompetitionDataId();
+                }
+            }
+        }
+
+        // Delete CompetitionDatas
+        if ($competitionDataService->deleteCompetitionDataByDate($date) === false) {
+            $error[] = 'CompetitionDatas konnte nicht gelöscht werden: ' . $date;
+        }
+
+        // Delete Cmpetitions
+        if ($competitionService->deleteCompetitionByDate($date) === false) {
+            $error[] = 'Competition konnte nicht gelöscht werden: ' . $date;
+        }
+
+        if (empty($error) === false) {
+            foreach ($error as $errorText) {
+                echo $errorText . '<br/>';
+            }
+
+            exit;
+        }
+
+        echo 'Alles gelöscht!!';
     }
 }

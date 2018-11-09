@@ -164,6 +164,30 @@ class CompetitionResultsService
     }
 
     /**
+     * @param Id $competitionDataId
+     *
+     * @return bool
+     */
+    public function deleteCompetitionResultsByCompetitionDataId(Id $competitionDataId): bool
+    {
+        if ($this->getCompetitionResultsByCompetitionDataId($competitionDataId) === null) {
+            return true;
+        }
+        
+        return $this->competitionResultsRepository->deleteCompetitionResultsByCompetitionDataId($competitionDataId);
+    }
+
+    /**
+     * @param Id $competitionResultsId
+     *
+     * @return bool
+     */
+    public function deleteCompetitionResultsByCompetitionResultsId(Id $competitionResultsId): bool
+    {
+        return $this->competitionResultsRepository->deleteCompetitionResultsByCompetitionResultsId($competitionResultsId);
+    }
+
+    /**
      * @param CompetitionResults $competitionResults
      * @param Competition $competition
      *

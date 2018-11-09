@@ -204,6 +204,20 @@ class CompetitionService
     }
 
     /**
+     * @param Date $date
+     *
+     * @return bool
+     */
+    public function deleteCompetitionByDate(Date $date): bool
+    {
+        if (empty($this->getCompetitionsByDate($date)) === true) {
+            return true;
+        }
+
+        return $this->competitionRepository->deleteCompetitionByDate($date);
+    }
+
+    /**
      * @return array
      */
     protected function getAllCompetitionTypes(): array

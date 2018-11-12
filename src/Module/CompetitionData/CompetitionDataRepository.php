@@ -252,4 +252,31 @@ class CompetitionDataRepository extends DefaultRepository
 
         return $this->database->fetchAll($query);
     }
+
+    /**
+     * @param Id $clubId
+     *
+     * @return array
+     */
+    public function getCompetitionDataByClubId(Id $clubId): array
+    {
+        $query = $this->database->getNewSelectQuery(self::TABLE);
+
+        $query->where('clubId', '=', $clubId->toString());
+
+        return $this->database->fetchAll($query);
+    }
+
+    /**
+     * @param CompetitionData $competitionData
+     */
+    public function competitionDataExist(CompetitionData $competitionData)
+    {
+        $query = $this->database->getNewSelectQuery(self::TABLE);
+
+        $query->where('startNumber', '=', $competitionData->getStartNumber()->getStartNumber());
+        $query->andWhere('date', '=', $competitionData->getDate()->toString());
+
+        return $this->database->fetch($query);
+    }
 }

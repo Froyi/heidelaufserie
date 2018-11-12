@@ -7,6 +7,8 @@
         <form action="{{ route('uploadRunnerFile') }}" method="post" enctype="multipart/form-data">
             <p><label for="runnerFile">Datei: <input type="file" name="runnerFile"></label></p>
             <p><label for="date">Datum des Wettbewerbes: <input type="date" name="date" {% if today %}value="{{ today }}"{% endif %}></label></p>
+            <div class="flex"><input type="checkbox" checked name="resetCompetitionData" id="resetCompetitionData"> <label
+                        for="resetCompetitionData">Sollen bestehende Daten zu diesem Lauf gelöscht werden?</label></div>
             <p><input type="submit" name="submit" value="Speichern"></p>
         </form>
     </div>

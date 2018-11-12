@@ -76,7 +76,7 @@ class CompetitionDataService
             if ($competition !== null) {
                 $competitionData = $this->competitionDataFactory->getCompetitionDataByObject($competitionDataData, $competition, $transponderData, $club);
 
-                if ($competitionData !== null) {
+                if ($competitionData !== null && $this->competitionDataExist($competitionData) === false) {
                     $competitionDataArray[$competitionData->getCompetitionDataId()->toString()] = $competitionData;
                 }
             }
@@ -101,6 +101,16 @@ class CompetitionDataService
         return $this->createCompetitionData($competitionDataData, $timeMeasureService, $runnerService, $competitionService, null, $finishMeasureService);
     }
 
+    /**
+     * @param Date $date
+     * @param TimeMeasureService|null $timeMeasureService
+     * @param RunnerService|null $runnerService
+     * @param CompetitionService|null $competitionService
+     * @param FinishMeasureService|null $finishMeasureService
+     * @param int|null $limit
+     *
+     * @return array
+     */
     public function getRandomCompetitionDataByDate(Date $date, TimeMeasureService $timeMeasureService = null, RunnerService $runnerService = null, CompetitionService $competitionService = null, FinishMeasureService $finishMeasureService = null, int $limit = null): array
     {
 
@@ -145,6 +155,11 @@ class CompetitionDataService
      */
     public function saveAllCompetitionData(array $allCompetitionData): bool
     {
+        /** @var CompetitionData $competitionData */
+        foreach ($allCompetitionData as $competitionData) {
+            $this->clubService->saveOrUpdateClub($competitionData->getClub());
+        }
+
         return $this->competitionDataRepository->saveAllCompetitionData($allCompetitionData);
     }
 
@@ -273,6 +288,54 @@ class CompetitionDataService
     }
 
     /**
+     * @param Id $clubId
+     *
+     * @return array
+     */
+    public function getCompetitionDatasByClubId(Id $clubId): array
+    {
+        $competitionDataData = $this->competitionDataRepository->getCompetitionDataByClubId($clubId);
+
+        return $this->createCompetitionData($competitionDataData);
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllCompetitionData(): array
+    {
+        $competitionDataData = $this->competitionDataRepository->getAllCompetitionData();
+
+        return $this->createCompetitionData($competitionDataData);
+    }
+
+    /**
+     * @param Id $getCompetitionDataId
+     *
+     * @return mixed
+     */
+    public function getClubStringByCompetitionDataId(Id $getCompetitionDataId)
+    {
+        $competitionDataData = $this->competitionDataRepository->getCompetitionDataByCompetitionDataId($getCompetitionDataId);
+
+        return $competitionDataData->clubId;
+    }
+
+    /**
+     * @param CompetitionData $competitionData
+     *
+     * @return bool
+     */
+    public function saveOrUpdateCompetitionData(CompetitionData $competitionData): bool
+    {
+        if ($this->getCompetitionDataByCompetitionDataId($competitionData->getCompetitionDataId()) === null) {
+            return $this->competitionDataRepository->saveCompetitionData($competitionData);
+        }
+
+        return $this->competitionDataRepository->updateCompetitionData($competitionData);
+    }
+
+    /**
      * @param array $competitions
      * @param CompetitionTypeId $competitionTypeId
      *
@@ -380,5 +443,15 @@ class CompetitionDataService
         }
 
         return null;
+    }
+
+    /**
+     * @param CompetitionData $competitionData
+     *
+     * @return bool
+     */
+    protected function competitionDataExist(CompetitionData $competitionData): bool
+    {
+        return (empty($this->competitionDataRepository->competitionDataExist($competitionData)) === false);
     }
 }

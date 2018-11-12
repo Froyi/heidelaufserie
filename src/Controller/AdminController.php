@@ -4,6 +4,8 @@ declare (strict_types=1);
 namespace Project\Controller;
 
 use Project\Configuration;
+use Project\Module\Club\Club;
+use Project\Module\Club\ClubName;
 use Project\Module\Club\ClubService;
 use Project\Module\Competition\Competition;
 use Project\Module\Competition\CompetitionService;
@@ -16,6 +18,7 @@ use Project\Module\CompetitionStatistic\CompetitionStatisticService;
 use Project\Module\FinishMeasure\FinishMeasureService;
 use Project\Module\GenericValueObject\Date;
 use Project\Module\GenericValueObject\Datetime;
+use Project\Module\GenericValueObject\Id;
 use Project\Module\GenericValueObject\Year;
 use Project\Module\Reader\ReaderService;
 use Project\Module\Runner\Runner;
@@ -290,14 +293,20 @@ class AdminController extends DefaultController
             $transponderData = $readerService->readTransponderFile();
 
             $competitions = $competitionService->getCompetitionsByDate($date);
+
             if (empty($competitions) === false) {
                 $competitionDataAfterUpload = $competitionDataService->getCompetitionDataAfterRunnerUpload($runnerData, $competitions, $transponderData);
             }
+
+            if (Tools::getValue('resetCompetitionData') !== false) {
+                $competitionDataService->deleteCompetitionDataByDate($date);
+            }
+
             $competitionDataService->saveAllCompetitionData($competitionDataAfterUpload);
         }
 
         $this->notificationService->setSuccess('Die Teilnehmer konnten erfolgreich importiert werden.');
-        header('Location: ' . Tools::getRouteUrl('speaker'));
+        header('Location: ' . Tools::getRouteUrl('competitionDay'));
         exit;
     }
 
@@ -437,5 +446,79 @@ class AdminController extends DefaultController
         $this->notificationService->setSuccess('Die Liste wurde erfolgreich gelöscht.');
         header('Location: ' . Tools::getRouteUrl('admin'));
         exit;
+    }
+
+    public function mergeDuplicateClubsAction(): void
+    {
+        $clubService = new ClubService($this->database);
+        $competitionDataService = new CompetitionDataService($this->database, $clubService);
+
+        $allClubs = $clubService->getAllClubs();
+
+        /** @var Club $club */
+        foreach ($allClubs as $club) {
+            $duplicateClubs = $clubService->getClubsByClubName($club->getClubName());
+
+            /** @var Club $duplicateClub */
+            foreach ($duplicateClubs as $duplicateClub) {
+                if ($club->getClubId()->toString() === $duplicateClub->getClubId()->toString()) {
+                    continue;
+                }
+
+                $duplicateCompetitionDatas = $competitionDataService->getCompetitionDatasByClubId($duplicateClub->getClubId());
+
+                /** @var CompetitionData $duplicateCompetitionData */
+                foreach ($duplicateCompetitionDatas as $duplicateCompetitionData) {
+                    $duplicateCompetitionData->setClub($club);
+
+                    $competitionDataService->saveCompetitionData($duplicateCompetitionData);
+                }
+
+                $clubService->deleteClub($duplicateClub);
+                unset($allClubs[$duplicateClub->getClubId()->toString()]);
+            }
+        }
+    }
+
+    public function mergeClubsInCompetitionData(): void
+    {
+        $clubService = new ClubService($this->database);
+        $competitionDataService = new CompetitionDataService($this->database, $clubService);
+
+        $competitionDatas = $competitionDataService->getAllCompetitionData();
+
+        /** @var CompetitionData $competitionData */
+        foreach ($competitionDatas as $competitionData) {
+            if ($competitionData->getClub() !== null) {
+                continue;
+            }
+
+            $clubString = $competitionDataService->getClubStringByCompetitionDataId($competitionData->getCompetitionDataId());
+
+            if (empty($clubString) === true) {
+                continue;
+            }
+
+            try {
+                Id::fromString($clubString);
+                continue;
+            } catch (\InvalidArgumentException $exception) {}
+
+            try {
+                $clubName = ClubName::fromString($clubString);
+            } catch(\InvalidArgumentException $exception) {
+                continue;
+            }
+
+            $club = $clubService->getOrCreateClubByClubName($clubName);
+
+            if ($clubService->saveOrUpdateClub($club) === false) {
+                continue;
+            }
+
+            $competitionData->setClub($club);
+
+            $competitionDataService->saveOrUpdateCompetitionData($competitionData);
+        }
     }
 }

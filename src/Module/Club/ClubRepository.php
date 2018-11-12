@@ -78,11 +78,48 @@ class ClubRepository extends DefaultRepository
     }
 
     /**
+     * @return array
+     */
+    public function getAllClubs(): array
+    {
+        $query = $this->database->getNewSelectQuery(self::TABLE);
+
+        return $this->database->fetchAll($query);
+    }
+
+    /**
+     * @param ClubName $clubName
+     *
+     * @return array
+     */
+    public function getClubsByClubName(ClubName $clubName): array
+    {
+        $query = $this->database->getNewSelectQuery(self::TABLE);
+        $query->where('clubName', '=', $clubName->getClubName());
+
+        return $this->database->fetchAll($query);
+    }
+
+    /**
      * @param Club $club
      *
      * @return bool
      */
-    protected function updateClub(Club $club)
+    public function deleteClub(Club $club): bool
+    {
+        $query = $this->database->getNewDeleteQuery(self::TABLE);
+
+        $query->where('clubId', '=', $club->getClubId()->toString());
+
+        return $this->database->execute($query);
+    }
+
+    /**
+     * @param Club $club
+     *
+     * @return bool
+     */
+    protected function updateClub(Club $club): bool
     {
         $query = $this->database->getNewUpdateQuery(self::TABLE);
 

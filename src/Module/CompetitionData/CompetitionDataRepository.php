@@ -231,4 +231,25 @@ class CompetitionDataRepository extends DefaultRepository
 
         return $this->database->execute($query);
     }
+
+    /**
+     * @param Date $date
+     * @param int $limit
+     *
+     * @return array
+     */
+    public function getRandomCompetitionDataByDate(Date $date, int $limit): array
+    {
+        $query = $this->database->getNewSelectQuery(self::TABLE);
+
+        $query->where('date', '=', $date->toString());
+
+        if ($limit !== null) {
+            $query->limit($limit);
+        }
+        
+        $query->orderRandom();
+
+        return $this->database->fetchAll($query);
+    }
 }

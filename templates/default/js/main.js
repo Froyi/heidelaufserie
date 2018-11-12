@@ -56,6 +56,9 @@ function generateTimeMeasureData() {
             if (response.status === 'success') {
                 console.log(response.timeMeasure);
             }
+        },
+        complete: function () {
+            generateTimeMeasureData();
         }
     })
 }
@@ -71,7 +74,8 @@ $(document).ready(function () {
 
 
     if ($('.js-timemeasure-page').length > 0) {
-        window.setInterval(generateTimeMeasureData, 1000);
+        generateTimeMeasureData();
+        // window.setInterval(generateTimeMeasureData, 1000);
     }
 
     /*var socket = io.connect('http://localhost:3000', {transports: ['websocket']});

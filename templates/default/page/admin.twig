@@ -27,4 +27,44 @@
             {% endif %}
         {% endif %}
     </div>
+
+    <div class="content-container delete-time-measure">
+        <h2>Zeitnahmetabellen löschen</h2>
+
+        {% if timeMeasureCount > 0 %}
+            <p class="time-measure-filled">Es befinden sich aktuell {{ timeMeasureCount }} Einträge in der
+                Datenbank.</p>
+        {% else %}
+            <p class="time-measure-empty">Es befindet sich aktuell kein Eintrag in der Datenbank.</p>
+        {% endif %}
+
+
+        <a href="{{ route('deleteMeasureData') }}">Zeitnahme löschen (Sprechermonitor)</a>
+    </div>
+
+    {% if competitionDates %}
+        <div class="content-container delete-competition">
+            <h2>Wettkampf löschen</h2>
+
+            <form action="{{ route('deleteCompetitionData') }}" method="post">
+                <div>
+                    <label for="competitionDate">Wettkampftag</label>
+                    <select name="date" id="competitionDate">
+                        {% for competitionDate in competitionDates %}
+                            <option value="{{ competitionDate }}">{{ competitionDate }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="with-results-container">
+                    <input type="checkbox" name="withResults" id="withResults">
+                    <label for="withResults">Mit Laufresultaten?</label>
+                </div>
+
+                <div>
+                    <input type="submit" value="löschen">
+                </div>
+            </form>
+        </div>
+    {% endif %}
 </div>

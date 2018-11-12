@@ -101,6 +101,14 @@ class CompetitionDataService
         return $this->createCompetitionData($competitionDataData, $timeMeasureService, $runnerService, $competitionService, null, $finishMeasureService);
     }
 
+    public function getRandomCompetitionDataByDate(Date $date, TimeMeasureService $timeMeasureService = null, RunnerService $runnerService = null, CompetitionService $competitionService = null, FinishMeasureService $finishMeasureService = null, int $limit = null): array
+    {
+
+        $competitionDataData = $this->competitionDataRepository->getRandomCompetitionDataByDate($date, $limit);
+
+        return $this->createCompetitionData($competitionDataData, $timeMeasureService, $runnerService, $competitionService, null, $finishMeasureService);
+    }
+
     /**
      * @param Date $date
      * @param StartNumber $startNumber

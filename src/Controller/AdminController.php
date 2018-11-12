@@ -21,6 +21,7 @@ use Project\Module\Reader\ReaderService;
 use Project\Module\Runner\Runner;
 use Project\Module\Runner\RunnerDuplicateService;
 use Project\Module\Runner\RunnerService;
+use Project\TimeMeasure\TimeMeasureService;
 use Project\Utilities\Tools;
 
 /**
@@ -53,11 +54,19 @@ class AdminController extends DefaultController
     public function adminAction(): void
     {
         $competitionService = new CompetitionService($this->database);
+        $timeMeasureService = new TimeMeasureService($this->database);
+
+        $timeMeasureCount = $timeMeasureService->getTimeMeasureCount();
+
+        $competitionDates = $competitionService->getCompetitonDates();
+
         $startTimeGroups = $competitionService->getAllStartTimeGroups();
 
         $actualStartTimes = $competitionService->getStartTimesByDate($this->getToday());
 
+        $this->viewRenderer->addViewConfig('competitionDates', $competitionDates);
         $this->viewRenderer->addViewConfig('startTimeGroups', $startTimeGroups);
+        $this->viewRenderer->addViewConfig('timeMeasureCount', $timeMeasureCount);
         $this->viewRenderer->addViewConfig('actualStartTimes', $actualStartTimes);
         $this->viewRenderer->addViewConfig('page', 'admin');
 
@@ -288,7 +297,7 @@ class AdminController extends DefaultController
         }
 
         $this->notificationService->setSuccess('Die Teilnehmer konnten erfolgreich importiert werden.');
-        header('Location: ' . Tools::getRouteUrl('admin'));
+        header('Location: ' . Tools::getRouteUrl('speaker'));
         exit;
     }
 
@@ -367,8 +376,8 @@ class AdminController extends DefaultController
             /** @var Date $date */
             $date = Date::fromValue(Tools::getValue('date'));
         } catch (\InvalidArgumentException $exception) {
-            echo 'Es ist ein Fehler geschehen. Ich konnte kein Datum in der URL finden. Bitte versuche es erneut mit korrekter URL.';
-            
+            $this->notificationService->setError('Es ist ein Fehler geschehen. Ich konnte kein Datum in der URL finden. Bitte versuche es erneut mit korrekter URL.');
+            header('Location: ' . Tools::getRouteUrl('admin'));
             exit;
         }
 
@@ -405,13 +414,28 @@ class AdminController extends DefaultController
         }
 
         if (empty($error) === false) {
-            foreach ($error as $errorText) {
-                echo $errorText . '<br/>';
-            }
-
+            $this->notificationService->setError(implode(' ', $error));
+            header('Location: ' . Tools::getRouteUrl('admin'));
             exit;
         }
 
-        echo 'Alles gelöscht!!';
+        $this->notificationService->setSuccess('Alles wurde erfolgreich gelöscht.');
+        header('Location: ' . Tools::getRouteUrl('admin'));
+        exit;
+    }
+
+    public function deleteMeasureDataAction(): void
+    {
+        $timeMeasureService = new TimeMeasureService($this->database);
+
+        if ($timeMeasureService->deleteAll() === false) {
+            $this->notificationService->setError('Die Liste konnte nicht gelöscht werden.');
+            header('Location: ' . Tools::getRouteUrl('admin'));
+            exit;
+        }
+
+        $this->notificationService->setSuccess('Die Liste wurde erfolgreich gelöscht.');
+        header('Location: ' . Tools::getRouteUrl('admin'));
+        exit;
     }
 }

@@ -36,6 +36,9 @@ class TimeMeasureRepository extends DefaultRepository
      */
     public function getNewTimeMeasures(): array
     {
+        /*$queryString = 'SELECT DISTINCT transponderNumber FROM timemeasure WHERE shown = 0';
+        return $this->database->fetchAllQueryString($queryString);*/
+
         $query = $this->database->getNewSelectQuery(self::TABLE);
         $query->where('shown', '=', false);
 
@@ -100,5 +103,21 @@ class TimeMeasureRepository extends DefaultRepository
         $query->where('timeMeasureId', '=', $timeMeasure->getTimeMeasureId()->toString());
 
         return $this->database->execute($query);
+    }
+
+    /**
+     * @return bool
+     */
+    public function deleteAll(): bool
+    {
+        return $this->database->truncateTable(self::TABLE);
+    }
+
+    /**
+     * @return int
+     */
+    public function countAll(): int
+    {
+        return $this->database->count(self::TABLE);
     }
 }

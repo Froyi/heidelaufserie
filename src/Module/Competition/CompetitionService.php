@@ -220,6 +220,24 @@ class CompetitionService
     /**
      * @return array
      */
+    public function getCompetitonDates(): array
+    {
+        $competitionDates = [];
+
+        $allCompetitions = $this->getAllCompetitions();
+
+        /** @var Competition $competition */
+        foreach ($allCompetitions as $competition) {
+            $date = $competition->getDate();
+            $competitionDates[$date->toString()] = $date;
+        }
+
+        return $competitionDates;
+    }
+
+    /**
+     * @return array
+     */
     protected function getAllCompetitionTypes(): array
     {
         $allCompetitionsArray = [];

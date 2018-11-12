@@ -18,6 +18,7 @@ use Project\Module\Runner\RunnerService;
 use Project\TimeMeasure\TimeMeasureService;
 use Project\Utilities\Tools;
 use Project\View\JsonModel;
+use SebastianBergmann\Timer\Timer;
 
 /**
  * Class JsonController
@@ -221,14 +222,16 @@ class JsonController extends DefaultController
         /** @var Date $date */
         $date = Date::fromValue('today');
 
-        if (Tools::shallWeRefresh(20) === true) {
+        if (Tools::shallWeRefresh(10) === true) {
             $clubService = new ClubService($this->database);
             $competitionDataService = new CompetitionDataService($this->database, $clubService);
             $timeMeasureService = new TimeMeasureService($this->database);
             $runnerService = new RunnerService($this->database, $this->configuration);
             $competitionService = new CompetitionService($this->database);
+            Timer::start();
 
-            $competitionDatas = $competitionDataService->getCompetitionDataByDate($date, $timeMeasureService, $runnerService, $competitionService);
+            $competitionDatas = $competitionDataService->getRandomCompetitionDataByDate($date, $timeMeasureService, $runnerService, $competitionService, null, 5);
+            $time = Timer::stop();
 
             for ($i = 0; $i <= 5; $i++) {
                 $randomCompetitionKey = array_rand($competitionDatas);
@@ -246,7 +249,7 @@ class JsonController extends DefaultController
                     $timeMeasureService->saveTimeMeasure($timeMeasure);
                 }
 
-                $this->jsonModel->addJsonConfig('timeMeasure', $timeMeasure);
+                $this->jsonModel->addJsonConfig('timeMeasure', $time);
 
                 $this->jsonModel->send();
             }

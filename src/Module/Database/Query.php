@@ -4,9 +4,7 @@ namespace Project\Module\Database;
 
 /**
  * Class Query
- *
  * TYPE | TABLE | WHERE | ORDER | LIMIT
- *
  * @package Project\Module\Database
  */
 class Query
@@ -22,6 +20,7 @@ class Query
     public const OR = 'OR ';
     public const LIMIT = 'LIMIT ';
     public const ORDERBY = 'ORDER BY ';
+    public const ORDER_RAND = 'RAND() ';
     public const ASC = 'ASC';
     public const DESC = 'DESC';
     public const SET = 'SET ';
@@ -53,6 +52,9 @@ class Query
 
     /** @var array $insert */
     protected $insert = [];
+
+    /** @var string $query */
+    protected $query;
 
     /**
      * Query constructor.
@@ -223,6 +225,10 @@ class Query
      */
     public function getQuery(): string
     {
+        if (empty($this->query) === false) {
+            return $this->query;
+        }
+
         $queryString = '';
 
         switch ($this->type) {
@@ -256,6 +262,23 @@ class Query
         }
 
         return $queryString;
+    }
+
+    /**
+     * @param string $query
+     *
+     * @return Query
+     */
+    public function setQuery(string $query): self
+    {
+        $this->query = $query;
+
+        return $this;
+    }
+
+    public function orderRandom()
+    {
+        $this->orderBy = self::ORDERBY . self::ORDER_RAND;
     }
 
     /**

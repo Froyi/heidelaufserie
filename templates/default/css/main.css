@@ -534,7 +534,6 @@ input[type="submit"] {
 .admin form select {
   width: 96%;
   padding: 0 0.63em;
-  min-height: 6.2em;
   margin-bottom: 1em;
 }
 .content-main-wrapper {
@@ -763,6 +762,32 @@ input[type="submit"] {
 .speaker-page.landscape .speaker-competition-status .gender-container .gender-competition:first-of-type {
   margin-bottom: 3em;
 }
+.admin-page {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.admin-page .content-container {
+  min-height: 11em;
+  margin-bottom: 2em;
+}
+.admin-page .delete-competition form {
+  margin-top: 1em;
+}
+.admin-page .delete-competition select {
+  margin-top: 0.25em;
+}
+.admin-page .delete-competition .with-results-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 1em;
+}
+.admin-page .delete-competition .with-results-container input {
+  width: 1.5em;
+  margin-right: 0.5em;
+}
 .admin-page .start-time-set {
   max-width: 40em;
 }
@@ -799,6 +824,9 @@ input[type="submit"] {
   text-align: center;
   font-size: 0.88em;
 }
+.admin-page .delete-time-measure a {
+  color: #D53D3D;
+}
 .competition-day-page {
   display: flex;
   justify-content: flex-start;
@@ -820,6 +848,9 @@ input[type="submit"] {
   max-width: 27.13em;
   margin-right: 2.5em;
 }
+.competitions-page .create-competition select {
+  min-height: 6.2em;
+}
 .competitions-page .all-competitions {
   flex-grow: 1;
 }
@@ -838,3 +869,4 @@ input[type="submit"] {
 .runner-container .runner-duplicate-container .runner-data {
   width: 100%;
 }
+/*# sourceMappingURL=main.css.map */

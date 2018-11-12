@@ -89,6 +89,10 @@ return [
             'controller' => 'AdminController',
             'action' => 'deleteCompetitionDataAction',
         ],
+        'deleteMeasureData' => [
+            'controller' => 'AdminController',
+            'action' => 'deleteMeasureDataAction',
+        ],
         'migrateShortCode' => [
             'controller' => 'MigrateController',
             'action' => 'migrateShortCodeAction',

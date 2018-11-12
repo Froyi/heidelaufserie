@@ -119,6 +119,19 @@ class TimeMeasureService
     }
 
     /**
+     * @return bool
+     */
+    public function deleteAll(): bool
+    {
+        return $this->timeMeasureRepository->deleteAll();
+    }
+
+    public function getTimeMeasureCount(): int
+    {
+        return $this->timeMeasureRepository->countAll();
+    }
+
+    /**
      * @param array $timeMeasureData
      *
      * @return array

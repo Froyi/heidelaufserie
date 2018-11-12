@@ -107,19 +107,6 @@ class Database
     }
 
     /**
-     * @param string $table
-     *
-     * @return Query
-     */
-    public function getNewTruncatQuery(string $table): Query
-    {
-        $query = new Query($table);
-        $query->addType(Query::TRUNCATE);
-
-        return $query;
-    }
-
-    /**
      * @param Query $query
      *
      * @return array
@@ -141,6 +128,33 @@ class Database
         $sql = $this->connection->query($query);
 
         return $sql->fetchAll(\PDO::FETCH_OBJ);
+    }
+
+    public function count(string $table): int
+    {
+        $query = new Query($table);
+        $query->setQuery("SELECT count(*) as amount FROM " . $table);
+
+        $result = $this->fetch($query);
+
+        if (empty($result) === true) {
+            return 0;
+        }
+
+        return (int)$result->amount;
+    }
+
+    /**
+     * @param string $table
+     *
+     * @return bool
+     */
+    public function truncateTable(string $table): bool
+    {
+        $query = new Query($table);
+        $query->addType(Query::TRUNCATE);
+
+        return $this->execute($query);
     }
 
     /**

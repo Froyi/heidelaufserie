@@ -294,15 +294,21 @@ class AdminController extends DefaultController
 
             $competitions = $competitionService->getCompetitionsByDate($date);
 
-            if (empty($competitions) === false) {
-                $competitionDataAfterUpload = $competitionDataService->getCompetitionDataAfterRunnerUpload($runnerData, $competitions, $transponderData);
+            if (empty($competitions) === true) {
+                $this->notificationService->setError('Die Teilnehmer konnten nicht importiert werden. An dem Tag gibt es keine Veranstaltung.');
+                header('Location: ' . Tools::getRouteUrl('competitionDay'));
+                exit;
             }
+
+            $competitionDataAfterUpload = $competitionDataService->getCompetitionDataAfterRunnerUpload($runnerData, $competitions, $transponderData);
 
             if (Tools::getValue('resetCompetitionData') !== false) {
                 $competitionDataService->deleteCompetitionDataByDate($date);
             }
 
             $competitionDataService->saveAllCompetitionData($competitionDataAfterUpload);
+
+            $this->mergeDuplicateClubs();
         }
 
         $this->notificationService->setSuccess('Die Teilnehmer konnten erfolgreich importiert werden.');
@@ -448,7 +454,7 @@ class AdminController extends DefaultController
         exit;
     }
 
-    public function mergeDuplicateClubsAction(): void
+    public function mergeDuplicateClubs(): void
     {
         $clubService = new ClubService($this->database);
         $competitionDataService = new CompetitionDataService($this->database, $clubService);

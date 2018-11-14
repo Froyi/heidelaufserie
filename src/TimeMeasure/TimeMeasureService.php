@@ -132,6 +132,16 @@ class TimeMeasureService
     }
 
     /**
+     * @param TimeMeasure $timeMeasure
+     *
+     * @return bool
+     */
+    public function deleteTimeMeasure(TimeMeasure $timeMeasure): bool
+    {
+        return $this->timeMeasureRepository->deleteTimeMeasure($timeMeasure);
+    }
+
+    /**
      * @param array $timeMeasureData
      *
      * @return array

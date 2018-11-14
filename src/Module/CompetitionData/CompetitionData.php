@@ -5,6 +5,7 @@ namespace Project\Module\CompetitionData;
 
 use Project\Module\Club\Club;
 use Project\Module\Competition\Competition;
+use Project\Module\CompetitionResults\Round;
 use Project\Module\CompetitionStatistic\CompetitionStatistic;
 use Project\Module\DefaultModel;
 use Project\Module\GenericValueObject\Date;
@@ -239,6 +240,8 @@ class CompetitionData extends DefaultModel
                 $roundsTimes['timeOverall'] = $roundTime->getDifference($startingTime);
             }
 
+            $roundsTimes['timeMeasure'] = $timeMeasure;
+
             $rounds[$roundNumber] = $roundsTimes;
 
             $lastRoundTime = $roundTime;
@@ -359,5 +362,66 @@ class CompetitionData extends DefaultModel
     public function setFinishMeasureList(array $finishMeasureList): void
     {
         $this->finishMeasureList = $finishMeasureList;
+    }
+
+    /**
+     * @param TimeMeasure $timeMeasure
+     *
+     * @return bool
+     */
+    public function removeUnplausibleTimeMeasure(TimeMeasure $timeMeasure): bool
+    {
+        if (isset($this->timeMeasureList[$timeMeasure->getTimeMeasureId()->toString()]) === true) {
+            unset($this->timeMeasureList[$timeMeasure->getTimeMeasureId()->toString()]);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     * @todo test it
+     */
+    public function isUnusualSlowLastRound(): bool
+    {
+        $lastRoundTime = $this->getLastRoundTime();
+        $actualRound = $this->getActualRound();
+
+        // Wenn es keine letzte Runde gibt, kann nicht bestimmt werden, ob es sich um eine langsame Runde handelt
+        if ($lastRoundTime === null) {
+            return false;
+        }
+
+        if ($this->getCompetitionStatistic() !== null) {
+            if ($actualRound === 1 && $this->getCompetitionStatistic()->getAverageFirstRound() !== null) {
+                return ($lastRoundTime > ($this->getCompetitionStatistic()->getAverageFirstRound()->getRoundTime() * Round::UNUSUAL_SLOW));
+            }
+
+            if ($actualRound === 2 && $this->getCompetitionStatistic()->getAverageSecondRound() !== null) {
+                return ($lastRoundTime > ($this->getCompetitionStatistic()->getAverageSecondRound()->getRoundTime() * Round::UNUSUAL_SLOW));
+            }
+
+            if ($actualRound === 3 && $this->getCompetitionStatistic()->getAverageThirdRound() !== null) {
+                return ($lastRoundTime > ($this->getCompetitionStatistic()->getAverageThirdRound()->getRoundTime() * Round::UNUSUAL_SLOW));
+            }
+        }
+
+        // Es muss eine allgemeine Lösung her, wenn es sich um die erste Runde handelt und es keine Referenzzeit aus dem letzten Jahr gibt
+        if ($actualRound === 1) {
+            return ($lastRoundTime > Round::SLOW_TIME);
+        }
+
+        $averageRound = 0;
+        foreach ($this->getRoundTimes() as $roundNumber => $roundTime) {
+            if ($roundNumber === $actualRound) {
+                break;
+            }
+
+            $averageRound = ($averageRound + $roundTime['round']) / $roundNumber;
+        }
+
+        return ($lastRoundTime >= ($averageRound * Round::UNUSUAL_SLOW));
     }
 }

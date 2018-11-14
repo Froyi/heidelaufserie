@@ -601,7 +601,7 @@ input[type="submit"] {
 }
 .notification-container .notification.alert,
 .notification-container .notification.error {
-  background-color: rgba(188, 212, 186, 0.9);
+  background-color: rgba(213, 61, 61, 0.9);
 }
 .notification-container .notification.info,
 .notification-container .notification.success {
@@ -630,6 +630,9 @@ input[type="submit"] {
 }
 .speaker-page .runner-speaker.more-rounds {
   background-color: rgba(255, 223, 97, 0.53);
+}
+.speaker-page .runner-speaker.slow-round {
+  background-color: rgba(213, 61, 61, 0.53);
 }
 .speaker-page .runner-speaker:last-of-type {
   border-bottom: none;

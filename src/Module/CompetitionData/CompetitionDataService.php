@@ -8,6 +8,7 @@ use Project\Module\Club\ClubService;
 use Project\Module\Competition\Competition;
 use Project\Module\Competition\CompetitionService;
 use Project\Module\Competition\CompetitionTypeId;
+use Project\Module\CompetitionResults\Round;
 use Project\Module\CompetitionStatistic\CompetitionStatisticService;
 use Project\Module\Database\Database;
 use Project\Module\FinishMeasure\FinishMeasureService;
@@ -333,6 +334,28 @@ class CompetitionDataService
         }
 
         return $this->competitionDataRepository->updateCompetitionData($competitionData);
+    }
+
+    /**
+     * @param CompetitionData $competitionData
+     *
+     * @return array
+     */
+    public function getUnplausibleTimeMeasure(CompetitionData $competitionData): array
+    {
+        $unplausibleTimeMeasure = [];
+
+        $roundTimes = $competitionData->getRoundTimes();
+
+        foreach ($roundTimes as $roundNumber => $roundTime) {
+            if ($roundTime['round'] < Round::PLAUSIBLE_TIME) {
+                $unplausibleTimeMeasure[] = $roundTime['timeMeasure'];
+            } else if ($roundNumber > 3) {
+                $unplausibleTimeMeasure[] = $roundTime['timeMeasure'];
+            }
+        }
+
+        return $unplausibleTimeMeasure;
     }
 
     /**

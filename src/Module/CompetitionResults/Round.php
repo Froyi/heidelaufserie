@@ -9,6 +9,11 @@ namespace Project\Module\CompetitionResults;
  */
 class Round
 {
+    public const PLAUSIBLE_TIME = 900;
+
+    public const SLOW_TIME = 2200;
+    public const UNUSUAL_SLOW = 1.5;
+
     /** @var int $round */
     protected $round;
 

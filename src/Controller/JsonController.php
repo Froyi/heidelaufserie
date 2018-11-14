@@ -116,15 +116,16 @@ class JsonController extends DefaultController
     }
 
     /**
+     * @throws \InvalidArgumentException
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    public
-    function refreshSpeakerDataAction(): void
+    public function refreshSpeakerDataAction(): void
     {
         /** @var Date $date */
-        $date = Date::fromValue('today');
+        $date = Date::fromValue('2018-11-11');
+        $removedEntries = 0;
 
         $timeMeasureService = new TimeMeasureService($this->database);
         $clubService = new ClubService($this->database);
@@ -140,6 +141,22 @@ class JsonController extends DefaultController
             $this->jsonModel->send('noRefresh');
         }
 
+        /** @var CompetitionData $competitionData */
+        foreach ($allCompetitionData as $competitionData) {
+            $unplausibleTimeMeasure = $competitionDataService->getUnplausibleTimeMeasure($competitionData);
+
+            if (empty($unplausibleTimeMeasure) === true) {
+                continue;
+            }
+
+            foreach ($unplausibleTimeMeasure as $timeMeasure) {
+                $timeMeasureService->deleteTimeMeasure($timeMeasure);
+                $competitionData->removeUnplausibleTimeMeasure($timeMeasure);
+
+                $removedEntries++;
+            }
+        }
+
         $timeMeasureService->markAllTimeMeasureListsAsShown($allCompetitionData);
 
 
@@ -147,6 +164,10 @@ class JsonController extends DefaultController
         $this->viewRenderer->addViewConfig('year', Year::fromValue(date('Y', strtotime('-1 year')))->getYearShort());
 
         $this->jsonModel->addJsonConfig('view', $this->viewRenderer->renderJsonView('module/runnerSpeakerUpdate.twig'));
+        if ($removedEntries > 0) {
+            $this->jsonModel->addJsonConfig('removedEntries', $removedEntries);
+        }
+
 
         $this->jsonModel->send();
     }
@@ -191,7 +212,7 @@ class JsonController extends DefaultController
     public function refreshRankingDataAction(): void
     {
         /** @var Date $date */
-        $date = Date::fromValue('today');
+        $date = Date::fromValue('2018-11-11');
         $genderConfig = $this->configuration->getEntryByName('ranking');
 
         $clubService = new ClubService($this->database);
@@ -214,7 +235,6 @@ class JsonController extends DefaultController
 
     /**
      * This action is only for testing. In production this one is not used!!!
-     * @todo Look why this generating process is too slow.
      * @throws \Exception
      */
     public function generateTimeMeasureDataAction(): void

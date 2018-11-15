@@ -276,7 +276,7 @@ class Query
         return $this;
     }
 
-    public function orderRandom()
+    public function orderRandom(): void
     {
         $this->orderBy = self::ORDERBY . self::ORDER_RAND;
     }

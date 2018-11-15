@@ -48,7 +48,9 @@ class JsonController extends DefaultController
      */
     public function noDuplicateAction(): void
     {
-        $runnerDuplicateService = new RunnerDuplicateService($this->database, $this->configuration);
+        $clubService = new ClubService($this->database);
+        $competitionDataService = new CompetitionDataService($this->database, $clubService);
+        $runnerDuplicateService = new RunnerDuplicateService($this->database, $this->configuration, $competitionDataService);
         $runnerService = new RunnerService($this->database, $this->configuration);
 
         try {

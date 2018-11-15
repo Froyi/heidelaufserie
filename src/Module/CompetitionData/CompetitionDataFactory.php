@@ -60,7 +60,6 @@ class CompetitionDataFactory
 
     /**
      * @param $object
-     * @param Club|null $club
      *
      * @return null|CompetitionData
      */

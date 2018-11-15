@@ -133,7 +133,7 @@ class Database
     public function count(string $table): int
     {
         $query = new Query($table);
-        $query->setQuery("SELECT count(*) as amount FROM " . $table);
+        $query->setQuery('SELECT count(*) as amount FROM ' . $table);
 
         $result = $this->fetch($query);
 

@@ -349,7 +349,7 @@ class CompetitionStatistic
     /**
      * @param Id $runnerId
      */
-    public function setRunnerId(Id $runnerId)
+    public function setRunnerId(Id $runnerId): void
     {
         $this->runnerId = $runnerId;
     }

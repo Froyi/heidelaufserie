@@ -27,8 +27,8 @@ class ClubName extends DefaultGenericValueObject
 
     /**
      * @param string $clubName
-     * @return Club
-     * @throws \InvalidArgumentException
+     *
+     * @return ClubName
      */
     public static function fromString(string $clubName): self
     {

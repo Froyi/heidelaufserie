@@ -269,6 +269,8 @@ class CompetitionDataRepository extends DefaultRepository
 
     /**
      * @param CompetitionData $competitionData
+     *
+     * @return mixed
      */
     public function competitionDataExist(CompetitionData $competitionData)
     {

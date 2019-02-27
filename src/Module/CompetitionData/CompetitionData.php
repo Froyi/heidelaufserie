@@ -389,7 +389,7 @@ class CompetitionData extends DefaultModel
         $lastRoundTime = $this->getLastRoundTime();
         $actualRound = $this->getActualRound();
 
-        // Wenn es keine letzte Runde gibt, kann nicht bestimmt werden, ob es sich um eine langsame Runde handelt
+        // Wenn es keine (letzte) Runde gibt, kann nicht bestimmt werden, ob es sich um eine langsame Runde handelt
         if ($lastRoundTime === null) {
             return false;
         }
